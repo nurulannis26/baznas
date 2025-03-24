@@ -15,7 +15,6 @@ return new class extends Migration
 
         Schema::create('divisi', function (Blueprint $table) {
             $table->uuid('divisi_id')->primary();
-            $table->integer('kode_divisi');
             $table->string('divisi')->unique();
             $table->timestamp('created_at');
             $table->timestamp('updated_at');

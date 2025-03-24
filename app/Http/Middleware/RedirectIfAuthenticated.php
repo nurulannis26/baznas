@@ -21,7 +21,13 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                if (Auth::user()->pengurus_id != NULL) {
+                    return redirect('/home');
+                } else {
+                    return back()->withErrors([
+                        'password' => 'Wrong No HP or Password',
+                    ]);
+                }
             }
         }
 

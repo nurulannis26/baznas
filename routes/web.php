@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PengurusController;
 use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\ProgramController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,26 +18,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('main');
-});
-Route::get('/apa', function () {
-    return view('auth.welcome');
-});
+// Route::middleware(['web'])->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', function () {
+            // dd('as');
+            return view('auth.welcome');
+        })->name('login');
+        Route::get('/', function () {
+            return view('auth.welcome');
+        });
+        Route::post('/login_ver', [LoginController::class, 'verifikasi'])->name('login.action');
+    });
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/coba', function () {
-    return view('auth.home');
-});
-
-// Route::middleware('auth')->group(function () {
-//     Route::prefix('baznas')->name('baznas.')->middleware('baznas')->group(function () {
-//         Route::get('/main', function () {
-//             return view('main');
-//         })->name('main');
-//     });
+    Route::middleware('auth')->group(function () {
+        Route::get('/home', [LoginController::class, 'home'])->name('home');
+        Route::get('/permohonan', [PermohonanController::class, 'index'])->name('permohonan');
+        Route::get('/program', [ProgramController::class, 'index'])->name('program');
+        Route::get('/pengurus', [PengurusController::class, 'index'])->name('pengurus');
+    });
 // });
 
-Route::get('/permohonan', [PermohonanController::class, 'index'])->name('permohonan');
-Route::get('/program', [ProgramController::class, 'index'])->name('program');
-Route::get('/pengurus', [PengurusController::class, 'index'])->name('pengurus');
+
+
 

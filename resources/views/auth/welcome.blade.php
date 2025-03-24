@@ -67,18 +67,26 @@
                     <!-- Social Media Icons -->
                     <div class="d-flex align-items-center mt-4 justify-content-center">
                         <div class="d-flex social-icons">
-                            <img src="{{ asset('icons/ig.png') }}" href="https://www.instagram.com/baznascilacap?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                            target="_blank" alt="Instagram">
-                            <img src="{{ asset('icons/tw.png') }}" href="https://www.tiktok.com/@baznaskab.cilacap_?is_from_webapp=1&sender_device=pc" target="_blank" alt="TikTok">
-                            <img src="{{ asset('icons/fb.png') }}" href="https://www.facebook.com/BaznasKabCilacap/" target="_blank" alt="Facebook">
-                            <img src="{{ asset('icons/wa.png') }}" href="https://wa.me/6285842716803" target="_blank" alt="WhatsApp">
+                            <a href="https://www.instagram.com/baznascilacap?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                        target="_blank">
+                            <img src="{{ asset('icons/ig.png') }}" alt="Instagram">
+                        </a>
+                        <a href="https://www.tiktok.com/@baznaskab.cilacap_?is_from_webapp=1&sender_device=pc" target="_blank">
+                            <img src="{{ asset('icons/tw.png') }}" alt="TikTok">
+                        </a>
+                        <a href="https://www.facebook.com/BaznasKabCilacap/" target="_blank">
+                            <img src="{{ asset('icons/fb.png') }}" alt="Facebook">
+                        </a>
+                        <a href="https://wa.me/6285842716803" target="_blank">
+                            <img src="{{ asset('icons/wa.png') }}" alt="WhatsApp">
+                        </a>
                         </div>
                         <p class="h5 font-weight-medium mb-0 ml-3">BAZNAS CILACAP</p>
                     </div>
                 </div>
                 
             </div>
-
+            
             <!-- Main Content -->
             <div class="col-md-5 d-flex flex-column align-items-center justify-content-center">
                 <div class="text-center">
@@ -86,14 +94,14 @@
                     <h2 class="h4 font-weight-bold text-success">Selamat datang di E-DISDAY</h2>
                     <p class="h6 text-success">Pendistribusian & Pemberdayaan</p>
                     <hr class="border-warning w-50 mb-3">
-                    <form action="" method="POST">
+                    <form action="{{ route('login.action') }}" method="POST">
                         @csrf
                         <div class="mt-2 font-bold text-left">
                             Masuk ke akun anda
                         </div>
                         <div class="mt-2 form-group text-left">
                             <label for="phone">No HP</label>
-                            <input type="number" id="phone" name="phone" class="form-control" placeholder="Masukkan No HP" required>
+                            <input type="number" id="phone" name="nohp" class="form-control" placeholder="Masukkan No HP" required>
                         </div>
                         <div class="form-group text-left">
                             <label for="password">Password</label>

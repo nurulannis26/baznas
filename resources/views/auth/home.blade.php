@@ -88,10 +88,10 @@
             </a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Home</a>
+                    <a class="nav-link active" :href="route('home')" :active="request() - > routeIs('home')">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Bantuan Teknis</a>
+                    <a class="nav-link" href="https://wa.me/6285842716803" target="_blank">Bantuan Teknis</a>
                 </li>
             </ul>
         </div>
@@ -104,14 +104,22 @@
             <!-- Foto Profil -->
             <div class="rounded-circle bg-light text-center d-flex align-items-center justify-content-center"
                 style="width: 50px; height: 50px; font-weight: bold; color: #2E7D32;">
-                AK
+                @if (Auth::user()->foto_url)
+                    <img src="{{ Auth::user()->foto_url }}" width="70"
+                        class="w-10 h-10 rounded-full object-cover">
+                @else
+                    <div
+                        class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 font-semibold">
+                        {{ strtoupper(substr(Auth::user()->nama, 0, 2)) }}
+                    </div>
+                @endif
             </div>
 
             <!-- Informasi Nama & Jabatan -->
             <div class="ml-3 text-right">
-                <p class="font-weight-bold mb-0 text-left">Akhmad Kholil, SH.</p>
-                <p class="mb-0 text-left">Wakil Ketua II</p>
-                <p class="mb-0 text-left">Bidang Pendistribusian dan Pemberdayaan</p>
+                <p class="font-weight-bold mb-0 text-left">{{ Auth::user()->nama }}</p>
+                <p class="mb-0 text-left">{{ Auth::user()->pengurus->jabatan->jabatan }}</p>
+                <p class="mb-0 text-left">{{ Auth::user()->pengurus->jabatan->divisi->divisi }}</p>
             </div>
         </div>
 
@@ -121,33 +129,47 @@
 
         <div class="row mt-4 align-items-stretch">
             <div class="col-md-6">
-                <h5 class="text-success">Rabu, 5 Februari 2025</h5>
+                <h5 class="text-success">{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}</h5>
                 <h2 class="font-weight-bold text-success">Efektif, Akuntabel, dan Transparan</h2>
                 <p class="lead text-success">e-DisDay untuk Manajemen yang Lebih Baik</p>
                 <div class="d-flex align-items-center mt-4">
                     <div class="d-flex social-icons">
-                        <img src="{{ asset('icons/ig.png') }}" alt="Instagram">
-                        <img src="{{ asset('icons/tw.png') }}" alt="TikTok">
-                        <img src="{{ asset('icons/fb.png') }}" alt="Facebook">
-                        <img src="{{ asset('icons/wa.png') }}" alt="WhatsApp">
+                        <a href="https://www.instagram.com/baznascilacap?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                        target="_blank">
+                            <img src="{{ asset('icons/ig.png') }}" alt="Instagram">
+                        </a>
+                        <a href="https://www.tiktok.com/@baznaskab.cilacap_?is_from_webapp=1&sender_device=pc" target="_blank">
+                            <img src="{{ asset('icons/tw.png') }}" alt="TikTok">
+                        </a>
+                        <a href="https://www.facebook.com/BaznasKabCilacap/" target="_blank">
+                            <img src="{{ asset('icons/fb.png') }}" alt="Facebook">
+                        </a>
+                        <a href="https://wa.me/6285842716803" target="_blank">
+                            <img src="{{ asset('icons/wa.png') }}" alt="WhatsApp">
+                        </a>
                     </div>
                     <p class="h5 mb-0 ml-3 text-success">BAZNAS CILACAP</p>
                 </div>
             </div>
             <div class="col-md-6 d-flex">
                 <div class="col-md-6 d-flex">
-                    <div class="card card-custom">
-                        <h4>E-DISDAY</h4>
-                        <span style="font-size: 17px">Pendistribusian & Pemberdayaan</span>
-                        <a href="#" class="text-white arrow-big" style="font-size: 30px">&#8594;</a>
-                    </div>
+                    <a href="{{ route('permohonan') }}" class="text-white">
+                        <div class="card card-custom">
+                            <h4>E-DISDAY</h4>
+                            <span style="font-size: 17px">Pendistribusian & Pemberdayaan</span>
+                            <a href="#" class="text-white arrow-big" style="font-size: 30px">&#8594;</a>
+                        </div>
+                    </a>
+                    
                 </div>
                 <div class="col-md-6 d-flex">
-                    <div class="card card-custom">
-                        <h4>E-AMBULANCE</h4>
-                        <span style="font-size: 17px">Rekam Jejak Layanan Ambulance</span>
-                        <a href="#" class="text-white arrow-big" style="font-size: 30px">&#8594;</a>
-                    </div>
+                    <a href="#" class="text-white">
+                        <div class="card card-custom">
+                            <h4>E-AMBULANCE</h4>
+                            <span style="font-size: 17px">Rekam Jejak Layanan Ambulance</span>
+                            <a href="#" class="text-white arrow-big" style="font-size: 30px">&#8594;</a>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
