@@ -67,10 +67,11 @@
                     <!-- Social Media Icons -->
                     <div class="d-flex align-items-center mt-4 justify-content-center">
                         <div class="d-flex social-icons">
-                            <img src="{{ asset('icons/ig.png') }}" alt="Instagram">
-                            <img src="{{ asset('icons/tw.png') }}" alt="TikTok">
-                            <img src="{{ asset('icons/fb.png') }}" alt="Facebook">
-                            <img src="{{ asset('icons/wa.png') }}" alt="WhatsApp">
+                            <img src="{{ asset('icons/ig.png') }}" href="https://www.instagram.com/baznascilacap?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                            target="_blank" alt="Instagram">
+                            <img src="{{ asset('icons/tw.png') }}" href="https://www.tiktok.com/@baznaskab.cilacap_?is_from_webapp=1&sender_device=pc" target="_blank" alt="TikTok">
+                            <img src="{{ asset('icons/fb.png') }}" href="https://www.facebook.com/BaznasKabCilacap/" target="_blank" alt="Facebook">
+                            <img src="{{ asset('icons/wa.png') }}" href="https://wa.me/6285842716803" target="_blank" alt="WhatsApp">
                         </div>
                         <p class="h5 font-weight-medium mb-0 ml-3">BAZNAS CILACAP</p>
                     </div>
