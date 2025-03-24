@@ -23,6 +23,10 @@ Route::get('/apa', function () {
     return view('auth.welcome');
 });
 
+Route::get('/coba', function () {
+    return view('auth.home');
+});
+
 // Route::middleware('auth')->group(function () {
 //     Route::prefix('baznas')->name('baznas.')->middleware('baznas')->group(function () {
 //         Route::get('/main', function () {
