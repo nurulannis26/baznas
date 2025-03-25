@@ -26,18 +26,6 @@
     <link href="https://cdn.bootcdn.net/ajax/libs/intro.js/6.0.0/introjs.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/intro.js/6.0.0/introjs.min.css" rel="stylesheet">
     <!-- intro js end -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css">
-
-    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" language="javascript"
-        src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" language="javascript"
-        src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/fixedcolumns/4.2.2/css/fixedColumns.bootstrap4.min.css">
-    <script type="text/javascript" language="javascript"
-        src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
@@ -50,26 +38,28 @@
         body {
             overflow-x: hidden;
         }
-         .select2-selection {
+
+        .select2-selection {
             min-height: 38px !important;
         }
 
-         .select2-selection__arrow {
+        .select2-selection__arrow {
             min-height: 38px !important;
         }
-        
+
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             background-color: #28a745 !important;
-            color: #ffffff !important; /* Use white color for better contrast with green background */
+            color: #ffffff !important;
+            /* Use white color for better contrast with green background */
             border: #28a745 !important;
         }
-        
+
         .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
             color: #ffffff !important;
         }
     </style>
-    <title>E-DISDAY</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('images/baznas.png') }}">
+    <title>E-TASYARUF</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/logo_siftnu.png') }}">
     @include('template.css')
 
     @yield('css')
@@ -118,28 +108,20 @@
 
     @yield('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    
+
 
     @livewireScripts
     @stack('script')
     @stack('cart-js-internal-pc')
-    @stack('script-internalpc')
+    @stack('script-permohonan')
     @stack('filter_umum_upzis')
     @stack('filter_umum_ranting')
-     @stack('filter_gabungan')
-    {{-- 
-    @stack('intro_tour_dashboard')
-    @stack('intro_data_pengajuan')
-    @stack('intro_data_pengajual_detail')
-    @stack('intro-program-dan-pilar')
-    @stack('intro-data-pengajuan-pc-lazisnu')
-    @stack('detail-pengajuan-internal-pc')
-    @stack('detail-pengajuan-umum-pc-lazisnu') --}}
+    @stack('filter_gabungan')
 
 
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-<script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script>
         $(document).ready(function() {
             toastr.options = {
                 "progressBar": true,
@@ -158,53 +140,31 @@
         });
     </script>
 
-<script>
-	@if(Session::has('message'))
-		var type="{{Session::get('alert-type','info')}}"
+    <script>
+        @if (Session::has('message'))
+            var type = "{{ Session::get('alert-type', 'info') }}"
 
-		switch(type){
-			case 'info':
-		         toastr.info("{{ Session::get('message') }}");
-		         break;
-	        case 'success':
-	            toastr.success("{{ Session::get('message') }}");
-	            break;
-         	case 'warning':
-	            toastr.warning("{{ Session::get('message') }}");
-	            break;
-	        case 'error':
-		        toastr.error("{{ Session::get('message') }}");
-		        break;
-		}
-	@endif
-</script>
-
-    {{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> --}}
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+            switch (type) {
+                case 'info':
+                    toastr.info("{{ Session::get('message') }}");
+                    break;
+                case 'success':
+                    toastr.success("{{ Session::get('message') }}");
+                    break;
+                case 'warning':
+                    toastr.warning("{{ Session::get('message') }}");
+                    break;
+                case 'error':
+                    toastr.error("{{ Session::get('message') }}");
+                    break;
+            }
+        @endif
+    </script>
 
 
     <script type="text/javascript" language="javascript"
         src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
-    <script type="text/javascript" class="init">
-        $(document).ready(function() {
-            var table = $('#example1').DataTable({
-                // scrollY: "300px",
-                scrollX: true,
-                scrollCollapse: true,
-                paging: true,
-                fixedColumns: {
-                    left: 2,
-                },
-                "paging": false,
-                "ordering": false,
-                "info": false
 
-            });
-        });
-    </script>
-
-    @stack('s2')
 
 </body>
 

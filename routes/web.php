@@ -36,6 +36,8 @@ use Illuminate\Support\Facades\Route;
         Route::get('/permohonan', [PermohonanController::class, 'index'])->name('permohonan');
         Route::get('/program', [ProgramController::class, 'index'])->name('program');
         Route::get('/pengurus', [PengurusController::class, 'index'])->name('pengurus');
+        Route::post('/filter_permohonan_post', [PermohonanController::class, 'filter_permohonan_post']);
+        Route::get('/filter_permohonan/{c_filter_daterange}/{c_filters_fo}/{c_filters_atasan}/{c_filters_survey}/{c_filters_pencairan}/{c_filters_lpj}', [PermohonanController::class, 'filter_permohonan']);
     });
 // });
 

@@ -147,6 +147,8 @@ class Permohonan extends Component
             ->orderBy('permohonan.created_at', 'desc')
             ->get();
 
+            dd($data);
+
 
         return view('livewire.permohonan', compact(
             'start_date',

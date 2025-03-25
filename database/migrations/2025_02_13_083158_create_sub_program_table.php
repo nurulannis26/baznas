@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('sub_program_id')->primary();
             $table->foreignUuid('program_id')->index();
             $table->foreign('program_id')->references('program_id')->on('program')->onDelete('cascade');
+            $table->string('no_urut');
             $table->string('sub_program');
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
