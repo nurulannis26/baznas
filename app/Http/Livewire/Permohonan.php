@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Permohonan as ModelsPermohonan;
+use App\Models\Program;
+use App\Models\SubProgram;
 use App\Models\Surat;
 use App\Models\Upz;
 use Illuminate\Support\Facades\Auth;
@@ -48,17 +50,20 @@ class Permohonan extends Component
     public $asnaf_id;
     public $program_id;
     public $sub_program_id; 
-    public $sub_programs = [];
+    public $daftar_program = [];
+    public $daftar_kegiatan = [];
+    public $daftar_kegiatan2 = [];
     public $permohonan_nominal;
     public $permohonan_bentuk_bantuan;
     public $permohonan_catatan_input;
+    public $selectedProgram;
+    // public $fileName;
 
-    protected $listeners = ['updateSubProgram'];
-
-    public function updateSubProgram($value)
+    public function updateSelectedProgram($value)
     {
         $this->sub_program_id = $value; // Simpan nilai yang dipilih
     }
+
     public function mount()
     {
         if ($this->filter_permohonan == 'on') {
@@ -77,13 +82,12 @@ class Permohonan extends Component
         }
     }
 
-    public function updatedProgramId($value)
-    {
-        $this->sub_programs = DB::table('sub_program')
-        ->where('program_id', $value)
-        ->get()
-        ->toArray();
-    }
+    // public function updatedSuratUrl()
+    // {
+    //     if ($this->surat_url) {
+    //         $this->fileName = $this->surat_url->getClientOriginalName();
+    //     }
+    // }
 
     public function render()
     {
@@ -147,14 +151,22 @@ class Permohonan extends Component
             ->orderBy('permohonan.created_at', 'desc')
             ->get();
 
-            dd($data);
+            // dd($data);
 
+            $this->daftar_program = Program::orderBy('created_at', 'DESC')->get();
+            $this->daftar_kegiatan = SubProgram::where('program_id', $this->program_id)
+            ->whereRaw('LENGTH(no_urut) = 3')
+            ->orderBy('no_urut', 'ASC')->get();
+            // dd($this->daftar_kegiatan);lah 
+            $this->daftar_kegiatan2 = SubProgram::where('program_id', $this->program_id)
+                ->whereRaw('LENGTH(no_urut) = 4')
+                ->orderBy('no_urut', 'ASC')->get();
 
         return view('livewire.permohonan', compact(
             'start_date',
             'end_date',
             'filter_daterange',
-            'data'
+            'data',
             ));
     }
     
@@ -162,126 +174,69 @@ class Permohonan extends Component
     {
         $a = DB::table('permohonan')->join('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
         ->where('upz.upz_id', $id)->first();
-        return $a->nama;
+        return $a->nama ?? '-';
     }
 
     public function modal_tambah_permohonan()
     {
+
     }
 
-    public function updatedPermohonanJenis($value) {
-        if (date('m') == '01') {
-            $romawi = 'I';
-        } elseif (date('m') == '02') {
-            $romawi = 'II';
-        } elseif (date('m') == '03') {
-            $romawi = 'III';
-        } elseif (date('m') == '04') {
-            $romawi = 'IV';
-        } elseif (date('m') == '05') {
-            $romawi = 'V';
-        } elseif (date('m') == '06') {
-            $romawi = 'VI';
-        } elseif (date('m') == '07') {
-            $romawi = 'VII';
-        } elseif (date('m') == '08') {
-            $romawi = 'VIII';
-        } elseif (date('m') == '09') {
-            $romawi = 'IX';
-        } elseif (date('m') == '10') {
-            $romawi = 'X';
-        } elseif (date('m') == '11') {
-            $romawi = 'XI';
-        } elseif (date('m') == '12') {
-            $romawi = 'XII';
-        }
-
-        if ($value == 'Individu') {
-            $a = ModelsPermohonan::whereYear('created_at', date('Y'))
-                ->where('permohonan_jenis', 'Individu')
-                ->latest()
-                ->first();
-
-            if ($a == NULL) {
-                $urut = 0;
-            } else {
-                $string = $a->permohonan_nomor;
-
-                $pos = strpos($string, '/E-DISDAY');
-
-                $urutt = substr($string, 0, $pos);
-
-                if (!isset($urutt) || strlen($urutt) === 0) {
-                    // Handle the case where $urutt is not set or is an empty string
-                    $urut = 0; // or some other default value
-                } elseif (strlen($urutt) == 1 || strlen($urutt) == 2) {
-                    $urut = (int)$urutt;
-                } elseif (strlen($urutt) == 3) {
-                    $urut1 = (int)$urutt[0] . $urutt[1];
-                    $urut = $urut1 . (int)$urutt[2];
-                } else {
-                    $urut1 = (int)$urutt[0] . $urutt[1];
-                    $urut2 = $urut1 . (int)$urutt[2];
-                    $urut = $urut2 . (int)$urutt[3];
-                }
-            }
-
-            if (($urut + 1) < 10) {
-                $this->permohonan_nomor = '0' . $urut + 1 . '/' . 'E-DISDAY' . '/INDIVIDU/' . $romawi . '/' . date('Y');
-            } else {
-                $this->permohonan_nomor = $urut + 1 . '/' . 'E-DISDAY' . '/INDIVIDU/' . $romawi . '/' . date('Y');
-            }
-        } else if ($value == 'UPZ') {
-            $a = ModelsPermohonan::whereYear('created_at', date('Y'))
-                ->where('permohonan_jenis', 'UPZ')
-                ->latest()
-                ->first();
-
-            if ($a == NULL) {
-                $urut = 0;
-            } else {
-                $string = $a->permohonan_nomor;
-
-                $pos = strpos($string, '/E-DISDAY');
-
-                $urutt = substr($string, 0, $pos);
-
-                if (!isset($urutt) || strlen($urutt) === 0) {
-                    // Handle the case where $urutt is not set or is an empty string
-                    $urut = 0; // or some other default value
-                } elseif (strlen($urutt) == 1 || strlen($urutt) == 2) {
-                    $urut = (int)$urutt;
-                } elseif (strlen($urutt) == 3) {
-                    $urut1 = (int)$urutt[0] . $urutt[1];
-                    $urut = $urut1 . (int)$urutt[2];
-                } else {
-                    $urut1 = (int)$urutt[0] . $urutt[1];
-                    $urut2 = $urut1 . (int)$urutt[2];
-                    $urut = $urut2 . (int)$urutt[3];
-                }
-            }
-            $this->reset('permohonan_nomor');
-
-            if (($urut + 1) < 10) {
-                $this->permohonan_nomor = '0' . $urut + 1 . '/' . 'E-DISDAY' . '/UPZ/' . $romawi . '/' . date('Y');
-            } else {
-                $this->permohonan_nomor = $urut + 1 . '/' . 'E-DISDAY' . '/UPZ/' . $romawi . '/' . date('Y');
-            }
-        }
-
-        $this->dispatch('$refresh');
+    public function updatedPermohonanJenis()
+{
+    $romawi = $this->getRomawi(date('m'));
+    
+    if ($this->permohonan_jenis == 'Individu') {
+        $this->generateNomorPermohonan('INDIVIDU', $romawi);
+    } elseif ($this->permohonan_jenis == 'UPZ') {
+        $this->generateNomorPermohonan('UPZ', $romawi);
     }
+}
+
+private function generateNomorPermohonan($jenis, $romawi)
+{
+    $a = ModelsPermohonan::whereYear('created_at', date('Y'))
+        ->where('permohonan_jenis', $jenis)
+        ->latest()
+        ->first();
+
+    $urut = $a ? $this->extractUrutNumber($a->permohonan_nomor) : 0;
+
+    $this->permohonan_nomor = sprintf('%02d', $urut + 1) . '/E-DISDAY/' . $jenis . '/' . $romawi . '/' . date('Y');
+}
+
+private function extractUrutNumber($nomor)
+{
+    $pos = strpos($nomor, '/E-DISDAY');
+    $urutt = substr($nomor, 0, $pos);
+    return is_numeric($urutt) ? (int)$urutt : 0;
+}
+
+private function getRomawi($month)
+{
+    $romawi = [
+        '01' => 'I', '02' => 'II', '03' => 'III', '04' => 'IV', 
+        '05' => 'V', '06' => 'VI', '07' => 'VII', '08' => 'VIII', 
+        '09' => 'IX', '10' => 'X', '11' => 'XI', '12' => 'XII'
+    ];
+    return $romawi[$month];
+}
+
 
     public function hydrate()
     {
-        $this->dispatch('loadContactDeviceSelect2');
-        $this->dispatch('select2');
+        $this->emit('loadContactDeviceSelect2');
+        $this->emit('select2');
     }
 
     public function tambah_permohonan()
     {
+        if ($this->surat_url) {
+            $ext = $this->surat_url->extension();
+            $file_name = Str::uuid()->toString() . '.' . $ext;
+            $this->surat_url->storeAs('permohonan', $file_name);
+        }
         
-        $path = $this->surat_url->store('scan_surat', 'public');
 
         $surat = Surat::create([
             'surat_id' => Str::uuid(),
@@ -289,7 +244,7 @@ class Permohonan extends Component
             'surat_nomor' => $this->surat_nomor,
             'surat_tgl' => $this->surat_tgl,
             'surat_keterangan' => null,
-            'surat_url' => 'aaaaa'
+            'surat_url' => $file_name,
         ]);
     
         $upz_id = null;
@@ -307,6 +262,8 @@ class Permohonan extends Component
             $upz_id = $upz->upz_id;
         }
 
+        // dd($this->selectedProgram);
+
     
         $permohonan = ModelsPermohonan::create([
             'permohonan_id' => Str::uuid(),
@@ -319,12 +276,12 @@ class Permohonan extends Component
             'surat_id' => $surat->surat_id, 
             'asnaf_id' => $this->asnaf_id,
             'program_id' => $this->program_id,
-            'sub_program_id' => $this->sub_program_id,
+            'sub_program_id' => $this->selectedProgram,
             'permohonan_nominal' => str_replace('.', '', $this->permohonan_nominal),
             'permohonan_bentuk_bantuan' => $this->permohonan_bentuk_bantuan,
             'permohonan_catatan_input' => $this->permohonan_catatan_input,
             'permohonan_status_input' => 'Belum Selesai Input',
-            'permohonan_petugas_input' => 'abcd1234',
+            'permohonan_petugas_input' => Auth::user()->pengurus_id,
             'permohonan_tgl' => date('Y-m-d'),
             'permohonan_timestamp_input' => date('Y-m-d H:i:s'),
         ]);

@@ -90,15 +90,13 @@
                         </div>
                     </div>
                     {{-- tombol reset --}}
-                    <div class="col-12 col-md-3 col-sm-12 mb-2 mb-xl-0">
+                    <div class="col-12 col-md-1 col-sm-12 mb-2 mb-xl-0">
                         <a form="none" class="btn btn-light border-grey hover btn-block tombol-reset-pc"
                             href=""><i class="fas fa-sync-alt"></i>&nbsp;
                         </a>
                     </div>
                     {{-- end tombol reset --}}
-
-
-                    <div class="col-12 col-md-3 col-sm-12 mb-2 mb-xl-0">
+                    <div class="col-12 col-md-2 col-sm-12 mb-2 mb-xl-0">
                         <div class="btn-group btn-block ">
                             <button type="button" class="btn btn-outline-success btn-block dropdown-toggle"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -117,6 +115,15 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12 col-md-3 col-sm-12 mb-2 mb-xl-0 intro-tambah-data-pengajuan-pc">
+                        <button class="btn btn btn-success btn-block tombol-tambah" data-toggle="modal"
+                            data-target="#modal_tambah_permohonan" type="button"><i class="fas fa-plus-circle"></i>
+                            Tambah</button>
+                    </div>
+
+
+
 
                     {{-- end ekspor --}}
 
@@ -150,28 +157,79 @@
 
         {{-- tabel --}}
         <div class="table-responsive ">
-            <table class="table table-bordered table-hover" id="Permohonan" style="width:100%">
+            <table class="table table-bordered table-hover" id="Permohonan" style="width:100%" wire:ignore>
                 <thead>
                     <tr class="text-center">
                         <th style="vertical-align:middle;width: 3%;">No</th>
-                        <th style="vertical-align:middle;width: 30%;">Nomor
+                        <th style="vertical-align:middle;width: 25%;">Nomor
                             &amp; Nominal Pengajuan</th>
-                        <th style="vertical-align:middle;width: 22%;">Program
+                        <th style="vertical-align:middle;width: 20%;">Program
                             &amp; Sub Program</th>
                         <th style="vertical-align:middle;width: 15%;">Survey
                         </th>
-                        <th style="vertical-align:middle;width: 15%;">Pencairan
+                        <th style="vertical-align:middle;width: 17%;">Pencairan
                         </th>
-                        <th style="vertical-align:middle;width: 15%;">LPJ
+                        <th style="vertical-align:middle;width: 17%;">LPJ
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($data as $a)
+                        @php
+
+                            if ($a->permohonan_status_input == 'Selesai Input') {
+                                $bg_fo = 'badge-success';
+                                $ket_fo = 'Pengajuan Selesai diinput FO';
+                            } else {
+                                $bg_fo = 'badge-warning';
+                                $ket_fo = 'Pengajuan Blm Selesai diinput FO';
+                            }
+
+                            if ($a->permohonan_status_atasan == 'Diterima') {
+                                $bg_atasan = 'badge-success';
+                                $ket_atasan = 'Disetujui Atasan';
+                            } else {
+                                $bg_atasan = 'badge-warning';
+                                $ket_atasan = 'Blm Direspon Atasan';
+                            }
+
+                            if ($a->survey_status == 'Selesai') {
+                                $bg_survey = 'badge-success';
+                                $ket_survey = 'Sudah Survey';
+                            } else {
+                                $bg_survey = 'badge-warning';
+                                $ket_survey = 'Blm Survey';
+                            }
+
+                            if ($a->pencairan_status == 'Berhasil Dicairkan') {
+                                $bg_pencairan = 'badge-success';
+                                $ket_pencairan = 'Sudah Dicairkan';
+                            } else {
+                                $bg_pencairan = 'badge-warning';
+                                $ket_pencairan = 'Blm Dicairkan';
+                            }
+
+                            if ($a->pencairan_status == 'Berhasil Dicairkan') {
+                                $bg_lpj = 'badge-success';
+                                $ket_lpj = 'Sudah Dicairkan';
+                            } else {
+                                $bg_lpj = 'badge-warning';
+                                $ket_lpj = 'Blm Dicairkan';
+                            }
+
+                            if ($a->permohonan_jenis == 'Individu') {
+                                $bg_jenis = 'badge-success';
+                                $nama = $a->permohonan_nama_pemohon;
+                            } else {
+                                $bg_jenis = 'badge-primary';
+                                $nama = $this->nama_upz($a->upz_id);
+                            }
+
+                        @endphp
                         <tr onclick="window.open('/detail-permohonan/{{ $a->permohonan_id }}', '_blank');"
                             style=" cursor: pointer;">
                             <td class="text-center text-bold">{{ $loop->iteration }}</td>
-                            <td style="width: 30%">
+                            <td style="width: 25%">
                                 <sup class="badge {{ $bg_fo }} text-white">{{ $ket_fo }}</sup>
                                 <br>
 
@@ -197,20 +255,18 @@
                                         {{ Carbon\Carbon::parse($a->permohonan_timestamp_input)->isoFormat('D MMM YYYY') }}
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between" style="font-size: 13px">
-                                    <div>Pemohon</div>
-                                    <div class="flex flex-row">
-                                        <p>Pemohon</p>
-                                        <sup
-                                            class="badge {{ $bg_jenis }} text-white">{{ $permohonan_jenis }}</sup>
+                                <div class="d-flex justify-content-between align-items-center" style="font-size: 13px;">
+                                    <div class="d-flex align-items-center">
+                                        <p class="mb-0 mr-2">Pemohon</p>
+                                        <span class="badge px-3 py-1 text-white" style="background-color: #0F5132; border-radius: 20px;">{{ $a->permohonan_jenis }}</span>
                                     </div>
-                                    <div class="text-bold" style="font-size: 13px">
+                                    <div class="font-weight-bold " style="font-size: 13px;">
                                         {{ $nama }}
                                     </div>
-                                </div>
+                                </div>                                
                             </td>
 
-                            <td style="width: 10%">
+                            <td style="width: 20%">
                                 <sup class="text-light badge {{ $bg_atasan }}">{{ $ket_atasan }}
                                 </sup>
                                 <br>
@@ -263,7 +319,7 @@
                                         Nominal Dicairkan
                                     </div>
                                     <div class="col text-bold text-right" style="font-size: 10pt;">
-                                        <b class="text-success" style="font-size: 10pt;">
+                                        <b class="" style="font-size: 10pt;">
                                             Rp{{ number_format($a->pencairan_nominal), 0, '.', '.' }}
                                         </b>
                                     </div>
@@ -290,7 +346,7 @@
                                         Bentuk Penyaluran
                                     </div>
                                     <div class="col text-bold text-right" style="font-size: 10pt;">
-                                        <b class="text-success" style="font-size: 10pt;">
+                                        <b class="" style="font-size: 10pt;">
                                             Uang Tunai
                                         </b>
                                     </div>
@@ -308,108 +364,109 @@
                 </tbody>
             </table>
 
-
         </div>
+        @include('modal.modal_tambah_permohonan')
+
         {{-- end tabel --}}
 
         @push('script-permohonan')
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <script>
-        $(document).ready(function() {
-            $('#Permohonan').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json"
-                },
-                "paging": true,    // Aktifkan pagination
-                "searching": true, // Aktifkan search box
-                "info": true,      // Aktifkan informasi tampilan data
-                "lengthMenu": [5, 10, 25, 50, 100], // Pilihan jumlah baris per halaman
-                "pageLength": 5 // Jumlah baris awal yang ditampilkan
-            });
-        });
-    </script>
+            <script>
+                $(document).ready(function() {
+                    $('#Permohonan').DataTable({
+                        "language": {
+                            "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json"
+                        },
+                        "paging": true, // Aktifkan pagination
+                        "searching": true, // Aktifkan search box
+                        "info": true, // Aktifkan informasi tampilan data
+                        "lengthMenu": [5, 10, 25, 50, 100], // Pilihan jumlah baris per halaman
+                        "pageLength": 5 // Jumlah baris awal yang ditampilkan
+                    });
+                });
+            </script>
 
 
-        @php
-            $data_first = App\Models\Permohonan::orderBy('created_at', 'asc')->first();
-            $data_last = App\Models\Permohonan::orderBy('created_at', 'desc')->first();
+            @php
+                $data_first = App\Models\Permohonan::orderBy('created_at', 'asc')->first();
+                $data_last = App\Models\Permohonan::orderBy('created_at', 'desc')->first();
 
-            if ($data_first) {
-                $data_first = $data_first->created_at->format('Y-m-d');
-            } else {
-                $data_first = null;
-            }
-
-            if ($data_last) {
-                $data_last = $data_last->created_at->format('Y-m-d');
-            } else {
-                $data_last = null;
-            }
-        @endphp
-
-        <script>
-            // daterange
-            $(function() {
-
-                var start_date = '{{ $start_date }}';
-                var end_date = '{{ $end_date }}';
-
-                var start = moment(start_date);
-                var end = moment(end_date);
-
-                function cb(start, end) {
-                    $('#reportrange').html(start.format('D MMMM, YYYY') + ' - ' + end.format('D MMMM, YYYY'));
+                if ($data_first) {
+                    $data_first = $data_first->created_at->format('Y-m-d');
+                } else {
+                    $data_first = null;
                 }
-                // moment.locale('id');
-                $('#reportrange').daterangepicker({
-                    startDate: start,
-                    endDate: end,
-                    locale: {
-                        format: 'D MMMM YYYY',
-                        separator: ' - ',
-                        applyLabel: 'Pilih',
-                        cancelLabel: 'Batal',
-                        fromLabel: 'Dari',
-                        toLabel: 'Hingga',
-                        customRangeLabel: 'Pilih Tanggal',
-                        weekLabel: 'Mg',
-                        daysOfWeek: ['Mg', 'Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb'],
-                        monthNames: [
-                            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli',
-                            'Agustus', 'September', 'Oktober', 'November', 'Desember'
-                        ],
-                        firstDay: 1
-                    },
-                    ranges: {
-                        'Hari ini': [moment(), moment()],
-                        'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
-                        '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
-                        'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
-                        'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
-                            'month').endOf('month')],
-                        'Tahun Ini': [moment().startOf('year'), moment().endOf('year')],
-                        'Semua': [moment('{{ $data_first }}'), moment('{{ $data_last }}')]
 
+                if ($data_last) {
+                    $data_last = $data_last->created_at->format('Y-m-d');
+                } else {
+                    $data_last = null;
+                }
+            @endphp
+
+            <script>
+                // daterange
+                $(function() {
+
+                    var start_date = '{{ $start_date }}';
+                    var end_date = '{{ $end_date }}';
+
+                    var start = moment(start_date);
+                    var end = moment(end_date);
+
+                    function cb(start, end) {
+                        $('#reportrange').html(start.format('D MMMM, YYYY') + ' - ' + end.format('D MMMM, YYYY'));
                     }
-                }, function(start, end) {
-                    $('#reportrange').val(start.format('Y-MM-DD') + ' - ' + end.format('Y-MM-DD'));
-                    $('#filterFormPermohonan').submit(); // Mengirimkan formulir saat terjadi perubahan
+                    // moment.locale('id');
+                    $('#reportrange').daterangepicker({
+                        startDate: start,
+                        endDate: end,
+                        locale: {
+                            format: 'D MMMM YYYY',
+                            separator: ' - ',
+                            applyLabel: 'Pilih',
+                            cancelLabel: 'Batal',
+                            fromLabel: 'Dari',
+                            toLabel: 'Hingga',
+                            customRangeLabel: 'Pilih Tanggal',
+                            weekLabel: 'Mg',
+                            daysOfWeek: ['Mg', 'Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb'],
+                            monthNames: [
+                                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli',
+                                'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                            ],
+                            firstDay: 1
+                        },
+                        ranges: {
+                            'Hari ini': [moment(), moment()],
+                            'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                            '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
+                            '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
+                            'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+                            'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
+                                'month').endOf('month')],
+                            'Tahun Ini': [moment().startOf('year'), moment().endOf('year')],
+                            'Semua': [moment('{{ $data_first }}'), moment('{{ $data_last }}')]
+
+                        }
+                    }, function(start, end) {
+                        $('#reportrange').val(start.format('Y-MM-DD') + ' - ' + end.format('Y-MM-DD'));
+                        $('#filterFormPermohonan').submit(); // Mengirimkan formulir saat terjadi perubahan
+                    });
+
+                    // moment.locale('id');
+                    cb(start, end);
+                    window.start = start;
+                    window.end = end;
+
                 });
 
-                // moment.locale('id');
-                cb(start, end);
-                window.start = start;
-                window.end = end;
-
-            });
-
-            function submitFormUpzis() {
-                $('#reportrange').val(window.start.format('Y-MM-DD') + ' - ' + window.end.format('Y-MM-DD'));
-                $('#filterFormPermohonan').submit();
-            }
-        </script>
-    @endpush
+                function submitFormUpzis() {
+                    $('#reportrange').val(window.start.format('Y-MM-DD') + ' - ' + window.end.format('Y-MM-DD'));
+                    $('#filterFormPermohonan').submit();
+                }
+            </script>
+        @endpush
 
     </div>

@@ -63,4 +63,14 @@ class PermohonanController extends Controller
             compact('filter_permohonan', 'c_filter_daterange', 'c_filters_fo', 'c_filters_atasan', 'c_filters_survey', 'c_filters_pencairan', 'c_filters_lpj')
         );
     }
+
+    public function detail_permohonan($permohonan_id)
+    {
+        $title = "DETAIL PERMOHONAN";
+        $permohonan_id = $permohonan_id;
+        return view(
+            'permohonan.detail_permohonan',
+            compact('title', 'permohonan_id')
+        );
+    }
 }

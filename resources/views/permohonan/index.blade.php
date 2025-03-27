@@ -64,82 +64,35 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            window.loadContactDeviceSelect2 = () => {
+                bsCustomFileInput.init();
+                $('.tombol-tambah').click(function() {
+                    $(".custom-file-surat").html('').change();
+                });
+    
+            }
+        });
+    </script>
 </section>
 @endsection
 
 @section('js')
 
-    <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/jszip/jszip.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/pdfmake/vfs_fonts.js') }}"></script>
-    <!-- AdminLTE -->
-    <script src="{{ asset('assets/dist/js/adminlte.js') }}"></script>
 
-    <!-- OPTIONAL SCRIPTS -->
-    <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
+
+<script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/pdfmake/vfs_fonts.js') }}"></script>
+<!-- AdminLTE -->
+<script src="{{ asset('assets/dist/js/adminlte.js') }}"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
 
 @endsection
 
 
-
-
-@push('intro-data-pengajuan-pc-lazisnu')
-<script>
-    var yesoy = document.getElementById("panduan");
-    yesoy.onclick = function() {
-        introJs().setOptions({
-            steps: [{
-                    element: document.querySelector('.card-header-data-pengajuan-pc'),
-                    title: 'Data Pengajuan',
-                    intro: 'Menampilkan pengajuan pentasyarufan tingkat Internal Manajemen Eksekutif dan Umum Lazisnu Cilacap'
-                },
-                {
-                    element: document.querySelector('.intro-header-data-pengajuan-pcs'),
-                    title: 'Aksi',
-                    intro: 'Menampilkan informasi dan aksi mengenai data pengajuan yang dipilih'
-                },
-                {
-                    element: document.querySelector('.intro-filter-data-pengajuan-pc'),
-                    title: 'Filter Pengajuan',
-                    intro: 'Untuk menampilkan data pentasyarufan secara spesifik, gunakan filter'
-                },
-                {
-                    element: document.querySelector('.intro-ekspor-data-pengajuan-pc'),
-                    title: 'Ekspor',
-                    intro: 'Klik disini untuk ekspor data pengajuan pentasyarufan '
-                },
-                {
-                    element: document.querySelector('.intro-reset-filter-data-pengajuan-pc'),
-                    title: 'Reset',
-                    intro: 'Klik disini untuk mereset filter'
-                },
-                {
-                    element: document.querySelector('.intro-tambah-data-pengajuan-pc'),
-                    title: 'Tambah',
-                    intro: 'Klik disini untuk menambahkan pengajuan'
-                },
-
-
-                {
-                    element: document.querySelector('.intro-table-data-pengajuan-pc'),
-                    title: 'Data Pengajuan',
-                    intro: 'Data pengajuan berdasarkan filter akan tampil di tabel berikut, klik mana saja pada salah satu data untuk melihat detail'
-                },
-            ]
-
-        }).onbeforechange(function() {
-
-            if (this._currentStep === 0) {
-                $('#internal-tab').find('span').trigger('click');
-                return true;
-            }
-        }).oncomplete(function() {
-            location.reload();
-        }).start();
-
-
-    }
-</script>
-@endpush

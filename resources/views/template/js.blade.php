@@ -26,11 +26,11 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 
-{{-- <script>
+<script>
     $(function() {
         bsCustomFileInput.init();
     });
-</script> --}}
+</script>
 
 @if (session('toast'))
     <script>
@@ -188,5 +188,11 @@
                 this.setSelectionRange(cursorPosition, cursorPosition);
             }
         });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        bsCustomFileInput.init();
     });
 </script>
