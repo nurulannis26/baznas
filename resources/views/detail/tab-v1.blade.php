@@ -228,3 +228,106 @@
         {{-- end tabel --}}
     </div>
 </div>
+
+<div class="col-sm-12 mt-3 col-md-12 col-lg-12 tab-tab-lampiran-pengajuan-umum-pc">
+    {{-- judul --}}
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <b>B. LAMPIRAN PENGAJUAN/PROPOSAL/LAINNYA</b>
+        </div>
+        <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
+                wire:click="modal_lampiran_pengajuan_tambah" data-target="#modal_lampiran_pengajuan_tambah"
+                type="button"><i class="fas fa-plus-circle"></i>
+                Tambah</button>
+    </div>
+
+    {{-- alert --}}
+    @if (session()->has('alert_lampiran'))
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+            <i class="far fa-check-circle"></i> {{ session('alert_lampiran') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+    {{-- end alert --}}
+
+    {{-- tabel --}}
+    {{-- tabel dokumentasi --}}
+    <table class="table table-bordered mt-2 mb-2" style="width:100%">
+        <thead>
+            <tr class="text-center">
+                <th style="width: 5%;">No</th>
+                <th style="width: 40%">Judul</th>
+                <th>File</th>
+                <th>Waktu Upload</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @forelse($lampiran_pengajuan as $a)
+                <tr>
+                    <td>
+                        {{ $loop->iteration }}
+                    </td>
+                    <td>
+                        {{ $a->keterangan }} <br>
+                    </td>
+                    <td>
+                        <a href="{{ asset('uploads/pengajuan_lampiran/' . $a->url) }}" target="_blank">
+                            {{ $a->url }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($a->created_at)->format('d/m/Y H:i:s') }}
+                    </td>
+                    <td>
+                        <!-- tombol aksi -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Kelola</button>
+                            <button type="button"
+                                class="btn btn-success dropdown-toggle dropdown-toggle-split btn-sm"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle
+                                    Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'"
+                                    class="dropdown-item tombol-ubah tombol-tambah"
+                                    wire:click="modal_lampiran_pengajuan_ubah('{{ $a->lampiran_id }}','{{ $a->url }}')"
+                                    type="button" data-toggle="modal" data-target="#modal_lampiran_pengajuan_ubah"><i
+                                        class="fas fa-edit"></i>
+                                    Detail</a>
+                                <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
+                                    class="dropdown-item"
+                                    wire:click="modal_lampiran_pengajuan_hapus('{{ $a->lampiran_id }}','{{ $a->url }}')"
+                                    data-toggle="modal" data-target="#modal_lampiran_pengajuan_hapus"
+                                    type="button"><i class="fas fa-trash"></i>
+                                    Hapus</a>
+                                <a href="#"
+                                {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}}
+                                    onMouseOver="this.style.color='green'" onMouseOut="this.style.color='black'"
+                                    class="dropdown-item" type="button">
+                                    <i class="fa fa-download"></i> Cetak
+                                </a>
+
+                            </div>
+                        </div>
+                        {{-- end tombol aksi --}}
+                    </td>
+
+
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center"> Belum ada data</td>
+                </tr>
+            @endforelse
+
+
+        </tbody>
+    </table>
+    {{-- end tabel --}}
+</div>

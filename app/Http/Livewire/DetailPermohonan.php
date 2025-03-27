@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Lampiran;
 use App\Models\Permohonan;
 use Livewire\Component;
 
@@ -10,18 +11,34 @@ use Livewire\Component;
 class DetailPermohonan extends Component
 {
     public $permohonan_id;
-    public $dp;
+    public $lampiran_id;
 
     public function mount()
     {
-        $this->dp = Permohonan::leftJoin('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
-        ->leftJoin('surat', 'surat.surat_id', '=', 'permohonan.surat_id')
-        ->where('permohonan_id', $this->permohonan_id)->select('permohonan.*', 'upz.*', 'surat.*')->first();
+       
     }
 
     public function render()
     {
-        return view('livewire.detail-permohonan');
+        $dp = Permohonan::leftJoin('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
+        ->leftJoin('surat', 'surat.surat_id', '=', 'permohonan.surat_id')
+        ->where('permohonan_id', $this->permohonan_id)->select('permohonan.*', 'upz.*', 'surat.*')->first();
+
+        $lampiran_pengajuan = Lampiran::where('permohonan_id', $this->permohonan_id)
+        ->where('jenis', 'Permohonan')->get();
+
+        $lampiran_survey = Lampiran::where('permohonan_id', $this->permohonan_id)
+        ->where('jenis', 'Survey')->get();
+
+        $lampiran_pencairan = Lampiran::where('permohonan_id', $this->permohonan_id)
+        ->where('jenis', 'Pencairan')->get();
+
+        return view('livewire.detail-permohonan', compact(
+            'dp', 
+            'lampiran_pengajuan', 
+            'lampiran_survey', 
+            'lampiran_pencairan'
+        ));
     }
 
     
@@ -55,4 +72,36 @@ class DetailPermohonan extends Component
     {
         $data_detail = Permohonan::where('permohonan_id', $permohonan_id)->first();
     }
+
+    public function modal_lampiran_pengajuan_tambah()
+    {
+
+    }
+
+    public function lampiran_pengajuan_tambah()
+    {
+
+    }
+
+    public function modal_lampiran_pengajuan_ubah($lampiran_id)
+    {
+        $this->lampiran_id = $lampiran_id;
+    }
+
+    public function modal_lampiran_pengajuan_hapus($lampiran_id)
+    {
+        $this->lampiran_id = $lampiran_id;
+    }
+
+    public function lampiran_pengajuan_ubah()
+    {
+
+    }
+
+    public function lampiran_pengajuan_hapus()
+    {
+
+    }
+
+
 }
