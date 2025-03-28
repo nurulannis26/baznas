@@ -19,9 +19,9 @@
 
         @if ($dp->permohonan_status_atasan == 'Diterima')
             @if ($dp->survey_status == 'Selesai')
-                <sup class="text-light badge badge-success">Sudah Survey</sup>
+                <sup class="text-light badge badge-success">Survey Disetujui</sup>
             @else
-                <sup class="text-light badge badge-warning">Blm Survey</sup>
+                <sup class="text-light badge badge-warning">Survey Blm Selesai</sup>
             @endif
         @endif
 

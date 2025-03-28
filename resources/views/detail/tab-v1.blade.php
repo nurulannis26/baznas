@@ -19,9 +19,9 @@
 
         @if ($dp->permohonan_status_atasan == 'Diterima')
             @if ($dp->survey_status == 'Selesai')
-                <sup class="text-light badge badge-success">Sudah Survey</sup>
+                <sup class="text-light badge badge-success">Survey Disetujui</sup>
             @else
-                <sup class="text-light badge badge-warning">Blm Survey</sup>
+                <sup class="text-light badge badge-warning">Survey Blm Selesai</sup>
             @endif
         @endif
 
@@ -312,19 +312,13 @@
                                     wire:click="modal_mustahik_ubah('{{ $a->mustahik_id }}')"
                                     type="button" data-toggle="modal" data-target="#modal_mustahik_ubah"><i
                                         class="fas fa-edit"></i>
-                                    Detail</a>
+                                    Ubah</a>
                                 <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item"
                                     wire:click="modal_mustahik_hapus('{{ $a->mustahik_id }}')"
                                     data-toggle="modal" data-target="#modal_mustahik_hapus"
                                     type="button"><i class="fas fa-trash"></i>
                                     Hapus</a>
-                                <a href="#"
-                                {{-- <a href="/unduh-lampiran/{{ $a->mustahik_id }}" --}}
-                                    onMouseOver="this.style.color='green'" onMouseOut="this.style.color='black'"
-                                    class="dropdown-item" type="button">
-                                    <i class="fa fa-download"></i> Cetak
-                                </a>
 
                             </div>
                         </div>

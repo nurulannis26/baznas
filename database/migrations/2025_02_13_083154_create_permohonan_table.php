@@ -61,7 +61,10 @@ return new class extends Migration
             $table->string('pencairan_status')->nullable();
             $table->string('pencairan_catatan')->nullable();
             $table->string('denial_note_atasan')->nullable();
+            $table->string('denial_note_pencairan')->nullable();
             $table->string('denial_date_atasan')->nullable();
+            $table->string('denial_date_pencairan')->nullable();
+            $table->string('survey_catatan')->nullable();
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
         });

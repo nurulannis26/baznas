@@ -23,11 +23,27 @@ class DetailPermohonan extends Component
     public $permohonan_catatan_atasan;
     public $denial_date_atasan;
     public $denial_note_atasan;
+    public $survey_tgl;
+    public $survey_form_url;
+    public $survey_hasil;
+    public $survey_catatan;
+    public $survey_status;
+    public $none_block_survey;
+    public $none_block_acc_pencairan;
+    public $none_block_tolak_pencairan;
+    public $pencairan_timestamp;
+    public $pencairan_nominal;
+    public $denial_date_pencairan;
+    public $denial_note_pencairan;
+    public $pencairan_catatan;
 
     public function mount()
     {
         $this->none_block_acc_atasan = 'none';
         $this->none_block_tolak_atasan = 'none';
+        $this->none_block_survey = 'none';
+        $this->none_block_tolak_pencairan = 'none';
+        $this->none_block_acc_pencairan = 'none';
     }
 
     public function render()
@@ -85,10 +101,40 @@ class DetailPermohonan extends Component
         }
     }
 
+    public function tombol_survey()
+    {
+        if ($this->none_block_survey == 'none') {
+            $this->none_block_survey = 'block';
+        } elseif ($this->none_block_survey == 'block') {
+            $this->none_block_survey = 'none';
+        }
+    }
+
+    public function tombol_acc_pencairan()
+    {
+        if ($this->none_block_acc_pencairan == 'none') {
+            $this->none_block_acc_pencairan = 'block';
+        } elseif ($this->none_block_acc_pencairan == 'block') {
+            $this->none_block_acc_pencairan = 'none';
+        }
+    }
+
+    public function tombol_tolak_pencairan()
+    {
+        if ($this->none_block_tolak_pencairan == 'none') {
+            $this->none_block_tolak_pencairan = 'block';
+        } elseif ($this->none_block_tolak_pencairan == 'block') {
+            $this->none_block_tolak_pencairan = 'none';
+        }
+    }
+
     public function close()
     {
         $this->none_block_acc_atasan = 'none';
         $this->none_block_tolak_atasan = 'none';
+        $this->none_block_survey = 'none';
+        $this->none_block_acc_pencairan = 'none';
+        $this->none_block_tolak_pencairan = 'none';
     }
 
     
@@ -162,6 +208,14 @@ class DetailPermohonan extends Component
     {
 
     }
+    public function modal_lampiran_survey_tambah()
+    {
+
+    }
+    public function lampiran_survey_tambah()
+    {
+
+    }
 
     public function modal_lampiran_pengajuan_ubah($lampiran_id)
     {
@@ -169,6 +223,16 @@ class DetailPermohonan extends Component
     }
 
     public function modal_lampiran_pengajuan_hapus($lampiran_id)
+    {
+        $this->lampiran_id = $lampiran_id;
+    }
+
+    public function modal_lampiran_survey_ubah($lampiran_id)
+    {
+        $this->lampiran_id = $lampiran_id;
+    }
+
+    public function modal_lampiran_survey_hapus($lampiran_id)
     {
         $this->lampiran_id = $lampiran_id;
     }
@@ -183,6 +247,16 @@ class DetailPermohonan extends Component
 
     }
 
+    public function lampiran_survey_ubah()
+    {
+
+    }
+
+    public function lampiran_survey_hapus()
+    {
+
+    }
+
     public function acc_atasan()
     {
 
@@ -193,5 +267,14 @@ class DetailPermohonan extends Component
         
     }
 
+    public function acc_pencairan()
+    {
+
+    }
+
+    public function tolak_pencairan()
+    {
+
+    }
 
 }
