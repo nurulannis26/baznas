@@ -28,7 +28,7 @@ return new class extends Migration
             $table->foreignUuid('upz_id')->index()->nullable();
             $table->foreign('upz_id')->references('upz_id')->on('upz');
             $table->string('permohonan_nomor');
-            $table->enum('permohonan_jenis', ["BAZNAS","UPZ"]);
+            $table->enum('permohonan_jenis', ["Individu","UPZ"]);
             $table->string('permohonan_nama_pemohon')->nullable();
             $table->string('permohonan_alamat_pemohon')->nullable();
             $table->string('permohonan_nohp_pemohon')->nullable();
@@ -60,6 +60,8 @@ return new class extends Migration
             $table->string('pencairan_timestamp')->nullable();
             $table->string('pencairan_status')->nullable();
             $table->string('pencairan_catatan')->nullable();
+            $table->string('denial_note_atasan')->nullable();
+            $table->string('denial_date_atasan')->nullable();
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
         });

@@ -233,7 +233,123 @@
     {{-- judul --}}
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <b>B. LAMPIRAN PENGAJUAN/PROPOSAL/LAINNYA</b>
+            <b>B. DAFTAR MUSTAHIK</b>
+        </div>
+        <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
+                wire:click="modal_mustahik_tambah" data-target="#modal_mustahik_tambah"
+                type="button"><i class="fas fa-plus-circle"></i>
+                Tambah</button>
+    </div>
+
+    {{-- alert --}}
+    @if (session()->has('alert_mustahik'))
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+            <i class="far fa-check-circle"></i> {{ session('alert_mustahik') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+    {{-- end alert --}}
+
+    {{-- tabel --}}
+    {{-- tabel dokumentasi --}}
+    <table class="table table-bordered mt-2 mb-2" style="width:100%">
+        <thead>
+            <tr class="text-center">
+                <th style="width: 5%;">No</th>
+                <th style="width: 15%;">Nama</th>
+                <th style="width: 15%;">Nomor Identitas</th>
+                <th style="width: 15%;">Tempat, Tgl Lahir</th>
+                <th style="width: 15%;">Alamat</th>
+                <th style="width: 15%;">Kontak</th>
+                <th style="width: 10%;">Asnaf</th>
+                <th style="width: 10%;">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @forelse($daftar_mustahik as $a)
+                <tr>
+                    <td>
+                        {{ $loop->iteration }}
+                    </td>
+                    <td>
+                        {{ $a->nama }}
+                    </td>
+                    <td>
+                        <span>NIK&nbsp;&nbsp;: {{ $a->nik }}</span><br>
+                        <span>KK&nbsp;&nbsp;&nbsp;: {{ $a->kk }}</span>
+                    </td>
+                    <td>
+                        <span>{{ $a->tempat_lahir }}</span><br>
+                        <span> {{ Carbon\Carbon::parse($a->tgl_lahir)->isoFormat('D MMMM YYYY') }}</span>
+                    </td>
+                    <td>
+                        {{ $a->alamat }}
+                    </td>
+                    <td>
+                        <span>No HP&nbsp;&nbsp;: {{ $a->nohp }}</span><br>
+                        <span>Email&nbsp;&nbsp;: {{ $a->email }}</span>
+                    </td>
+                    <td>
+                        {{ \App\Models\Permohonan::getAsnaf($a->asnaf_id) }}
+                    </td>
+                    <td>
+                        <!-- tombol aksi -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Aksi</button>
+                            <button type="button"
+                                class="btn btn-success dropdown-toggle dropdown-toggle-split btn-sm"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle
+                                    Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'"
+                                    class="dropdown-item tombol-ubah tombol-tambah"
+                                    wire:click="modal_mustahik_ubah('{{ $a->mustahik_id }}')"
+                                    type="button" data-toggle="modal" data-target="#modal_mustahik_ubah"><i
+                                        class="fas fa-edit"></i>
+                                    Detail</a>
+                                <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
+                                    class="dropdown-item"
+                                    wire:click="modal_mustahik_hapus('{{ $a->mustahik_id }}')"
+                                    data-toggle="modal" data-target="#modal_mustahik_hapus"
+                                    type="button"><i class="fas fa-trash"></i>
+                                    Hapus</a>
+                                <a href="#"
+                                {{-- <a href="/unduh-lampiran/{{ $a->mustahik_id }}" --}}
+                                    onMouseOver="this.style.color='green'" onMouseOut="this.style.color='black'"
+                                    class="dropdown-item" type="button">
+                                    <i class="fa fa-download"></i> Cetak
+                                </a>
+
+                            </div>
+                        </div>
+                        {{-- end tombol aksi --}}
+                    </td>
+
+
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="8" class="text-center"> Belum ada data</td>
+                </tr>
+            @endforelse
+
+
+        </tbody>
+    </table>
+    {{-- end tabel --}}
+</div>
+
+<div class="col-sm-12 mt-3 col-md-12 col-lg-12 tab-tab-lampiran-pengajuan-umum-pc">
+    {{-- judul --}}
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <b>C. LAMPIRAN PERMOHONAN</b>
         </div>
         <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
                 wire:click="modal_lampiran_pengajuan_tambah" data-target="#modal_lampiran_pengajuan_tambah"

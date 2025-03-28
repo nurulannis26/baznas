@@ -136,22 +136,22 @@
 
                                     <div wire:ignore.self class="tab-pane fade" id="v2"
                                         role="tabpanel" aria-labelledby="v2-tab">
-                                        {{-- @include('detail.tab-v2') --}}
+                                        @include('detail.tab-v2')
                                     </div>
 
                                     <div wire:ignore.self class="tab-pane fade " id="v3" role="tabpanel"
                                         aria-labelledby="v3-tab">
-                                        {{-- @include('detail.tab-v3') --}}
+                                        @include('detail.tab-v3')
                                     </div>
 
                                     <div wire:ignore.self class="tab-pane fade " id="v4" role="tabpanel"
                                         aria-labelledby="v4-tab">
-                                        {{-- @include('detail.tab-v4') --}}
+                                        @include('detail.tab-v4')
                                     </div>
 
                                     <div wire:ignore.self class="tab-pane fade " id="v5" role="tabpanel"
                                         aria-labelledby="v5-tab">
-                                        {{-- @include('detail.tab-v5') --}}
+                                        @include('detail.tab-v5')
                                     </div>
 
                                 </div>
