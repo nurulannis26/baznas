@@ -288,8 +288,8 @@
                 @php
                     $namaPengguna = \App\Models\Pengguna::pengguna($dp->permohonan_petugas_atasan);
                     $petugasSurvey = \App\Models\Pengguna::pengguna($dp->survey_petugas_survey);
-                    $petugasPenyaluran = \App\Models\Pengguna::pengguna($dp->survey_petugas_survey);
-                    $jabatanPenyaluran = \App\Models\Pengguna::jabatan($dp->survey_petugas_survey);
+                    $petugasPenyaluran = \App\Models\Pengguna::pengguna($dp->survey_petugas_pyl);
+                    $jabatanPenyaluran = \App\Models\Pengguna::jabatan($dp->survey_petugas_pyl);
                     $jabatanSurvey = \App\Models\Pengguna::jabatan($dp->survey_petugas_survey);
                     $jabatan = \App\Models\Pengguna::jabatan($dp->permohonan_petugas_atasan);
 

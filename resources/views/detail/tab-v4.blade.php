@@ -300,7 +300,6 @@
                         $ket_pencairan = 'Blm Dicairkan';
                     }
                 @endphp
-                @endphp
                 <thead>
                     {{-- disetujui oleh --}}
                     <tr>
@@ -348,13 +347,17 @@
                                     {{ $dp->pencairan_catatan ?? '-' }}
                                 </span>
                             </td>
+                            
                         </tr>
                         <tr>
-                            Rp{{ number_format($dp->pencairan_nominal), 0, '.', '.' }}
+                            <td class="text-bold " style="width: 30%">
+                                Nominal Pencairan</td>
+                            <td style="width: 30%">
+                                @if($dp->pencairan_nominal)
+                                {{ number_format($dp->pencairan_nominal), 0, '.', '.'  }}
+                                @else - @endif</td>
                         </tr>
-                        <tr>
-                            {{ $dp->pencairan_sumberdana }}
-                        </tr>
+                        
                     @elseif($dp->pencairan_status == 'Ditolak')
                         <tr>
                             <td class="text-bold " style="width: 30%">
@@ -387,10 +390,10 @@
     {{-- judul --}}
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <b>B. LAMPIRAN SURVEY</b>
+            <b>B. LAMPIRAN PENCAIRAN</b>
         </div>
         <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
-            wire:click="modal_lampiran_survey_tambah" data-target="#modal_lampiran_survey_tambah" type="button"><i
+            wire:click="modal_lampiran_pencairan_tambah" data-target="#modal_lampiran_pencairan_tambah" type="button"><i
                 class="fas fa-plus-circle"></i>
             Tambah</button>
     </div>
@@ -429,7 +432,7 @@
                         {{ $a->keterangan }} <br>
                     </td>
                     <td>
-                        <a href="{{ asset('uploads/survey_lampiran/' . $a->url) }}" target="_blank">
+                        <a href="{{ asset('uploads/pencairan_lampiran/' . $a->url) }}" target="_blank">
                             {{ $a->url }}
                         </a>
                     </td>
@@ -450,14 +453,14 @@
                             <div class="dropdown-menu">
                                 <a onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item"
-                                    wire:click="modal_lampiran_survey_ubah('{{ $a->lampiran_id }}','{{ $a->url }}')"
-                                    type="button" data-toggle="modal" data-target="#modal_lampiran_survey_ubah"><i
+                                    wire:click="modal_lampiran_pencairan_ubah('{{ $a->lampiran_id }}','{{ $a->url }}')"
+                                    type="button" data-toggle="modal" data-target="#modal_lampiran_pencairan_ubah"><i
                                         class="fas fa-edit"></i>
                                     Ubah</a>
                                 <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item"
-                                    wire:click="modal_lampiran_survey_hapus('{{ $a->lampiran_id }}','{{ $a->url }}')"
-                                    data-toggle="modal" data-target="#modal_lampiran_survey_hapus" type="button"><i
+                                    wire:click="modal_lampiran_pencairan_hapus('{{ $a->lampiran_id }}','{{ $a->url }}')"
+                                    data-toggle="modal" data-target="#modal_lampiran_pencairan_hapus" type="button"><i
                                         class="fas fa-trash"></i>
                                     Hapus</a>
                                 <a href="#" {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}} onMouseOver="this.style.color='green'"

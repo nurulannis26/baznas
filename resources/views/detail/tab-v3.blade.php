@@ -70,7 +70,7 @@
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"
-                                style="width: 200px; display: flex; justify-content: center; align-items: center;">Tgl
+                                style="width: 200px; display: flex; justify-content: center; align-items: center;">
                                 Tgl Disetujui</span>
                         </div>
                         <input wire:model="survey_tgl" type="date" class="form-control">
@@ -83,7 +83,7 @@
                         <input type="file" wire:model="survey_form_url"
                             accept="application/pdf, image/png, image/jpg, image/jpeg" class="custom-file-input"
                             id="file" name="file">
-                        <label class="custom-file-label" for="customFile">Pilih file</label>
+                        <label class="custom-file-label" for="customFile">Masukan scan form survey</label>
 
                     </div>
                 </div>
@@ -214,12 +214,12 @@
                             Direspon Oleh
                         </td>
                         <td style="vertical-align: middle;">
-                            @if ($dp->permohonan_petugas_atasan == null)
+                            @if ($dp->survey_petugas_survey == null)
                                 -
                             @else
-                                <b style="font-size: 12pt;">{{ $namaPengguna }}</b>
+                                <b style="font-size: 12pt;">{{ $petugasSurvey }}</b>
                                 <br>
-                                <span style="font-size:11pt;">{{ $jabatan }}</span>
+                                <span style="font-size:11pt;">{{ $jabatanSurvey }}</span>
                             @endif
                         </td>
                     </tr>

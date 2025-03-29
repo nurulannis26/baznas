@@ -46,11 +46,17 @@ return new class extends Migration
             $table->string('permohonan_catatan_atasan')->nullable();
             $table->enum('survey_pilihan', ["Perlu","Tidak Perlu"])->nullable();
             $table->date('survey_tgl')->nullable();
+            $table->date('pyltgl')->nullable();
             $table->string('survey_petugas_survey')->index()->nullable();
+            $table->string('survey_petugas_pyl')->index()->nullable();
             $table->string('survey_hasil')->nullable();
+            $table->string('pyl_hasil')->nullable();
             $table->enum('survey_status', ["Selesai","Belum Selesai"])->nullable();
+            $table->enum('pyl_status', ["Selesai","Belum Selesai"])->nullable();
             $table->string('survey_form_url')->nullable();
+            $table->string('pyl_form_url')->nullable();
             $table->string('survey_timestamp')->nullable();
+            $table->string('pyl_timestamp')->nullable();
             $table->string('acc_nominal')->nullable();
             $table->string('acc_timestamp')->nullable();
             $table->string('acc_catatan')->nullable();
@@ -65,6 +71,7 @@ return new class extends Migration
             $table->string('denial_date_atasan')->nullable();
             $table->string('denial_date_pencairan')->nullable();
             $table->string('survey_catatan')->nullable();
+            $table->string('pyl_catatan')->nullable();
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
         });

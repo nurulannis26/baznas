@@ -20,6 +20,7 @@ class DetailPermohonan extends Component
     public $permohonan_timestamp_atasan;
     public $survey_pilihan;
     public $survey_petugas_survey;
+    public $survey_petugas_pyl;
     public $permohonan_catatan_atasan;
     public $denial_date_atasan;
     public $denial_note_atasan;
@@ -29,6 +30,7 @@ class DetailPermohonan extends Component
     public $survey_catatan;
     public $survey_status;
     public $none_block_survey;
+    public $none_block_pyl;
     public $none_block_acc_pencairan;
     public $none_block_tolak_pencairan;
     public $pencairan_timestamp;
@@ -36,12 +38,18 @@ class DetailPermohonan extends Component
     public $denial_date_pencairan;
     public $denial_note_pencairan;
     public $pencairan_catatan;
+    public $pyl_tgl;
+    public $pyl_form_url;
+    public $pyl_hasil;
+    public $pyl_catatan;
+    public $pyl_status;
 
     public function mount()
     {
         $this->none_block_acc_atasan = 'none';
         $this->none_block_tolak_atasan = 'none';
         $this->none_block_survey = 'none';
+        $this->none_block_pyl = 'none';
         $this->none_block_tolak_pencairan = 'none';
         $this->none_block_acc_pencairan = 'none';
     }
@@ -61,6 +69,9 @@ class DetailPermohonan extends Component
         $lampiran_pencairan = Lampiran::where('permohonan_id', $this->permohonan_id)
         ->where('jenis', 'Pencairan')->get();
 
+        $lampiran_pyl = Lampiran::where('permohonan_id', $this->permohonan_id)
+        ->where('jenis', 'LPJ')->get();
+
         $daftar_mustahik = DaftarMustahik::join('mustahik', 'mustahik.mustahik_id', '=', 'daftar_mustahik.mustahik_id')
         ->where('daftar_mustahik.permohonan_id', $this->permohonan_id)
         ->select('mustahik.*', 'daftar_mustahik.*')
@@ -78,6 +89,7 @@ class DetailPermohonan extends Component
             'lampiran_pengajuan', 
             'lampiran_survey', 
             'lampiran_pencairan',
+            'lampiran_pyl',
             'daftar_mustahik',
             'petugas_survey',
         ));
@@ -110,6 +122,15 @@ class DetailPermohonan extends Component
         }
     }
 
+    public function tombol_pyl()
+    {
+        if ($this->none_block_pyl == 'none') {
+            $this->none_block_pyl = 'block';
+        } elseif ($this->none_block_pyl == 'block') {
+            $this->none_block_pyl = 'none';
+        }
+    }
+
     public function tombol_acc_pencairan()
     {
         if ($this->none_block_acc_pencairan == 'none') {
@@ -134,6 +155,7 @@ class DetailPermohonan extends Component
         $this->none_block_tolak_atasan = 'none';
         $this->none_block_survey = 'none';
         $this->none_block_acc_pencairan = 'none';
+        $this->none_block_pyl = 'none';
         $this->none_block_tolak_pencairan = 'none';
     }
 
@@ -208,6 +230,26 @@ class DetailPermohonan extends Component
     {
 
     }
+    public function modal_lampiran_pencairan_tambah()
+    {
+
+    }
+
+    public function lampiran_pencairan_tambah()
+    {
+
+    }
+
+    public function modal_lampiran_pyl_tambah()
+    {
+
+    }
+
+    public function lampiran_pyl_tambah()
+    {
+
+    }
+
     public function modal_lampiran_survey_tambah()
     {
 
@@ -226,6 +268,14 @@ class DetailPermohonan extends Component
     {
         $this->lampiran_id = $lampiran_id;
     }
+    public function modal_lampiran_pyl_ubah($lampiran_id)
+    {
+        $this->lampiran_id = $lampiran_id;
+    }
+    public function modal_lampiran_pyl_hapus($lampiran_id)
+    {
+        $this->lampiran_id = $lampiran_id;
+    }
 
     public function modal_lampiran_survey_ubah($lampiran_id)
     {
@@ -233,6 +283,16 @@ class DetailPermohonan extends Component
     }
 
     public function modal_lampiran_survey_hapus($lampiran_id)
+    {
+        $this->lampiran_id = $lampiran_id;
+    }
+
+    public function modal_lampiran_pencairan_ubah($lampiran_id)
+    {
+        $this->lampiran_id = $lampiran_id;
+    }
+
+    public function modal_lampiran_pencairan_hapus($lampiran_id)
     {
         $this->lampiran_id = $lampiran_id;
     }
@@ -253,6 +313,26 @@ class DetailPermohonan extends Component
     }
 
     public function lampiran_survey_hapus()
+    {
+
+    }
+
+    public function lampiran_pencairan_ubah()
+    {
+
+    }
+
+    public function lampiran_pyl_hapus()
+    {
+
+    }
+
+    public function lampiran_pyl_ubah()
+    {
+
+    }
+
+    public function lampiran_pencairan_hapus()
     {
 
     }
