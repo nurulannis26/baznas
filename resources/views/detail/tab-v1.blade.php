@@ -43,14 +43,7 @@
     </div>
 </div>
 
-@if (session()->has('alert_permohonan'))
-    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-        <i class="far fa-check-circle"></i> {{ session('alert_permohonan') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
+
 
 <div class="row">
     <div class="col-sm-6 col-md-6 col-lg-6  tab-tab-detail-pengajuan-umum-pc">
@@ -62,8 +55,16 @@
                     PERMOHONAN</b>
             </div>
         </div>
-        {{-- end judul --}}
-        {{-- tabel --}}
+
+        @if (session()->has('alert_permohonan'))
+            <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                <i class="far fa-check-circle"></i> {{ session('alert_permohonan') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
         <div class="col-12 mt-2">
             <table class="table  table-bordered">
                 <thead>
@@ -167,7 +168,7 @@
 
             <button wire:click="modal_permohonan_ubah('{{ $permohonan_id }}')" style="cursor: pointer"
                 class="btn btn-outline-secondary btn-sm mr-1" data-toggle="modal"
-                data-target="#modal_ubah_nominal_pengajuan" type="button">
+                data-target="#modal_permohonan_ubah" type="button">
                 <i class="fas fa-edit"></i> Ubah
             </button>
 
@@ -176,10 +177,10 @@
                 Selesai input
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                <button class="dropdown-item" wire:click="selesai_input('{{ $dp->id_pengajuan }}')">
+                <button class="dropdown-item" wire:click="selesai_input('{{ $dp->permohonan_id }}')">
                     <i class="fas fa-check"></i> Selesai input
                 </button>
-                <button class="dropdown-item" wire:click="batal_input('{{ $dp->id_pengajuan }}')">
+                <button class="dropdown-item" wire:click="batal_input('{{ $dp->permohonan_id }}')">
                     <i class="fas fa-ban"></i> Belum selesai input
                 </button>
             </div>
@@ -236,9 +237,9 @@
             <b>B. DAFTAR MUSTAHIK</b>
         </div>
         <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
-                wire:click="modal_mustahik_tambah" data-target="#modal_mustahik_tambah"
-                type="button"><i class="fas fa-plus-circle"></i>
-                Tambah</button>
+            wire:click="modal_mustahik_tambah" data-target="#modal_mustahik_tambah" type="button"><i
+                class="fas fa-plus-circle"></i>
+            Tambah</button>
     </div>
 
     {{-- alert --}}
@@ -309,15 +310,14 @@
                             <div class="dropdown-menu">
                                 <a onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item tombol-ubah tombol-tambah"
-                                    wire:click="modal_mustahik_ubah('{{ $a->mustahik_id }}')"
-                                    type="button" data-toggle="modal" data-target="#modal_mustahik_ubah"><i
+                                    wire:click="modal_mustahik_ubah('{{ $a->mustahik_id }}')" type="button"
+                                    data-toggle="modal" data-target="#modal_mustahik_ubah"><i
                                         class="fas fa-edit"></i>
                                     Ubah</a>
                                 <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
-                                    class="dropdown-item"
-                                    wire:click="modal_mustahik_hapus('{{ $a->mustahik_id }}')"
-                                    data-toggle="modal" data-target="#modal_mustahik_hapus"
-                                    type="button"><i class="fas fa-trash"></i>
+                                    class="dropdown-item" wire:click="modal_mustahik_hapus('{{ $a->mustahik_id }}')"
+                                    data-toggle="modal" data-target="#modal_mustahik_hapus" type="button"><i
+                                        class="fas fa-trash"></i>
                                     Hapus</a>
 
                             </div>
@@ -346,9 +346,9 @@
             <b>C. LAMPIRAN PERMOHONAN</b>
         </div>
         <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
-                wire:click="modal_lampiran_pengajuan_tambah" data-target="#modal_lampiran_pengajuan_tambah"
-                type="button"><i class="fas fa-plus-circle"></i>
-                Tambah</button>
+            wire:click="modal_lampiran_pengajuan_tambah" data-target="#modal_lampiran_pengajuan_tambah"
+            type="button"><i class="fas fa-plus-circle"></i>
+            Tambah</button>
     </div>
 
     {{-- alert --}}
@@ -407,8 +407,8 @@
                                 <a onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item tombol-ubah tombol-tambah"
                                     wire:click="modal_lampiran_pengajuan_ubah('{{ $a->lampiran_id }}','{{ $a->url }}')"
-                                    type="button" data-toggle="modal" data-target="#modal_lampiran_pengajuan_ubah"><i
-                                        class="fas fa-edit"></i>
+                                    type="button" data-toggle="modal"
+                                    data-target="#modal_lampiran_pengajuan_ubah"><i class="fas fa-edit"></i>
                                     Detail</a>
                                 <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item"
@@ -416,10 +416,8 @@
                                     data-toggle="modal" data-target="#modal_lampiran_pengajuan_hapus"
                                     type="button"><i class="fas fa-trash"></i>
                                     Hapus</a>
-                                <a href="#"
-                                {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}}
-                                    onMouseOver="this.style.color='green'" onMouseOut="this.style.color='black'"
-                                    class="dropdown-item" type="button">
+                                <a href="#" {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}} onMouseOver="this.style.color='green'"
+                                    onMouseOut="this.style.color='black'" class="dropdown-item" type="button">
                                     <i class="fa fa-download"></i> Cetak
                                 </a>
 
@@ -439,5 +437,6 @@
 
         </tbody>
     </table>
-    {{-- end tabel --}}
+    
+    @include('modal.modal_permohonan_ubah')
 </div>

@@ -77,43 +77,8 @@
 {{-- auto close modal --}}
 <script>
     window.addEventListener('closeModal', event => {
-        console.log('BISA MASUK SINI');
-        $('#modal_pilar_tambah').modal('hide')
-        $('#modal_pilar_ubah').modal('hide')
-        $('#modal_kegiatan_tambah').modal('hide')
-        $('#modal_kegiatan_ubah').modal('hide')
-        $('#modal_pengajuan_konfirmasi').modal('hide')
-        $('#modal_pengajuan_rekomendasi').modal('hide')
-        $('#modal_internal_lampiran_tambah').modal('hide')
-        $('#modal_internal_lampiran_ubah').modal('hide')
-        $('#modal_internal_arsip_tambah').modal('hide')
-        $('#modal_internal_arsip_ubah').modal('hide')
-        $('#modal_pengeluaran_tambah').modal('hide')
-        $('#modal_pengeluaran_ubah').modal('hide')
-        $('#modal_pengajuan_penerima_manfaat_survey').modal('hide')
-        $('#modal_pengajuan_penerima_manfaat').modal('hide')
-        $('#modal_pengajuan_kegiatan').modal('hide')
-        $('#modal_pengajuan_berita').modal('hide')
-        $('#modal_ubah_nominal_pengajuan').modal('hide')
-    });
-
-    window.addEventListener('tambah_rencana', event => {
-        $('#modal_rencana_tambah').modal('hide')
-        $('#modal_rencana_detail').modal('show').css('overflow-y', 'auto');
-    });
-
-    window.addEventListener('ubah_rencana', event => {
-        $('#modal_rencana_detail').modal('hide')
-        $('#modal_rencana_ubah').modal('show').css('overflow-y', 'auto');
-    });
-
-    window.addEventListener('berhasil_ubah_rencana', event => {
-        $('#modal_rencana_ubah').modal('hide')
-        $('#modal_rencana_detail').modal('show').css('overflow-y', 'auto');
-    });
-
-    window.addEventListener('berhasil_hapus_rencana', event => {
-        $('#modal_rencana_detail').modal('hide')
+        $('#modal_permohonan_ubah').modal('hide')
+        $('#modal_tambah_permohonan').modal('hide')
     });
 </script>
 

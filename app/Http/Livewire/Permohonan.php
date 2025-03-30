@@ -251,6 +251,7 @@ private function getRomawi($month)
         if ($this->permohonan_jenis === 'UPZ') {
             $upz = Upz::create([
                 'upz_id' => Str::uuid(),
+                'upz' => $this->upz,
                 'nohp' => $this->nohp,
                 'alamat' => $this->alamat,
                 'pj_nama' => $this->pj_nama,
@@ -281,6 +282,7 @@ private function getRomawi($month)
             'permohonan_bentuk_bantuan' => $this->permohonan_bentuk_bantuan,
             'permohonan_catatan_input' => $this->permohonan_catatan_input,
             'permohonan_status_input' => 'Belum Selesai Input',
+            'permohonan_status_atasan' => 'Belum Dicek',
             'permohonan_petugas_input' => Auth::user()->pengurus_id,
             'permohonan_tgl' => date('Y-m-d'),
             'permohonan_timestamp_input' => date('Y-m-d H:i:s'),
@@ -295,6 +297,8 @@ private function getRomawi($month)
             $pemohon =$this->pj_nama;
             $nohp =$this->nohp;
         } 
+
+        $this->dispatchBrowserEvent('closeModal');
 
         return redirect('/detail-permohonan/' . $permohonan->permohonan_id);
     }
