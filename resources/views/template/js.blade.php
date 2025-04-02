@@ -82,6 +82,9 @@
         $('#modal_mustahik_tambah').modal('hide')
         $('#modal_mustahik_ubah').modal('hide')
         $('#modal_mustahik_hapus').modal('hide')
+        $('#modal_lampiran_tambah').modal('hide')
+        $('#modal_lampiran_ubah').modal('hide')
+        $('#modal_lampiran_hapus').modal('hide')
     });
 </script>
 

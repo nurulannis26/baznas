@@ -441,4 +441,9 @@
     @include('modal.modal_permohonan_ubah')
     @include('modal.modal_permohonan_hapus')
     @include('modal.modal_mustahik_tambah')
+    @include('modal.modal_mustahik_ubah')
+    @include('modal.modal_mustahik_hapus')
+    @include('modal.modal_lampiran_pengajuan_tambah')
+    @include('modal.modal_lampiran_pengajuan_ubah')
+    @include('modal.modal_lampiran_pengajuan_hapus')
 </div>

@@ -86,6 +86,8 @@ class DetailPermohonan extends Component
     public $kk_url_edit;
     public $foto_url_edit;
     public $keterangan_edit;
+    public $keterangan_lampiran_edit;
+    public $url_edit;
 
     public function mount()
     {
@@ -584,7 +586,23 @@ class DetailPermohonan extends Component
 
     public function lampiran_pengajuan_tambah()
     {
+        if ($this->url) {
+            $ext = $this->url->extension();
+            $file_name = Str::uuid()->toString() . '.' . $ext;
+            $this->url->storeAs('uploads/lampiran_pengajuan', $file_name);
+        }
 
+        Lampiran::create([
+            'lampiran_id' => Str::uuid(),
+            'permohonan_id' => $this->permohonan_id,
+            'keterangan' => $this->keterangan_lampiran,
+            'url' => $file_name,
+            'jenis' => 'Permohonan'
+        ]);
+
+        session()->flash('alert_lampiran', 'Lampiran berhasil ditambahkan!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
     public function modal_lampiran_pencairan_tambah()
     {
@@ -655,12 +673,47 @@ class DetailPermohonan extends Component
 
     public function lampiran_pengajuan_ubah()
     {
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
 
+        if ($this->url_edit != NULL) {
+            if ($lampiran->url != null) {
+                $path = public_path() . "/uploads/lampiran_pengajuan" . $lampiran->url;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+
+            $ext = $this->url_edit->extension();
+            $url_name = Str::uuid()->toString() . '.' . $ext;
+            $this->url_edit->storeAs('uploads/lampiran_pengajuan', $url_name);
+        } else {
+            $url_name = $lampiran->url;
+        }
+
+        Lampiran::where('lampiran_id', $lampiran->lampiran_id)->update([
+            'keterangan' => $this->keterangan_lampiran_edit,
+            'url' => $url_name,
+        ]);
+        
+        session()->flash('alert_lampiran', 'Lampiran berhasil diubah!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function lampiran_pengajuan_hapus()
     {
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
+        if ($lampiran->url != null) {
+            $path = public_path() . "/uploads/lampiran_pengajuan" . $lampiran->url;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
 
+        Lampiran::where('lampiran_id', $this->lampiran_id)->delete();
+        session()->flash('alert_lampiran', 'Lampiran berhasil dihapus!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function lampiran_survey_ubah()
