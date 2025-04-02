@@ -36,9 +36,7 @@
                             @if ($this->permohonan_jenis == 'Individu')
                                 {{-- pemohon --}}
                                 <div class="form-group col-md-6">
-                                    <label>NAMA PEMOHON &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="permohonan_nama_pemohon" type="text" class="form-control"
+                                    <label>NAMA PEMOHON &nbsp;</label><input wire:model="permohonan_nama_pemohon" type="text" class="form-control"
                                         placeholder="Masukan Nama Pemohon">
                                 </div>
                                 <hr>
@@ -140,8 +138,7 @@
                                 <label for="inputNama">ASNAF &nbsp;</label>
                                 <sup class="badge badge-danger text-white mb-2"
                                     style="background-color:rgb(0, 187, 31)">Optional</sup>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                <select wire:model="asnaf_id" class=" form-control ">
+                                    <select wire:model="asnaf_id" class=" form-control ">
                                     <option value="">Pilih Asnaf</option>
                                     @php
                                         $asnaf_get = DB::table('asnaf')->get();

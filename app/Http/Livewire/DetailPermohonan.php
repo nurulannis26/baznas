@@ -4,10 +4,12 @@ namespace App\Http\Livewire;
 
 use App\Models\DaftarMustahik;
 use App\Models\Lampiran;
+use App\Models\Mustahik;
 use App\Models\Pengurus;
 use App\Models\Permohonan;
 use App\Models\Surat;
 use App\Models\Upz;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Str;
 
@@ -68,6 +70,21 @@ class DetailPermohonan extends Component
     public $pj_jabatan_edit;
     public $surat_url_edit;
     public $alamat_edit;
+    public $nama_edit;
+    public $nik_edit;
+    public $kk_edit;
+    public $tempat_lahir_edit;
+    public $tgl_lahir_edit;
+    public $alamat_mustahik_edit;
+    public $nohp_mustahik_edit;
+    public $email_edit;
+    public $jenis_kelamin_edit;
+    public $asnaf_edit;
+    public $rt_edit;
+    public $rw_edit;
+    public $ktp_url_edit;
+    public $kk_url_edit;
+    public $foto_url_edit;
     public $keterangan_edit;
 
     public function mount()
@@ -256,7 +273,38 @@ class DetailPermohonan extends Component
 
     public function hapus_permohonan()
     {
-        
+        // Ambil semua ID permohonan yang akan dihapus
+        $permohonanIds = DB::table('permohonan')->pluck('permohonan_id');
+
+        if ($permohonanIds->isNotEmpty()) {
+            // Hapus data di tabel mustahik
+            DB::table('mustahik')->whereIn('daftar_mustahik_id', function ($query) use ($permohonanIds) {
+                $query->select('daftar_mustahik_id')
+                    ->from('daftar_mustahik')
+                    ->whereIn('permohonan_id', $permohonanIds);
+            })->delete();
+
+            // Hapus data di tabel daftar_mustahik
+            DB::table('daftar_mustahik')->whereIn('permohonan_id', $permohonanIds)->delete();
+
+            // Hapus data di tabel permohonan
+            DB::table('permohonan')->whereIn('permohonan_id', $permohonanIds)->delete();
+        }
+
+        // Hapus data di tabel lampiran
+        $lampiran = Lampiran::where('permohonan_id', $this->permohonan_id)->first();
+        if ($lampiran) {
+            Lampiran::where('permohonan_id', $this->permohonan_id)->delete();
+            if ($lampiran->url != null) {
+                $path = public_path() . "/uploads/pengajuan_lampiran/" . $lampiran->url;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+        }
+
+        $this->dispatchBrowserEvent('success', ['message' => 'Permohonan Berhasil Dihapus']);
+        return redirect()->route('permohonan')->with('success', 'Data permohonan berhasil dihapus.');
     }
 
     public function ubah_permohonan()
@@ -352,17 +400,145 @@ class DetailPermohonan extends Component
 
     public function mustahik_tambah()
     {
+        if ($this->foto_url) {
+            $ext = $this->foto_url->extension();
+            $file_name = Str::uuid()->toString() . '.' . $ext;
+            $this->foto_url->storeAs('uploads/foto_diri', $file_name);
+        }
 
+        if ($this->ktp_url) {
+            $ext = $this->ktp_url->extension();
+            $file_name_ktp = Str::uuid()->toString() . '.' . $ext;
+            $this->ktp_url->storeAs('uploads/ktp', $file_name_ktp);
+        }
+
+        if ($this->kk_url) {
+            $ext = $this->kk_url->extension();
+            $file_name_kk = Str::uuid()->toString() . '.' . $ext;
+            $this->kk_url->storeAs('uploads/kk', $file_name_kk);
+        }
+
+        $mustahik = Mustahik::create([
+            'mustahik_id' => Str::uuid(),
+            'nama' => $this->nama,
+            'nik' => $this->nik,
+            'kk' => $this->kk,
+            'tempat_lahir' => $this->tempat_lahir,
+            'tgl_lahir' => $this->tgl_lahir,
+            'alamat' => $this->alamat_mustahik,
+            'nohp' => $this->nohp_mustahik,
+            'email' => $this->email,
+            'jenis_kelamin' => $this->jenis_kelamin,
+            'asnaf_id' => $this->asnaf,
+            'rt' => $this->rt,
+            'rw' => $this->rw,
+            'ktp_url' => $file_name_ktp,
+            'kk_url' => $file_name_kk,
+            'foto_url' => $file_name,
+        ]);
+
+        $daftar_mustahik = DaftarMustahik::create([
+            'daftar_mustahik_id' => Str::uuid(),
+            'permohonan_id' => $this->permohonan_id,
+            'mustahik_id' => $mustahik->mustahik_id,
+        ]);
+
+        session()->flash('alert_mustahik', 'Mustahik berhasil ditambahkan!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function modal_mustahik_ubah($mustahik_id)
     {
-        $this->mustahik_id = $mustahik_id;
+        $mustahik = Mustahik::where('mustahik_id', $mustahik_id)->first();
+        
+        $this->nama_edit = $mustahik->nama;
+        $this->nik_edit = $mustahik->nik;
+        $this->kk_edit = $mustahik->kk;
+        $this->tempat_lahir_edit = $mustahik->tempat_lahir;
+        $this->tgl_lahir_edit = $mustahik->tgl_lahir;
+        $this->alamat_mustahik_edit = $mustahik->alamat;
+        $this->nohp_mustahik_edit = $mustahik->nohp;
+        $this->email_edit = $mustahik->email;
+        $this->jenis_kelamin_edit = $mustahik->jenis_kelamin;
+        $this->asnaf_edit = $mustahik->asnaf_id;
+        $this->rt_edit = $mustahik->rt;
+        $this->rw_edit = $mustahik->rw;
+        $this->ktp_url_edit = $mustahik->ktp_url;
+        $this->kk_url_edit = $mustahik->kk_url;
+        $this->foto_url_edit = $mustahik->foto_url;
     }
 
     public function mustahik_ubah($mustahik_id)
     {
-        $this->mustahik_id = $mustahik_id;
+        $mustahik = Mustahik::where('mustahik_id', $mustahik_id)->first();
+
+        if ($this->foto_url_edit != NULL) {
+            if ($mustahik->foto_url != null) {
+                $path = public_path() . "/uploads/foto_diri" . $mustahik->foto_url;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+
+            $ext = $this->foto_url_edit->extension();
+            $foto_url_name = Str::uuid()->toString() . '.' . $ext;
+            $this->foto_url_edit->storeAs('uploads/foto_diri', $foto_url_name);
+        } else {
+            $foto_url_name = $mustahik->foto_url;
+        }
+
+        if ($this->ktp_url_edit != NULL) {
+            if ($mustahik->ktp_url != null) {
+                $path = public_path() . "/uploads/ktp" . $mustahik->ktp_url;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+
+            $ext = $this->ktp_url_edit->extension();
+            $ktp_url_name = Str::uuid()->toString() . '.' . $ext;
+            $this->ktp_url_edit->storeAs('uploads/ktp', $ktp_url_name);
+        } else {
+            $ktp_url_name = $mustahik->ktp_url;
+        }
+
+        if ($this->kk_url_edit != NULL) {
+            if ($mustahik->kk_url != null) {
+                $path = public_path() . "/uploads/kk" . $mustahik->kk_url;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+
+            $ext = $this->kk_url_edit->extension();
+            $kk_url_name = Str::uuid()->toString() . '.' . $ext;
+            $this->kk_url_edit->storeAs('uploads/kk', $kk_url_name);
+        } else {
+            $kk_url_name = $mustahik->kk_url;
+        }
+
+        Mustahik::where('mustahik_id', $mustahik->mustahik_id)->update([
+            'nama' => $this->nama_edit,
+            'nik' => $this->nik_edit,
+            'kk' => $this->kk_edit,
+            'tempat_lahir' => $this->tempat_lahir_edit,
+            'tgl_lahir' => $this->tgl_lahir_edit,
+            'alamat' => $this->alamat_mustahik_edit,
+            'nohp' => $this->nohp_mustahik_edit,
+            'email' => $this->email_edit,
+            'jenis_kelamin' => $this->jenis_kelamin_edit,
+            'asnaf_id' => $this->asnaf_edit,
+            'rt' => $this->rt_edit,
+            'rw' => $this->rw_edit,
+            'ktp_url' => $ktp_url_name,
+            'kk_url' => $kk_url_name,
+            'foto_url' => $foto_url_name,
+        ]);
+
+        session()->flash('alert_mustahik', 'Mustahik berhasil diubah!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function modal_mustahik_hapus()
@@ -372,7 +548,33 @@ class DetailPermohonan extends Component
 
     public function mustahik_hapus()
     {
+        $mustahik = Mustahik::where('mustahik_id', $this->mustahik_id)->first();
+        if ($mustahik->foto_url != null) {
+            $path = public_path() . "/uploads/foto_diri" . $mustahik->foto_url;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
 
+        if ($mustahik->ktp_url != null) {
+            $path = public_path() . "/uploads/ktp" . $mustahik->ktp_url;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+
+        if ($mustahik->kk_url != null) {
+            $path = public_path() . "/uploads/kk" . $mustahik->kk_url;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+
+        DaftarMustahik::where('mustahik_id', $this->mustahik_id)->delete();
+        Mustahik::where('mustahik_id', $this->mustahik_id)->delete();
+        session()->flash('alert_mustahik', 'Mustahik berhasil dihapus!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function modal_lampiran_pengajuan_tambah()

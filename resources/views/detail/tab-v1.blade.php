@@ -160,13 +160,13 @@
     <div class="col-sm-6 col-md-6 col-lg-6  tab-tab-detail-pengajuan-umum-pc">
 
         <div class="d-flex align-items-center justify-content-end mb-2 mt-3 text-right" style="flex-grow: 1;">
-            <button wire:click="modal_permohonan_hapus('{{ $permohonan_id }}')" style="cursor: pointer"
-                class="btn btn-outline-secondary btn-sm mr-1" data-toggle="modal" data-target="#modal_pc_hapus"
+            <button wire:click="modal_permohonan_hapus('{{ $dp->permohonan_id }}')" style="cursor: pointer"
+                class="btn btn-outline-secondary btn-sm mr-1" data-toggle="modal" data-target="#modal_permohonan_hapus"
                 type="button">
                 <i class="fas fa-trash"></i> Hapus
             </button>
 
-            <button wire:click="modal_permohonan_ubah('{{ $permohonan_id }}')" style="cursor: pointer"
+            <button wire:click="modal_permohonan_ubah('{{ $dp->permohonan_id }}')" style="cursor: pointer"
                 class="btn btn-outline-secondary btn-sm mr-1" data-toggle="modal"
                 data-target="#modal_permohonan_ubah" type="button">
                 <i class="fas fa-edit"></i> Ubah
@@ -439,4 +439,6 @@
     </table>
     
     @include('modal.modal_permohonan_ubah')
+    @include('modal.modal_permohonan_hapus')
+    @include('modal.modal_mustahik_tambah')
 </div>

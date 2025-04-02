@@ -79,6 +79,9 @@
     window.addEventListener('closeModal', event => {
         $('#modal_permohonan_ubah').modal('hide')
         $('#modal_tambah_permohonan').modal('hide')
+        $('#modal_mustahik_tambah').modal('hide')
+        $('#modal_mustahik_ubah').modal('hide')
+        $('#modal_mustahik_hapus').modal('hide')
     });
 </script>
 
