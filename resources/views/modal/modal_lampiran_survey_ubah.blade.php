@@ -1,6 +1,6 @@
 @if (Auth::user()->pengurus_id != null)
     {{--  tambah program_penguatan_kelembagaan --}}
-    <div wire:ignore.self class="modal fade " id="modal_lampiran_pengajuan_ubah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade " id="modal_lampiran_survey_ubah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -13,21 +13,21 @@
                         </button>
                     </div>
                 </div>
-                <form wire:submit.prevent="lampiran_pengajuan_ubah">
+                <form wire:submit.prevent="lampiran_survey_ubah">
 
                     <div class="modal-body">
                         <div class="form-row">
                             
                             <div class="form-group col-md-6">
                                 <label>JUDUL &nbsp;</label>
-                                <input wire:model="keterangan_lampiran_edit" type="text" class="form-control"
+                                <input wire:model="keterangan_lampiran_survey_edit" type="text" class="form-control"
                                     placeholder="Masukan judul">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
                                 <label for="inputHP">FILE LAMPIRAN</label>
                                 <div class="custom-file custom-file-surat">
-                                    <input type="file" wire:model="url_edit"
+                                    <input type="file" wire:model="url_survey_edit"
                                         accept="application/pdf, image/png, image/jpg, image/jpeg"
                                         class="custom-file-input" id="file" name="file">
                                     <label class="custom-file-label" for="customFile">Pilih file</label>
@@ -45,7 +45,7 @@
                             class="fas fa-ban"></i>
                         Batal</button>
 
-                    @if ($keterangan_lampiran_edit == '')
+                    @if ($keterangan_lampiran_survey_edit == '')
                         <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
                                 class="fas fa-save"></i>
                             Simpan</button>

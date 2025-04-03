@@ -80,7 +80,7 @@
 
                 <div class="form-group col-md-6">
                     <div class="input-group">
-                        <input type="file" wire:model="survey_form_url"
+                        <input type="file" wire:model="pyl_form_url"
                             accept="application/pdf, image/png, image/jpg, image/jpeg" class="custom-file-input"
                             id="file" name="file">
                         <label class="custom-file-label" for="customFile">Masukan file LPJ</label>
@@ -356,4 +356,8 @@
         </tbody>
     </table>
     {{-- end tabel --}}
+
+    @include('modal.modal_lampiran_pyl_tambah')
+    @include('modal.modal_lampiran_pyl_ubah')
+    @include('modal.modal_lampiran_pyl_hapus')
 </div>

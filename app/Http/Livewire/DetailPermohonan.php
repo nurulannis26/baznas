@@ -9,6 +9,7 @@ use App\Models\Pengurus;
 use App\Models\Permohonan;
 use App\Models\Surat;
 use App\Models\Upz;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -611,7 +612,23 @@ class DetailPermohonan extends Component
 
     public function lampiran_pencairan_tambah()
     {
+        if ($this->url_pencairan) {
+            $ext = $this->url_pencairan->extension();
+            $file_name = Str::uuid()->toString() . '.' . $ext;
+            $this->url_pencairan->storeAs('uploads/lampiran_pencairan', $file_name);
+        }
 
+        Lampiran::create([
+            'lampiran_id' => Str::uuid(),
+            'permohonan_id' => $this->permohonan_id,
+            'keterangan' => $this->keterangan_lampiran_pencairan,
+            'url' => $file_name,
+            'jenis' => 'Pencairan'
+        ]);
+
+        session()->flash('alert_lampiran', 'Lampiran berhasil ditambahkan!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function modal_lampiran_pyl_tambah()
@@ -621,16 +638,48 @@ class DetailPermohonan extends Component
 
     public function lampiran_pyl_tambah()
     {
+        if ($this->url_pyl) {
+            $ext = $this->url_pyl->extension();
+            $file_name = Str::uuid()->toString() . '.' . $ext;
+            $this->url_pyl->storeAs('uploads/lampiran_pyl', $file_name);
+        }
 
+        Lampiran::create([
+            'lampiran_id' => Str::uuid(),
+            'permohonan_id' => $this->permohonan_id,
+            'keterangan' => $this->keterangan_lampiran_pyl,
+            'url' => $file_name,
+            'jenis' => 'Survey'
+        ]);
+
+        session()->flash('alert_lampiran', 'Lampiran berhasil ditambahkan!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function modal_lampiran_survey_tambah()
     {
-
+        
     }
     public function lampiran_survey_tambah()
     {
+        if ($this->url_survey) {
+            $ext = $this->url_survey->extension();
+            $file_name = Str::uuid()->toString() . '.' . $ext;
+            $this->url_survey->storeAs('uploads/lampiran_survey', $file_name);
+        }
 
+        Lampiran::create([
+            'lampiran_id' => Str::uuid(),
+            'permohonan_id' => $this->permohonan_id,
+            'keterangan' => $this->keterangan_lampiran_survey,
+            'url' => $file_name,
+            'jenis' => 'Survey'
+        ]);
+
+        session()->flash('alert_lampiran', 'Lampiran berhasil ditambahkan!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function modal_lampiran_pengajuan_ubah($lampiran_id)
@@ -718,52 +767,247 @@ class DetailPermohonan extends Component
 
     public function lampiran_survey_ubah()
     {
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
 
+        if ($this->url_survey_edit != NULL) {
+            if ($lampiran->url != null) {
+                $path = public_path() . "/uploads/lampiran_survey" . $lampiran->url;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+
+            $ext = $this->url_survey_edit->extension();
+            $url_name = Str::uuid()->toString() . '.' . $ext;
+            $this->url_survey_edit->storeAs('uploads/lampiran_survey', $url_name);
+        } else {
+            $url_name = $lampiran->url;
+        }
+
+        Lampiran::where('lampiran_id', $lampiran->lampiran_id)->update([
+            'keterangan' => $this->keterangan_lampiran_survey_edit,
+            'url' => $url_name,
+        ]);
+        
+        session()->flash('alert_lampiran', 'Lampiran berhasil diubah!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function lampiran_survey_hapus()
     {
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
+        if ($lampiran->url != null) {
+            $path = public_path() . "/uploads/lampiran_survey" . $lampiran->url;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
 
+        Lampiran::where('lampiran_id', $this->lampiran_id)->delete();
+        session()->flash('alert_lampiran', 'Lampiran berhasil dihapus!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function lampiran_pencairan_ubah()
     {
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
 
+        if ($this->url_pencairan_edit != NULL) {
+            if ($lampiran->url != null) {
+                $path = public_path() . "/uploads/lampiran_pencairan" . $lampiran->url;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+
+            $ext = $this->url_pencairan_edit->extension();
+            $url_name = Str::uuid()->toString() . '.' . $ext;
+            $this->url_pencairan_edit->storeAs('uploads/lampiran_pencairan', $url_name);
+        } else {
+            $url_name = $lampiran->url;
+        }
+
+        Lampiran::where('lampiran_id', $lampiran->lampiran_id)->update([
+            'keterangan' => $this->keterangan_lampiran_pencairan_edit,
+            'url' => $url_name,
+        ]);
+        
+        session()->flash('alert_lampiran', 'Lampiran berhasil diubah!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function lampiran_pyl_hapus()
     {
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
+        if ($lampiran->url != null) {
+            $path = public_path() . "/uploads/lampiran_pyl" . $lampiran->url;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
 
+        Lampiran::where('lampiran_id', $this->lampiran_id)->delete();
+        session()->flash('alert_lampiran', 'Lampiran berhasil dihapus!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function lampiran_pyl_ubah()
     {
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
 
+        if ($this->url_pyl_edit != NULL) {
+            if ($lampiran->url != null) {
+                $path = public_path() . "/uploads/lampiran_pyl" . $lampiran->url;
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+
+            $ext = $this->url_pyl_edit->extension();
+            $url_name = Str::uuid()->toString() . '.' . $ext;
+            $this->url_pyl_edit->storeAs('uploads/lampiran_pyl', $url_name);
+        } else {
+            $url_name = $lampiran->url;
+        }
+
+        Lampiran::where('lampiran_id', $lampiran->lampiran_id)->update([
+            'keterangan' => $this->keterangan_lampiran_pyl_edit,
+            'url' => $url_name,
+        ]);
+        
+        session()->flash('alert_lampiran', 'Lampiran berhasil diubah!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function lampiran_pencairan_hapus()
     {
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
+        if ($lampiran->url != null) {
+            $path = public_path() . "/uploads/lampiran_pencairan" . $lampiran->url;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
 
+        Lampiran::where('lampiran_id', $this->lampiran_id)->delete();
+        session()->flash('alert_lampiran', 'Lampiran berhasil dihapus!');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function acc_atasan()
     {
+        $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
+            'permohonan_timestamp_atasan' => $this->permohonan_timestamp_atasan,
+            'survey_pilihan' => $this->survey_pilihan,
+            'survey_petugas_survey' => $this->survey_petugas_survey,
+            'permohonan_catatan_atasan' => $this->permohonan_catatan_atasan,
+            'permohonan_status_atasan' => 'Diterima',
+            'permohonan_petugas_atasan' => Auth::user()->pengurus_id,
+            'survey_status' => 'Belum Selesai',
+        ]);
 
+        session()->flash('alert_atasan', 'Permohonan berhasil di ACC oleh Atasan');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function tolak_atasan()
     {
-        
+        $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
+            'denial_date_atasan' => $this->denial_date_atasan,
+            'survey_pilihan' => null,
+            'survey_petugas_survey' => null,
+            'denial_note_atasan' => $this->denial_note_atasan,
+            'permohonan_status_atasan' => 'Ditolak',
+            'permohonan_petugas_atasan' => Auth::user()->pengurus_id,
+        ]);
+
+        session()->flash('alert_atasan', 'Permohonan berhasil di Tolak oleh Atasan');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
+    }
+
+    public function survey()
+    {
+        if ($this->survey_form_url) {
+            $ext = $this->survey_form_url->extension();
+            $file_name = Str::uuid()->toString() . '.' . $ext;
+            $this->survey_form_url->storeAs('uploads/lampiran_survey', $file_name);
+        }
+
+        $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
+            'survey_tgl' => $this->survey_tgl,
+            'survey_form_url' => $file_name,
+            'survey_hasil' => $this->survey_hasil,
+            'survey_catatan' => $this->survey_catatan,
+            'survey_status' => 'Selesai',
+            'survey_petugas_survey' => Auth::user()->pengurus_id,
+            'survey_petugas_pyl' => $this->survey_petugas_survey,
+        ]);
+
+        session()->flash('alert_survey', 'Survey berhasil di ACC');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
+    }
+
+    public function penyaluran()
+    {
+        if ($this->pyl_form_url) {
+            $ext = $this->pyl_form_url->extension();
+            $file_name = Str::uuid()->toString() . '.' . $ext;
+            $this->pyl_form_url->storeAs('uploads/penyaluran', $file_name);
+        }
+
+        $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
+            'pyl_tgl' => $this->pyl_tgl,
+            'pyl_form_url' => $file_name,
+            'pyl_hasil' => $this->pyl_hasil,
+            'pyl_catatan' => $this->pyl_catatan,
+            'pyl_status' => 'Selesai',
+            'survey_petugas_pyl' => Auth::user()->pengurus_id,
+        ]);
+
+        session()->flash('alert_pyl', 'Penyaluran telah Selesai dilakukan');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function acc_pencairan()
     {
+        $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
+            'pencairan_timestamp' => $this->pencairan_timestamp,
+            'pencairan_nominal' => str_replace('.', '', $this->pencairan_nominal), 
+            'pencairan_sumberdana' => $this->pencairan_sumberdana,
+            'pencairan_catatan' => $this->pencairan_catatan,
+            'pencairan_status' => 'Berhasil Dicairkan',
+            'pencairan_petugas_keuangan' => Auth::user()->pengurus_id,
+        ]);
 
+        session()->flash('alert_pencairan', 'Pencairan berhasil di ACC Keuangan');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
     public function tolak_pencairan()
     {
+        $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
+            'denial_date_pencairan' => $this->denial_date_pencairan,
+            'pencairan_nominal' => null, 
+            'pencairan_sumberdana' => null,
+            'denial_note_pencairan' => $this->denial_note_pencairan,
+            'pencairan_status' => 'Ditolak',
+            'pencairan_petugas_keuangan' => Auth::user()->pengurus_id,
+        ]);
 
+        session()->flash('alert_pencairan', 'Pencairan berhasil di Tolak Keuangan');
+        $this->emit('waktu_alert');
+        $this->dispatchBrowserEvent('closeModal');
     }
 
 }

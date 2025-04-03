@@ -78,13 +78,23 @@
 <script>
     window.addEventListener('closeModal', event => {
         $('#modal_permohonan_ubah').modal('hide')
+        $('#modal_permohonan_hapus').modal('hide')
         $('#modal_tambah_permohonan').modal('hide')
         $('#modal_mustahik_tambah').modal('hide')
         $('#modal_mustahik_ubah').modal('hide')
         $('#modal_mustahik_hapus').modal('hide')
-        $('#modal_lampiran_tambah').modal('hide')
-        $('#modal_lampiran_ubah').modal('hide')
-        $('#modal_lampiran_hapus').modal('hide')
+        $('#modal_lampiran_pengajuan_tambah').modal('hide')
+        $('#modal_lampiran_pengajuan_ubah').modal('hide')
+        $('#modal_lampiran_pengajuan_hapus').modal('hide')
+        $('#modal_lampiran_survey_ubah').modal('hide')
+        $('#modal_lampiran_survey_tambah').modal('hide')
+        $('#modal_lampiran_survey_hapus').modal('hide')
+        $('#modal_lampiran_pencairan_tambah').modal('hide')
+        $('#modal_lampiran_pencairan_ubah').modal('hide')
+        $('#modal_lampiran_pencairan_hapus').modal('hide')
+        $('#modal_lampiran_pyl_tambah').modal('hide')
+        $('#modal_lampiran_pyl_ubah').modal('hide')
+        $('#modal_lampiran_pyl_hapus').modal('hide')
     });
 </script>
 

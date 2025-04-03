@@ -356,4 +356,8 @@
         </tbody>
     </table>
     {{-- end tabel --}}
+
+    @include('modal.modal_lampiran_survey_tambah')
+    @include('modal.modal_lampiran_survey_ubah')
+    @include('modal.modal_lampiran_survey_hapus')
 </div>

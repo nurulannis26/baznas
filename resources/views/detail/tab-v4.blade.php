@@ -100,7 +100,7 @@
                                 style="width: 200px; display: flex; justify-content: center; align-items: center;">Sumber
                                 Dana</span>
                         </div>
-                        <select class="form-control" name="survey_pilihan" wire:model="pencairan_sumberdana">
+                        <select class="form-control" name="pencairan_sumberdana" wire:model="pencairan_sumberdana">
                             <option value="" selected>Pilih Sumber Dana</option>
 
                         </select>
@@ -485,4 +485,8 @@
         </tbody>
     </table>
     {{-- end tabel --}}
+
+    @include('modal.modal_lampiran_pencairan_tambah')
+    @include('modal.modal_lampiran_pencairan_ubah')
+    @include('modal.modal_lampiran_pencairan_hapus')
 </div>
