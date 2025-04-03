@@ -45,15 +45,15 @@
                             class="fas fa-ban"></i>
                         Batal</button>
 
-                    @if ($keterangan_lampiran_survey_edit == '')
+                    {{-- @if ($keterangan_lampiran_survey_edit == '')
                         <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
                                 class="fas fa-save"></i>
                             Simpan</button>
-                    @else
+                    @else --}}
                         <button type="submit" name="submit" class="btn btn-success"
                             wire:loading.attr="disabled"><i class="fas fa-save"></i>
                             Simpan</button>
-                    @endif
+                    {{-- @endif --}}
                 </div>
             </div>
         </div>
