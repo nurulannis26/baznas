@@ -49,7 +49,7 @@
                         {{-- card body --}}
                         <div class="card-body ">
 
-                            halo Pengurus!
+                            @livewire('pengurus')
                         </div>
                         {{-- end card body --}}
 
