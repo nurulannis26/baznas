@@ -1,3 +1,4 @@
+
 <!-- jQuery -->
 <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
 <!-- Bootstrap -->
@@ -74,6 +75,8 @@
     });
 </script>
 
+
+
 {{-- auto close modal --}}
 <script>
     window.addEventListener('closeModal', event => {
@@ -95,6 +98,9 @@
         $('#modal_lampiran_pyl_tambah').modal('hide')
         $('#modal_lampiran_pyl_ubah').modal('hide')
         $('#modal_lampiran_pyl_hapus').modal('hide')
+        $('#modal_kegiatan_tambah').modal('hide')
+        $('#modal_kegiatan_ubah').modal('hide')
+        $('#modal_kegiatan_hapus').modal('hide')
     });
 </script>
 

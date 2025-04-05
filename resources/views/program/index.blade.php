@@ -33,29 +33,12 @@
 
             <div class="row">
                 <div class="col-12">
-                    <div class="card ijo-atas">
 
 
-                        {{-- tabbed --}}
-                        <div class="row mt-2 mr-2 ml-2 card-header-data-pengajuan-pc">
-                            <div class="col-12 col-md-3 col-sm-12 mb-2 mb-xl-0">
-                                <h5 class=" mt-2">
-                                    <span class="text-success mt-1">Data Program</span>
-                                </h5>
-                            </div>
-                        </div>
-
-
-                        {{-- card body --}}
-                        <div class="card-body ">
-
-                            halo Program!
-                        </div>
-                        {{-- end card body --}}
+                        @livewire('program')
 
 
 
-                    </div>
                 </div>
             </div>
         </div>
