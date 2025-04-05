@@ -32,8 +32,10 @@ class Program extends Component
 
     public function render()
     {
-        $pilars = ModelsProgram::orderBy('created_at', 'ASC')->get();
-        // dd($pilars);
+        $pilars = ModelsProgram::withCount('subPrograms')
+        ->orderBy('created_at', 'ASC')
+        ->get();
+
 
 
         if ($this->program_id == NULL) {

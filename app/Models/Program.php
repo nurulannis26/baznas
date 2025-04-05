@@ -22,7 +22,7 @@ class Program extends Model
         });
     }
 
-    public function sub_program() {
+    public function subPrograms() {
         return $this->hasMany(SubProgram::class, 'program_id', 'program_id');
     }
 
