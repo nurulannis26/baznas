@@ -1,4 +1,4 @@
-<div wire:ignore.self class="modal fade" id="modal_survey_pengajuan_hapus" role="dialog"
+<div wire:ignore.self class="modal fade" id="modal_lampiran_survey_hapus" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

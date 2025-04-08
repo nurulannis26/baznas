@@ -46,7 +46,7 @@ return new class extends Migration
             $table->string('permohonan_catatan_atasan')->nullable();
             $table->enum('survey_pilihan', ["Perlu","Tidak Perlu"])->nullable();
             $table->date('survey_tgl')->nullable();
-            $table->date('pyltgl')->nullable();
+            $table->date('pyl_tgl')->nullable();
             $table->string('survey_petugas_survey')->index()->nullable();
             $table->string('survey_petugas_pyl')->index()->nullable();
             $table->string('survey_hasil')->nullable();

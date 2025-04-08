@@ -99,7 +99,7 @@
                             <span class="input-group-text"
                                 style="width: 200px; display: flex; justify-content: center; align-items: center;">Survey</span>
                         </div>
-                        <select class="form-control" name="survey_petugas_survey" wire:model="survey_pilihan">
+                        <select class="form-control" name="survey_petugas_survey" wire:model="survey_pilihan" @if($survey_pilihan == 'Tidak Perlu') disabled @endif>
                             <option value="" selected>Pilih Petugas</option>
                             @foreach ($petugas_survey as $petugas)
                                 <option value="{{ $petugas->pengurus_id }}">{{ $petugas->nama }}</option>
@@ -211,6 +211,8 @@
                     </div>
                 </div>
                 {{-- end info --}}
+                <div class="form-group col-md-9">
+                </div>
 
                 {{-- tombol tolak --}}
                 <div class="form-group col-md-3">
@@ -380,11 +382,11 @@
                                 <br>
                                 Petugas Survey:
                                 <b style="font-size: 12pt;">
-                                    {{ $petugasSurvey }}
+                                    {{ $petugasSurvey ?? '-'}}
                                 </b>
                                 <br>
                                 <span style="font-size: 11pt;">
-                                    {{ $jabatanSurvey }}
+                                    {{ $jabatanSurvey ?? '-'}}
                                 </span>
     
                             </td>
@@ -398,11 +400,11 @@
                                 <br>
                                 Petugas Penyaluran:
                                 <b style="font-size: 12pt;">
-                                    {{ $petugasPenyaluran }}
+                                    {{ $petugasPenyaluran ?? '-' }}
                                 </b>
                                 <br>
                                 <span style="font-size: 11pt;">
-                                    {{ $jabatanPenyaluran }}
+                                    {{ $jabatanPenyaluran ?? '-'}}
                                 </span>
     
                             </td>

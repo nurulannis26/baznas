@@ -31,30 +31,31 @@
                                         accept="application/pdf, image/png, image/jpg, image/jpeg"
                                         class="custom-file-input" id="file" name="file">
                                     <label class="custom-file-label" for="customFile">Pilih file</label>
+                                    {{-- @dump($url_pyl) --}}
                                 </div>
                             </div>
                         </div>
                     </div>
 
 
-
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                class="fas fa-ban"></i>
+                            Batal</button>
+    
+                        {{-- @if ($url == '')
+                            <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
+                                    class="fas fa-save"></i>
+                                Simpan</button>
+                        @else --}}
+                            <button type="submit" name="submit" class="btn btn-success"
+                                wire:loading.attr="disabled"><i class="fas fa-save"></i>
+                                Simpan</button>
+                        {{-- @endif --}}
+                    </div>
 
                 </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                            class="fas fa-ban"></i>
-                        Batal</button>
-
-                    {{-- @if ($url == '')
-                        <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
-                                class="fas fa-save"></i>
-                            Simpan</button>
-                    @else --}}
-                        <button type="submit" name="submit" class="btn btn-success"
-                            wire:loading.attr="disabled"><i class="fas fa-save"></i>
-                            Simpan</button>
-                    {{-- @endif --}}
-                </div>
+                
             </div>
         </div>
         {{-- end tabbed --}}

@@ -20,7 +20,7 @@
                             
                             <div class="form-group col-md-6">
                                 <label>JUDUL &nbsp;</label>
-                                <input wire:model="keterangan_lampiran_survey_edit" type="text" class="form-control"
+                                <input wire:model="keterangan_survey_edit" type="text" class="form-control"
                                     placeholder="Masukan judul">
                             </div>
                             <hr>
@@ -36,25 +36,26 @@
                         </div>
                     </div>
 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                class="fas fa-ban"></i>
+                            Batal</button>
+    
+                        {{-- @if ($keterangan_lampiran_survey_edit == '')
+                            <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
+                                    class="fas fa-save"></i>
+                                Simpan</button>
+                        @else --}}
+                            <button type="submit" name="submit" class="btn btn-success"
+                                wire:loading.attr="disabled"><i class="fas fa-save"></i>
+                                Simpan</button>
+                        {{-- @endif --}}
+                    </div>
 
 
 
                 </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                            class="fas fa-ban"></i>
-                        Batal</button>
-
-                    {{-- @if ($keterangan_lampiran_survey_edit == '')
-                        <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
-                                class="fas fa-save"></i>
-                            Simpan</button>
-                    @else --}}
-                        <button type="submit" name="submit" class="btn btn-success"
-                            wire:loading.attr="disabled"><i class="fas fa-save"></i>
-                            Simpan</button>
-                    {{-- @endif --}}
-                </div>
+                
             </div>
         </div>
         {{-- end tabbed --}}

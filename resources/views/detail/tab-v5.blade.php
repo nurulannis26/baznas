@@ -79,7 +79,7 @@
                 {{-- end tgl disetujui --}}
 
                 <div class="form-group col-md-6">
-                    <div class="input-group">
+                    <div class="input-group custom-file">
                         <input type="file" wire:model="pyl_form_url"
                             accept="application/pdf, image/png, image/jpg, image/jpeg" class="custom-file-input"
                             id="file" name="file">
@@ -129,15 +129,15 @@
 
                 {{-- tombol acc --}}
                 <div class="form-group col-md-3">
-                    @if ($pyl_hasil == '')
+                    {{-- @if ($pyl_hasil == '')
                         <button class="btn btn-success btn-block" disabled wire:loading.attr="disabled"><i
                                 class="fas fa-check-circle"></i>
                             Simpan</button>
-                    @else
+                    @else --}}
                         <button type="submit" name="submit" class="btn btn-success btn-block"
                             wire:loading.attr="disabled"><i class="fas fa-check-circle"></i>
                             Simpan</button>
-                    @endif
+                    {{-- @endif --}}
                 </div>
                 {{-- acc --}}
 
@@ -245,7 +245,12 @@
                         <td class="text-bold " style="width: 30%">
                             Scan Form LPJ</td>
                         <td class="mr-2">
-                            <a href="">LPJ.pdf</a>
+                            @if($dp->pyl_form_url == null)
+                                <span>-</span>
+                            @else
+                                <a href="{{ asset('uploads/penyaluran/' . $dp->pyl_form_url) }}" target="_blank">Lihat
+                                </a> 
+                            @endif
                         </td>
                     </tr>
                 </thead>
@@ -268,9 +273,9 @@
     </div>
 
     {{-- alert --}}
-    @if (session()->has('alert_la'))
+    @if (session()->has('alert_lp'))
         <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-            <i class="far fa-check-circle"></i> {{ session('alert_la') }}
+            <i class="far fa-check-circle"></i> {{ session('alert_lp') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -301,7 +306,7 @@
                         {{ $a->keterangan }} <br>
                     </td>
                     <td>
-                        <a href="{{ asset('uploads/pyl_lampiran/' . $a->url) }}" target="_blank">
+                        <a href="{{ asset('uploads/lampiran_pyl/' . $a->url) }}" target="_blank">
                             {{ $a->url }}
                         </a>
                     </td>
@@ -360,4 +365,22 @@
     @include('modal.modal_lampiran_pyl_tambah')
     @include('modal.modal_lampiran_pyl_ubah')
     @include('modal.modal_lampiran_pyl_hapus')
+    <script>
+        $(document).ready(function() {
+
+            window.loadContactDeviceSelect2 = () => {
+                bsCustomFileInput.init();
+                $('#pencairan_nominal').on('input', function(e) {
+                    $('#pencairan_nominal').val(formatRupiah($('#pencairan_nominal').val(),
+                        'Rp. '));
+                });
+            }
+
+            loadContactDeviceSelect2();
+            window.livewire.on('loadContactDeviceSelect2', () => {
+                loadContactDeviceSelect2();
+            });
+
+        });
+    </script>
 </div>

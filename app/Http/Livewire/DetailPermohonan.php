@@ -106,6 +106,20 @@ class DetailPermohonan extends Component
     public $foto_url;
     public $ktp_url;
     public $kk_url;
+    public $keterangan_lampiran;
+    public $url;
+    public $keterangan_lampiran_survey;
+    public $url_survey;
+    public $keterangan_survey_edit;
+    public $url_survey_edit;
+    public $keterangan_lampiran_pencairan;
+    public $url_pencairan;
+    public $keterangan_lampiran_pencairan_edit;
+    public $url_pencairan_edit;
+    public $keterangan_lampiran_pyl;
+    public $url_pyl;
+    public $keterangan_lampiran_pyl_edit;
+    public $url_pyl_edit;
 
     public function mount()
     {
@@ -342,9 +356,9 @@ class DetailPermohonan extends Component
 
 
         if ($this->surat_url_edit != NULL) {
-            dd($this->surat_url_edit);
+            // dd($this->surat_url_edit);
             if ($data->surat_url != null) {
-                $path = public_path() . "/permohonan" . $data->surat_url;
+                $path = public_path() . "/uploads/permohonan" . $data->surat_url;
                 if (file_exists($path)) {
                     unlink($path);
                 }
@@ -432,20 +446,20 @@ class DetailPermohonan extends Component
         if ($this->foto_url) {
             $ext = $this->foto_url->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->foto_url->storeAs('uploads/foto_diri', $file_name, 'public');
+            $this->foto_url->storeAs('foto_diri', $file_name, 'public');
         }
 
         if ($this->ktp_url) {
         //     dd('baba');
             $ext = $this->ktp_url->extension();
             $file_name_ktp = Str::uuid()->toString() . '.' . $ext;
-            $this->ktp_url->storeAs('uploads/ktp', $file_name_ktp, 'public');
+            $this->ktp_url->storeAs('ktp', $file_name_ktp, 'public');
         }
 
         if ($this->kk_url) {
             $ext = $this->kk_url->extension();
             $file_name_kk = Str::uuid()->toString() . '.' . $ext;
-            $this->kk_url->storeAs('uploads/kk', $file_name_kk, 'public');
+            $this->kk_url->storeAs('kk', $file_name_kk, 'public');
         }
 
         $mustahik = Mustahik::create([
@@ -619,7 +633,7 @@ class DetailPermohonan extends Component
         if ($this->url) {
             $ext = $this->url->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->url->storeAs('uploads/lampiran_pengajuan', $file_name);
+            $this->url->storeAs('lampiran_pengajuan', $file_name);
         }
 
         Lampiran::create([
@@ -644,7 +658,7 @@ class DetailPermohonan extends Component
         if ($this->url_pencairan) {
             $ext = $this->url_pencairan->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->url_pencairan->storeAs('uploads/lampiran_pencairan', $file_name);
+            $this->url_pencairan->storeAs('lampiran_pencairan', $file_name);
         }
 
         Lampiran::create([
@@ -655,7 +669,7 @@ class DetailPermohonan extends Component
             'jenis' => 'Pencairan'
         ]);
 
-        session()->flash('alert_lampiran', 'Lampiran berhasil ditambahkan!');
+        session()->flash('alert_la', 'Lampiran berhasil ditambahkan!');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -667,10 +681,11 @@ class DetailPermohonan extends Component
 
     public function lampiran_pyl_tambah()
     {
+        // dd($this->url_pyl);
         if ($this->url_pyl) {
             $ext = $this->url_pyl->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->url_pyl->storeAs('uploads/lampiran_pyl', $file_name);
+            $this->url_pyl->storeAs('lampiran_pyl', $file_name);
         }
 
         Lampiran::create([
@@ -678,10 +693,10 @@ class DetailPermohonan extends Component
             'permohonan_id' => $this->permohonan_id,
             'keterangan' => $this->keterangan_lampiran_pyl,
             'url' => $file_name,
-            'jenis' => 'Survey'
+            'jenis' => 'LPJ'
         ]);
 
-        session()->flash('alert_lampiran', 'Lampiran berhasil ditambahkan!');
+        session()->flash('alert_lp', 'Lampiran berhasil ditambahkan!');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -695,7 +710,7 @@ class DetailPermohonan extends Component
         if ($this->url_survey) {
             $ext = $this->url_survey->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->url_survey->storeAs('uploads/lampiran_survey', $file_name);
+            $this->url_survey->storeAs('lampiran_survey', $file_name);
         }
 
         Lampiran::create([
@@ -706,7 +721,7 @@ class DetailPermohonan extends Component
             'jenis' => 'Survey'
         ]);
 
-        session()->flash('alert_lampiran', 'Lampiran berhasil ditambahkan!');
+        session()->flash('alert_lampiran_survey', 'Lampiran berhasil ditambahkan!');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -714,6 +729,8 @@ class DetailPermohonan extends Component
     public function modal_lampiran_pengajuan_ubah($lampiran_id)
     {
         $this->lampiran_id = $lampiran_id;
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
+        $this->keterangan_lampiran_edit = $lampiran->keterangan;
     }
 
     public function modal_lampiran_pengajuan_hapus($lampiran_id)
@@ -723,6 +740,8 @@ class DetailPermohonan extends Component
     public function modal_lampiran_pyl_ubah($lampiran_id)
     {
         $this->lampiran_id = $lampiran_id;
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
+        $this->keterangan_lampiran_pyl_edit = $lampiran->keterangan;
     }
     public function modal_lampiran_pyl_hapus($lampiran_id)
     {
@@ -732,6 +751,8 @@ class DetailPermohonan extends Component
     public function modal_lampiran_survey_ubah($lampiran_id)
     {
         $this->lampiran_id = $lampiran_id;
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
+        $this->keterangan_survey_edit = $lampiran->keterangan;
     }
 
     public function modal_lampiran_survey_hapus($lampiran_id)
@@ -742,6 +763,8 @@ class DetailPermohonan extends Component
     public function modal_lampiran_pencairan_ubah($lampiran_id)
     {
         $this->lampiran_id = $lampiran_id;
+        $lampiran = Lampiran::where('lampiran_id', $this->lampiran_id)->first();
+        $this->keterangan_lampiran_pencairan_edit = $lampiran->keterangan;
     }
 
     public function modal_lampiran_pencairan_hapus($lampiran_id)
@@ -763,7 +786,7 @@ class DetailPermohonan extends Component
 
             $ext = $this->url_edit->extension();
             $url_name = Str::uuid()->toString() . '.' . $ext;
-            $this->url_edit->storeAs('uploads/lampiran_pengajuan', $url_name);
+            $this->url_edit->storeAs('lampiran_pengajuan', $url_name);
         } else {
             $url_name = $lampiran->url;
         }
@@ -808,17 +831,17 @@ class DetailPermohonan extends Component
 
             $ext = $this->url_survey_edit->extension();
             $url_name = Str::uuid()->toString() . '.' . $ext;
-            $this->url_survey_edit->storeAs('uploads/lampiran_survey', $url_name);
+            $this->url_survey_edit->storeAs('lampiran_survey', $url_name);
         } else {
             $url_name = $lampiran->url;
         }
 
         Lampiran::where('lampiran_id', $lampiran->lampiran_id)->update([
-            'keterangan' => $this->keterangan_lampiran_survey_edit,
+            'keterangan' => $this->keterangan_survey_edit,
             'url' => $url_name,
         ]);
         
-        session()->flash('alert_lampiran', 'Lampiran berhasil diubah!');
+        session()->flash('alert_lampiran_survey', 'Lampiran berhasil diubah!');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -834,7 +857,7 @@ class DetailPermohonan extends Component
         }
 
         Lampiran::where('lampiran_id', $this->lampiran_id)->delete();
-        session()->flash('alert_lampiran', 'Lampiran berhasil dihapus!');
+        session()->flash('alert_lampiran_survey', 'Lampiran berhasil dihapus!');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -853,7 +876,7 @@ class DetailPermohonan extends Component
 
             $ext = $this->url_pencairan_edit->extension();
             $url_name = Str::uuid()->toString() . '.' . $ext;
-            $this->url_pencairan_edit->storeAs('uploads/lampiran_pencairan', $url_name);
+            $this->url_pencairan_edit->storeAs('lampiran_pencairan', $url_name);
         } else {
             $url_name = $lampiran->url;
         }
@@ -863,7 +886,7 @@ class DetailPermohonan extends Component
             'url' => $url_name,
         ]);
         
-        session()->flash('alert_lampiran', 'Lampiran berhasil diubah!');
+        session()->flash('alert_la', 'Lampiran berhasil diubah!');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -879,7 +902,7 @@ class DetailPermohonan extends Component
         }
 
         Lampiran::where('lampiran_id', $this->lampiran_id)->delete();
-        session()->flash('alert_lampiran', 'Lampiran berhasil dihapus!');
+        session()->flash('alert_lp', 'Lampiran berhasil dihapus!');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -898,7 +921,7 @@ class DetailPermohonan extends Component
 
             $ext = $this->url_pyl_edit->extension();
             $url_name = Str::uuid()->toString() . '.' . $ext;
-            $this->url_pyl_edit->storeAs('uploads/lampiran_pyl', $url_name);
+            $this->url_pyl_edit->storeAs('lampiran_pyl', $url_name);
         } else {
             $url_name = $lampiran->url;
         }
@@ -924,7 +947,7 @@ class DetailPermohonan extends Component
         }
 
         Lampiran::where('lampiran_id', $this->lampiran_id)->delete();
-        session()->flash('alert_lampiran', 'Lampiran berhasil dihapus!');
+        session()->flash('alert_la', 'Lampiran berhasil dihapus!');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
     }
@@ -944,6 +967,7 @@ class DetailPermohonan extends Component
         session()->flash('alert_atasan', 'Permohonan berhasil di ACC oleh Atasan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
+        $this->none_block_acc_atasan = 'none';
     }
 
     public function tolak_atasan()
@@ -960,6 +984,7 @@ class DetailPermohonan extends Component
         session()->flash('alert_atasan', 'Permohonan berhasil di Tolak oleh Atasan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
+        $this->none_block_tolak_atasan = 'none';
     }
 
     public function survey()
@@ -967,7 +992,7 @@ class DetailPermohonan extends Component
         if ($this->survey_form_url) {
             $ext = $this->survey_form_url->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->survey_form_url->storeAs('uploads/lampiran_survey', $file_name);
+            $this->survey_form_url->storeAs('lampiran_survey', $file_name);
         }
 
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
@@ -983,6 +1008,7 @@ class DetailPermohonan extends Component
         session()->flash('alert_survey', 'Survey berhasil di ACC');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
+        $this->none_block_survey = 'none';
     }
 
     public function penyaluran()
@@ -990,7 +1016,7 @@ class DetailPermohonan extends Component
         if ($this->pyl_form_url) {
             $ext = $this->pyl_form_url->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->pyl_form_url->storeAs('uploads/penyaluran', $file_name);
+            $this->pyl_form_url->storeAs('penyaluran', $file_name);
         }
 
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
@@ -1005,6 +1031,7 @@ class DetailPermohonan extends Component
         session()->flash('alert_pyl', 'Penyaluran telah Selesai dilakukan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
+        $this->none_block_pyl = 'none';
     }
 
     public function acc_pencairan()
@@ -1012,7 +1039,7 @@ class DetailPermohonan extends Component
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'pencairan_timestamp' => $this->pencairan_timestamp,
             'pencairan_nominal' => str_replace('.', '', $this->pencairan_nominal), 
-            'pencairan_sumberdana' => $this->pencairan_sumberdana,
+            'pencairan_sumberdana' => $this->pencairan_sumberdana ?? '-',
             'pencairan_catatan' => $this->pencairan_catatan,
             'pencairan_status' => 'Berhasil Dicairkan',
             'pencairan_petugas_keuangan' => Auth::user()->pengurus_id,
@@ -1021,6 +1048,7 @@ class DetailPermohonan extends Component
         session()->flash('alert_pencairan', 'Pencairan berhasil di ACC Keuangan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
+        $this->none_block_acc_pencairan = 'none';
     }
 
     public function tolak_pencairan()
@@ -1037,6 +1065,7 @@ class DetailPermohonan extends Component
         session()->flash('alert_pencairan', 'Pencairan berhasil di Tolak Keuangan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
+        $this->none_block_tolak_pencairan = 'none';
     }
 
 }

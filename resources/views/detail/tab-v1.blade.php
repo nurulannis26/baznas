@@ -197,7 +197,8 @@
                         <td class="text-bold">Surat Permohonan
                         </td>
                         <td>
-                            <a href="{{ asset('public/' . $dp->file_surat_permohonan) }}" target="_blank">
+                            {{-- {{ dd($dp->surat_url) }} --}}
+                            <a href="{{ asset('uploads/permohonan/' . $dp->surat_url) }}" target="_blank">
                                 <i class="fas fa-file-pdf"></i> Permohonan
                                 Bantuan.pdf
                             </a>
@@ -385,7 +386,7 @@
                         {{ $a->keterangan }} <br>
                     </td>
                     <td>
-                        <a href="{{ asset('uploads/pengajuan_lampiran/' . $a->url) }}" target="_blank">
+                        <a href="{{ asset('uploads/lampiran_pengajuan/' . $a->url) }}" target="_blank">
                             {{ $a->url }}
                         </a>
                     </td>
@@ -409,17 +410,17 @@
                                     wire:click="modal_lampiran_pengajuan_ubah('{{ $a->lampiran_id }}','{{ $a->url }}')"
                                     type="button" data-toggle="modal"
                                     data-target="#modal_lampiran_pengajuan_ubah"><i class="fas fa-edit"></i>
-                                    Detail</a>
+                                    Ubah</a>
                                 <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item"
                                     wire:click="modal_lampiran_pengajuan_hapus('{{ $a->lampiran_id }}','{{ $a->url }}')"
                                     data-toggle="modal" data-target="#modal_lampiran_pengajuan_hapus"
                                     type="button"><i class="fas fa-trash"></i>
                                     Hapus</a>
-                                <a href="#" {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}} onMouseOver="this.style.color='green'"
+                                {{-- <a href="#" <a href="/unduh-lampiran/{{ $a->lampiran_id }}" onMouseOver="this.style.color='green'"
                                     onMouseOut="this.style.color='black'" class="dropdown-item" type="button">
                                     <i class="fa fa-download"></i> Cetak
-                                </a>
+                                </a> --}}
 
                             </div>
                         </div>

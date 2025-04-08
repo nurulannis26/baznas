@@ -79,7 +79,7 @@
                 {{-- end tgl disetujui --}}
 
                 <div class="form-group col-md-6">
-                    <div class="input-group">
+                    <div class="input-group custom-file custom-file-surat">
                         <input type="file" wire:model="survey_form_url"
                             accept="application/pdf, image/png, image/jpg, image/jpeg" class="custom-file-input"
                             id="file" name="file">
@@ -245,7 +245,14 @@
                         <td class="text-bold " style="width: 30%">
                             Scan Form Survey</td>
                         <td class="mr-2">
-                            <a href="">Form.pdf</a>
+                            @if ($dp->survey_form_url == null)
+                                <span class="text-danger">-</span>
+                            @else
+                                <a href="{{ asset('uploads/lampiran_survey/' . $dp->survey_form_url) }}"
+                                    target="_blank">
+                                    Lihat
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 </thead>
@@ -262,15 +269,15 @@
             <b>B. LAMPIRAN SURVEY</b>
         </div>
         <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
-                wire:click="modal_lampiran_survey_tambah" data-target="#modal_lampiran_survey_tambah"
-                type="button"><i class="fas fa-plus-circle"></i>
-                Tambah</button>
+            wire:click="modal_lampiran_survey_tambah" data-target="#modal_lampiran_survey_tambah" type="button"><i
+                class="fas fa-plus-circle"></i>
+            Tambah</button>
     </div>
 
     {{-- alert --}}
-    @if (session()->has('alert_la'))
+    @if (session()->has('alert_lampiran_survey'))
         <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-            <i class="far fa-check-circle"></i> {{ session('alert_la') }}
+            <i class="far fa-check-circle"></i> {{ session('alert_lampiran_survey') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -301,7 +308,7 @@
                         {{ $a->keterangan }} <br>
                     </td>
                     <td>
-                        <a href="{{ asset('uploads/survey_lampiran/' . $a->url) }}" target="_blank">
+                        <a href="{{ asset('uploads/lampiran_survey/' . $a->url) }}" target="_blank">
                             {{ $a->url }}
                         </a>
                     </td>
@@ -329,15 +336,13 @@
                                 <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item"
                                     wire:click="modal_lampiran_survey_hapus('{{ $a->lampiran_id }}','{{ $a->url }}')"
-                                    data-toggle="modal" data-target="#modal_lampiran_survey_hapus"
-                                    type="button"><i class="fas fa-trash"></i>
+                                    data-toggle="modal" data-target="#modal_lampiran_survey_hapus" type="button"><i
+                                        class="fas fa-trash"></i>
                                     Hapus</a>
-                                <a href="#"
-                                {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}}
-                                    onMouseOver="this.style.color='green'" onMouseOut="this.style.color='black'"
-                                    class="dropdown-item" type="button">
+                                {{-- <a href="#" <a href="/unduh-lampiran/{{ $a->lampiran_id }}" onMouseOver="this.style.color='green'"
+                                    onMouseOut="this.style.color='black'" class="dropdown-item" type="button">
                                     <i class="fa fa-download"></i> Cetak
-                                </a>
+                                </a> --}}
 
                             </div>
                         </div>
@@ -360,4 +365,21 @@
     @include('modal.modal_lampiran_survey_tambah')
     @include('modal.modal_lampiran_survey_ubah')
     @include('modal.modal_lampiran_survey_hapus')
+
+    @push('script')
+        <script>
+            $(document).ready(function() {
+
+                window.loadContactDeviceSelect2 = () => {
+                    bsCustomFileInput.init();
+                }
+
+                loadContactDeviceSelect2();
+                window.livewire.on('loadContactDeviceSelect2', () => {
+                    loadContactDeviceSelect2();
+                });
+
+            });
+        </script>
+    @endpush
 </div>

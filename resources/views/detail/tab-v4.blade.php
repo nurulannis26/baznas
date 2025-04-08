@@ -81,13 +81,13 @@
                 </div>
                 {{-- end direktur --}}
 
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"
-                                style="width: 200px; display: flex; justify-content: center; align-items: center;">Catatan</span>
+                                style="width: 200px; display: flex; justify-content: center; align-items: center;">Nominal</span>
                         </div>
-                        <input wire:model="pencairan_nominal" type="input" class="form-control " id="survey_catatan"
+                        <input wire:model="pencairan_nominal" type="input" class="form-control " id="pencairan_nominal"
                             placeholder="Masukan Nominal">
 
                     </div>
@@ -125,7 +125,7 @@
                     <div class="card card-body " style="background-color:#e0e0e0;">
                         <b>INFORMASI!</b>
                         <span>
-                            Dengan klik tombol Simpan, survey dinyatakan selesai. Lampirkan dokumentasi survey.
+                            Dengan klik tombol Simpan, pencairan permohonan telah berhasil dilakukan.
                         </span>
                     </div>
                 </div>
@@ -136,15 +136,15 @@
 
                 {{-- tombol acc --}}
                 <div class="form-group col-md-3">
-                    @if ($survey_hasil == '')
+                    {{-- @if ($survey_nominal == '')
                         <button class="btn btn-success btn-block" disabled wire:loading.attr="disabled"><i
                                 class="fas fa-check-circle"></i>
                             Simpan</button>
-                    @else
+                    @else --}}
                         <button type="submit" name="submit" class="btn btn-success btn-block"
                             wire:loading.attr="disabled"><i class="fas fa-check-circle"></i>
                             Simpan</button>
-                    @endif
+                    {{-- @endif --}}
                 </div>
                 {{-- acc --}}
 
@@ -213,6 +213,9 @@
                     </div>
                 </div>
                 {{-- end info --}}
+
+                <div class="form-group col-md-9">
+                </div>
 
                 {{-- tombol tolak --}}
                 <div class="form-group col-md-3">
@@ -423,7 +426,7 @@
         </thead>
         <tbody>
 
-            @forelse($lampiran_survey as $a)
+            @forelse($lampiran_pencairan as $a)
                 <tr>
                     <td>
                         {{ $loop->iteration }}
@@ -432,7 +435,7 @@
                         {{ $a->keterangan }} <br>
                     </td>
                     <td>
-                        <a href="{{ asset('uploads/pencairan_lampiran/' . $a->url) }}" target="_blank">
+                        <a href="{{ asset('uploads/lampiran_pencairan/' . $a->url) }}" target="_blank">
                             {{ $a->url }}
                         </a>
                     </td>
@@ -463,10 +466,10 @@
                                     data-toggle="modal" data-target="#modal_lampiran_pencairan_hapus" type="button"><i
                                         class="fas fa-trash"></i>
                                     Hapus</a>
-                                <a href="#" {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}} onMouseOver="this.style.color='green'"
+                                {{-- <a href="#" <a href="/unduh-lampiran/{{ $a->lampiran_id }}" onMouseOver="this.style.color='green'"
                                     onMouseOut="this.style.color='black'" class="dropdown-item" type="button">
                                     <i class="fa fa-download"></i> Cetak
-                                </a>
+                                </a> --}}
 
                             </div>
                         </div>
@@ -489,4 +492,23 @@
     @include('modal.modal_lampiran_pencairan_tambah')
     @include('modal.modal_lampiran_pencairan_ubah')
     @include('modal.modal_lampiran_pencairan_hapus')
+
+    <script>
+        $(document).ready(function() {
+
+            window.loadContactDeviceSelect2 = () => {
+                bsCustomFileInput.init();
+                $('#pencairan_nominal').on('input', function(e) {
+                    $('#pencairan_nominal').val(formatRupiah($('#pencairan_nominal').val(),
+                        'Rp. '));
+                });
+            }
+
+            loadContactDeviceSelect2();
+            window.livewire.on('loadContactDeviceSelect2', () => {
+                loadContactDeviceSelect2();
+            });
+
+        });
+    </script>
 </div>

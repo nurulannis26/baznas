@@ -1,6 +1,7 @@
 @if (Auth::user()->pengurus_id != null)
     {{--  tambah program_penguatan_kelembagaan --}}
-    <div wire:ignore.self class="modal fade " id="modal_lampiran_pengajuan_ubah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade " id="modal_lampiran_pengajuan_ubah" tabindex="-1"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -17,7 +18,7 @@
 
                     <div class="modal-body">
                         <div class="form-row">
-                            
+
                             <div class="form-group col-md-6">
                                 <label>JUDUL &nbsp;</label>
                                 <input wire:model="keterangan_lampiran_edit" type="text" class="form-control"
@@ -37,24 +38,23 @@
                     </div>
 
 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-ban"></i>
+                            Batal</button>
 
+                        @if ($keterangan_lampiran_edit == '')
+                            <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
+                                    class="fas fa-save"></i>
+                                Simpan</button>
+                        @else
+                            <button type="submit" name="submit" class="btn btn-success"
+                                wire:loading.attr="disabled"><i class="fas fa-save"></i>
+                                Simpan</button>
+                        @endif
+                    </div>
 
                 </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                            class="fas fa-ban"></i>
-                        Batal</button>
 
-                    @if ($keterangan_lampiran_edit == '')
-                        <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
-                                class="fas fa-save"></i>
-                            Simpan</button>
-                    @else
-                        <button type="submit" name="submit" class="btn btn-success"
-                            wire:loading.attr="disabled"><i class="fas fa-save"></i>
-                            Simpan</button>
-                    @endif
-                </div>
             </div>
         </div>
         {{-- end tabbed --}}
@@ -64,22 +64,20 @@
         {{-- end form --}}
 
         @push('script')
-  
-        <script>
-            $(document).ready(function() {
-  
-                window.loadContactDeviceSelect2 = () => {
-                    bsCustomFileInput.init();
-                }
-  
-                loadContactDeviceSelect2();
-                window.livewire.on('loadContactDeviceSelect2', () => {
+            <script>
+                $(document).ready(function() {
+
+                    window.loadContactDeviceSelect2 = () => {
+                        bsCustomFileInput.init();
+                    }
+
                     loadContactDeviceSelect2();
+                    window.livewire.on('loadContactDeviceSelect2', () => {
+                        loadContactDeviceSelect2();
+                    });
+
                 });
-  
-            });
-        </script>
-        
+            </script>
         @endpush
 
     </div>
