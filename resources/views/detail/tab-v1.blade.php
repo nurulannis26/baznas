@@ -43,27 +43,27 @@
     </div>
 </div>
 
-
+@if (session()->has('alert_permohonan'))
+    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+        <i class="far fa-check-circle"></i> {{ session('alert_permohonan') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
 <div class="row">
     <div class="col-sm-6 col-md-6 col-lg-6  tab-tab-detail-pengajuan-umum-pc">
         {{-- end diinput oleh --}}
         {{-- judul --}}
-        <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="d-flex justify-content-between align-items-center mt-2">
             <div class="col-lg-12 col-md-6 col-sm-12">
                 <b class="ml-2">A. DETAIL
                     PERMOHONAN</b>
             </div>
         </div>
 
-        @if (session()->has('alert_permohonan'))
-            <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-                <i class="far fa-check-circle"></i> {{ session('alert_permohonan') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+
 
         <div class="col-12 mt-2">
             <table class="table  table-bordered">
@@ -167,8 +167,8 @@
             </button>
 
             <button wire:click="modal_permohonan_ubah('{{ $dp->permohonan_id }}')" style="cursor: pointer"
-                class="btn btn-outline-secondary btn-sm mr-1" data-toggle="modal"
-                data-target="#modal_permohonan_ubah" type="button">
+                class="btn btn-outline-secondary btn-sm mr-1" data-toggle="modal" data-target="#modal_permohonan_ubah"
+                type="button">
                 <i class="fas fa-edit"></i> Ubah
             </button>
 
@@ -437,7 +437,7 @@
 
         </tbody>
     </table>
-    
+
     @include('modal.modal_permohonan_ubah')
     @include('modal.modal_permohonan_hapus')
     @include('modal.modal_mustahik_tambah')

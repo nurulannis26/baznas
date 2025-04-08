@@ -1,6 +1,7 @@
 @if (Auth::user()->pengurus_id != null)
     {{--  tambah program_penguatan_kelembagaan --}}
-    <div wire:ignore.self class="modal fade " id="modal_mustahik_ubah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade " id="modal_mustahik_ubah" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -71,16 +72,16 @@
                             <hr>
                             <div class="form-group col-md-6">
                                 <label for="inputNama">JENIS KELAMIN &nbsp;</label>
-                                    <select wire:model="jenis_kelamin_edit" class=" form-control ">
+                                <select wire:model="jenis_kelamin_edit" class=" form-control ">
                                     <option value="">Pilih Jenis Kelamin</option>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
                                 </select>
                             </div>
                             <hr>
                             <div class="form-group col-md-6 modal-tambah-asnaf-pilar">
                                 <label for="inputNama">ASNAF &nbsp;</label>
-                                    <select wire:model="asnaf_edit" class=" form-control ">
+                                <select wire:model="asnaf_edit" class=" form-control ">
                                     <option value="">Pilih Asnaf</option>
                                     @php
                                         $asnaf_get = DB::table('asnaf')->get();
@@ -135,25 +136,25 @@
                         </div>
                     </div>
 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                class="fas fa-ban"></i>
+                            Batal</button>
 
+                        @if ($nama_edit == '' or $alamat_mustahik_edit == '')
+                            <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
+                                    class="fas fa-save"></i>
+                                Simpan</button>
+                        @else
+                            <button type="submit" name="submit" class="btn btn-success"
+                                wire:loading.attr="disabled"><i class="fas fa-save"></i>
+                                Simpan</button>
+                        @endif
+                    </div>
 
 
                 </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                            class="fas fa-ban"></i>
-                        Batal</button>
 
-                    @if ($nama_edit == '' or $alamat_mustahik_edit == '' )
-                        <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
-                                class="fas fa-save"></i>
-                            Simpan</button>
-                    @else
-                        <button type="submit" name="submit" class="btn btn-success"
-                            wire:loading.attr="disabled"><i class="fas fa-save"></i>
-                            Simpan</button>
-                    @endif
-                </div>
             </div>
         </div>
         {{-- end tabbed --}}
@@ -163,22 +164,20 @@
         {{-- end form --}}
 
         @push('script')
-  
-        <script>
-            $(document).ready(function() {
-  
-                window.loadContactDeviceSelect2 = () => {
-                    bsCustomFileInput.init();
-                }
-  
-                loadContactDeviceSelect2();
-                window.livewire.on('loadContactDeviceSelect2', () => {
+            <script>
+                $(document).ready(function() {
+
+                    window.loadContactDeviceSelect2 = () => {
+                        bsCustomFileInput.init();
+                    }
+
                     loadContactDeviceSelect2();
+                    window.livewire.on('loadContactDeviceSelect2', () => {
+                        loadContactDeviceSelect2();
+                    });
+
                 });
-  
-            });
-        </script>
-        
+            </script>
         @endpush
 
     </div>

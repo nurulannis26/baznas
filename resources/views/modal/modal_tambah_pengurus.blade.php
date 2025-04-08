@@ -1,12 +1,11 @@
 @if (Auth::user()->pengurus_id != null)
     {{--  tambah program_penguatan_kelembagaan --}}
-    <div wire:ignore.self class="modal fade " id="modal_tambah_permohonan" tabindex="-1"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade " id="modal_tambah_pengurus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
 
-                    <h5 class="modal-title"> TAMBAH PERMOHONAN
+                    <h5 class="modal-title"> TAMBAH PENGURUS
                     </h5>
                     <div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,110 +13,61 @@
                         </button>
                     </div>
                 </div>
-                <form wire:submit.prevent="tambah_permohonan">
+                <form wire:submit.prevent="tambah_pengurus">
 
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputNama">JENIS PERMOHONAN &nbsp;</label>
+                                <label>NAMA &nbsp;</label><input wire:model="nama_pengurus" type="text" class="form-control"
+                                    placeholder="Masukan Nama">
+                            </div>
+                            <hr>
+                            <div class="form-group col-md-6">
+                                <label for="inputNama">JENIS KELAMIN &nbsp;</label>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                <select wire:model="permohonan_jenis" class="select2dulus form-control ">
-                                    <option value="">Pilih Jenis Permohonan</option>
-                                    <option value="Individu">INDIVIDU</option>
-                                    <option value="UPZ">UPZ</option>
+                                <select wire:model="jenis_kelamin_pengurus" class="select2dulus form-control ">
+                                    <option value="">Pilih Jenis Kelamin</option>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
 
                                 </select>
                             </div>
                             <hr>
 
                             <div class="form-group col-md-6">
-                                <label for="inputNama">NOMOR PERMOHONAN &nbsp;</label>
-                                <input wire:model="permohonan_nomor" type="text" class="form-control" readonly>
-                            </div>
-                            @if ($this->permohonan_jenis == 'Individu')
-                                {{-- pemohon --}}
-                                <div class="form-group col-md-6">
-                                    <label>NAMA PEMOHON &nbsp;</label><input wire:model="permohonan_nama_pemohon"
-                                        type="text" class="form-control" placeholder="Masukan Nama Pemohon">
-                                </div>
-                                <hr>
-                                {{-- end pemohon --}}
-
-                                {{-- nohp --}}
-                                <div class="form-group col-md-6 ">
-                                    <label>NO HP PEMOHON &nbsp;</label>
-
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="permohonan_nohp_pemohon" id="permohonan_nohp_pemohon"
-                                        type="text" class="form-control" placeholder="Masukan No HP Pemohon"
-                                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-                                </div>
-                                <hr>
-                                {{-- end nohp --}}
-                                <div class="form-group col-md-12">
-                                    <label>ALAMAT PEMOHON &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="permohonan_alamat_pemohon" type="text" class="form-control"
-                                        placeholder="Masukan Alamat Pemohon">
-                                </div>
-                            @elseif($this->permohonan_jenis == 'UPZ')
-                                <div class="form-group col-md-6">
-                                    <label>NAMA UPZ &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="upz" type="text" class="form-control"
-                                        placeholder="Masukan Nama UPZ">
-                                </div>
-                                <hr>
-                                <div class="form-group col-md-6 ">
-                                    <label>NO HP UPZ &nbsp;</label>
-
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="nohp" id="nohp" type="text" class="form-control"
-                                        placeholder="Masukan No HP UPZ"
-                                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-                                </div>
-                                <hr>
-                                <div class="form-group col-md-12">
-                                    <label>ALAMAT UPZ &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="alamat" type="text" class="form-control"
-                                        placeholder="Masukan Alamat UPZ">
-                                </div>
-                                <hr>
-                                <div class="form-group col-md-6">
-                                    <label>NAMA PJ &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="pj_nama" type="text" class="form-control"
-                                        placeholder="Masukan Nama PJ Permohonan">
-                                </div>
-                                <hr>
-                                <div class="form-group col-md-6">
-                                    <label>JABATAN &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="pj_jabatan" type="text" class="form-control"
-                                        placeholder="Masukan Jabatan PJ">
-                                </div>
-                                <hr>
-                            @endif
-                            <hr style="width: 100%; border: none; border-top: 1px solid #797b7d; margin: 10px 0;">
-
-                            <div class="form-group col-md-6">
-                                <label>JUDUL SURAT &nbsp;</label>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
-                                <input wire:model="surat_judul" type="text" class="form-control"
-                                    placeholder="Masukkan Judul Surat">
+                                <label for="inputNama">NOMOR HP &nbsp;</label>
+                                <input wire:model="nohp_pengurus" type="text" class="form-control" placeholder="Masukan Nomor HP">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>NOMOR SURAT &nbsp;</label>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
-                                <input wire:model="surat_nomor" type="text" class="form-control"
-                                    placeholder="Masukkan Nomor Surat">
+                                <label for="inputNama">EMAIL &nbsp;</label>
+                                <input wire:model="email_pengurus" type="text" class="form-control" placeholder="Masukan Email">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>TGL SURAT &nbsp;</label>
-                                <input wire:model="surat_tgl" type="date" class="form-control">
+                                <label>NIK &nbsp;</label>
+                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
+                                <input wire:model="nik_pengurus" type="text" class="form-control"
+                                    placeholder="Masukkan NIK">
+                            </div>
+                            <hr>
+                            <div class="form-group col-md-6">
+                                <label>KK &nbsp;</label>
+                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
+                                <input wire:model="kk_pengurus" type="text" class="form-control"
+                                    placeholder="Masukkan KK">
+                            </div>
+                            <hr>
+                            <div class="form-group col-md-6">
+                                <label>TEMPAT LAHIR &nbsp;</label>
+                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
+                                <input wire:model="tgl_lahir_pengurus" type="text" class="form-control"
+                                    placeholder="Masukkan Tempat Lahir">
+                            </div>
+                            <hr>
+                            <div class="form-group col-md-12">
+                                <label>ALAMAT &nbsp;</label>
+                                <input wire:model="alamat_pengurus" type="text" class="form-control" placeholder="Masukkan Alamat">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
@@ -139,7 +89,7 @@
                                 <label for="inputNama">ASNAF &nbsp;</label>
                                 <sup class="badge badge-danger text-white mb-2"
                                     style="background-color:rgb(0, 187, 31)">Optional</sup>
-                                <select wire:model="asnaf_id" class=" form-control ">
+                                    <select wire:model="asnaf_id" class=" form-control ">
                                     <option value="">Pilih Asnaf</option>
                                     @php
                                         $asnaf_get = DB::table('asnaf')->get();
@@ -171,7 +121,7 @@
                                 <label for="inputNama">SUB PROGRAM &nbsp;</label>
                                 {{-- <sup class="badge badge-danger text-white  mb-2"
                               style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                <select class="form-control" id="select2Permohonan" wire:model="selectedProgram"
+                                <select  class="form-control" id="select2Permohonan" wire:model="selectedProgram"
                                     data-placeholder="Pilih Program Terlebih Dahulu">
 
                                     @if ($program_id == '')
@@ -235,29 +185,29 @@
                             {{-- end info --}}
 
 
-
+                            
                         </div>
                     </div>
 
 
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                class="fas fa-ban"></i>
-                            Batal</button>
 
-                        @if ($permohonan_nominal == '' or $permohonan_bentuk_bantuan == '' or $permohonan_jenis == '')
-                            <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
-                                    class="fas fa-save"></i>
-                                Simpan</button>
-                        @else
-                            <button type="submit" name="submit" class="btn btn-success"
-                                wire:loading.attr="disabled"><i class="fas fa-save"></i>
-                                Simpan</button>
-                        @endif
-                    </div>
                 </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                            class="fas fa-ban"></i>
+                        Batal</button>
 
+                    @if ($permohonan_nominal == '' or $permohonan_bentuk_bantuan == '' or $permohonan_jenis == '')
+                        <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
+                                class="fas fa-save"></i>
+                            Simpan</button>
+                    @else
+                        <button type="submit" name="submit" class="btn btn-success"
+                            wire:loading.attr="disabled"><i class="fas fa-save"></i>
+                            Simpan</button>
+                    @endif
+                </div>
             </div>
         </div>
         {{-- end tabbed --}}
@@ -267,32 +217,33 @@
         {{-- end form --}}
 
         @push('script')
-            <script>
-                $(document).ready(function() {
-                    // Menginisialisasi Select2 setelah halaman dimuat sepenuhnya
+        <script>
+            $(document).ready(function() {
+                // Menginisialisasi Select2 setelah halaman dimuat sepenuhnya
+                $('#select2Permohonan').select2();
+            });
+        </script>
+  
+        <script>
+            $(document).ready(function() {
+  
+                window.loadContactDeviceSelect2 = () => {
+                    bsCustomFileInput.init();
                     $('#select2Permohonan').select2();
-                });
-            </script>
-
-            <script>
-                $(document).ready(function() {
-
-                    window.loadContactDeviceSelect2 = () => {
-                        bsCustomFileInput.init();
-                        $('#select2Permohonan').select2();
-                        $('#nominal_permohonan').on('input', function(e) {
-                            $('#nominal_permohonan').val(formatRupiah($('#nominal_permohonan').val(),
-                                'Rp. '));
-                        });
-                    }
-
-                    loadContactDeviceSelect2();
-                    window.livewire.on('loadContactDeviceSelect2', () => {
-                        loadContactDeviceSelect2();
+                    $('#nominal_permohonan').on('input', function(e) {
+                        $('#nominal_permohonan').val(formatRupiah($('#nominal_permohonan').val(),
+                            'Rp. '));
                     });
-
+                }
+  
+                loadContactDeviceSelect2();
+                window.livewire.on('loadContactDeviceSelect2', () => {
+                    loadContactDeviceSelect2();
                 });
-            </script>
+  
+            });
+        </script>
+        
         @endpush
 
     </div>

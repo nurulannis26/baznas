@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\WithFileUploads;
 
 
 
 class DetailPermohonan extends Component
 {
+    use WithFileUploads;
     public $permohonan_id;
     public $lampiran_id;
     public $mustahik_id;
@@ -89,6 +91,21 @@ class DetailPermohonan extends Component
     public $keterangan_edit;
     public $keterangan_lampiran_edit;
     public $url_edit;
+    public $nama;
+    public $nik;
+    public $kk;
+    public $tempat_lahir;
+    public $tgl_lahir;
+    public $alamat_mustahik;
+    public $nohp_mustahik;
+    public $email;
+    public $jenis_kelamin;
+    public $asnaf;
+    public $rt;
+    public $rw;
+    public $foto_url;
+    public $ktp_url;
+    public $kk_url;
 
     public function mount()
     {
@@ -139,6 +156,12 @@ class DetailPermohonan extends Component
             'daftar_mustahik',
             'petugas_survey',
         ));
+    }
+
+    public function hydrate()
+    {
+        $this->emit('loadContactDeviceSelect2');
+        $this->emit('select2');
     }
 
     public function reset_edit()
@@ -254,7 +277,6 @@ class DetailPermohonan extends Component
         $this->pj_nohp_edit = $data->pj_nohp;
         $this->keterangan_edit = $data->keterangan;
         
-        $this->surat_url_edit = $data->surat_url;
         $this->surat_judul_edit = $data->surat_judul;
         $this->surat_nomor_edit = $data->surat_nomor;
         $this->surat_tgl_edit = $data->surat_tgl;
@@ -320,6 +342,7 @@ class DetailPermohonan extends Component
 
 
         if ($this->surat_url_edit != NULL) {
+            dd($this->surat_url_edit);
             if ($data->surat_url != null) {
                 $path = public_path() . "/permohonan" . $data->surat_url;
                 if (file_exists($path)) {
@@ -383,6 +406,7 @@ class DetailPermohonan extends Component
             'permohonan_status_input' => 'Selesai Input',
         ]);
 
+        $this->emit('waktu_alert');
         session()->flash('alert_permohonan', 'Pengajuan telah selesai input!');
     }
 
@@ -393,6 +417,7 @@ class DetailPermohonan extends Component
             'permohonan_status_input' => 'Belum Selesai Input',
         ]);
 
+        $this->emit('waktu_alert');
         session()->flash('alert_permohonan', 'Pengajuan telah dibatalkan!');
     }
 
@@ -401,24 +426,26 @@ class DetailPermohonan extends Component
 
     }
 
-    public function mustahik_tambah()
+    public function tambah_mustahik()
     {
+        // dd($this->ktp_url);
         if ($this->foto_url) {
             $ext = $this->foto_url->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->foto_url->storeAs('uploads/foto_diri', $file_name);
+            $this->foto_url->storeAs('uploads/foto_diri', $file_name, 'public');
         }
 
         if ($this->ktp_url) {
+        //     dd('baba');
             $ext = $this->ktp_url->extension();
             $file_name_ktp = Str::uuid()->toString() . '.' . $ext;
-            $this->ktp_url->storeAs('uploads/ktp', $file_name_ktp);
+            $this->ktp_url->storeAs('uploads/ktp', $file_name_ktp, 'public');
         }
 
         if ($this->kk_url) {
             $ext = $this->kk_url->extension();
             $file_name_kk = Str::uuid()->toString() . '.' . $ext;
-            $this->kk_url->storeAs('uploads/kk', $file_name_kk);
+            $this->kk_url->storeAs('uploads/kk', $file_name_kk, 'public');
         }
 
         $mustahik = Mustahik::create([
@@ -435,10 +462,12 @@ class DetailPermohonan extends Component
             'asnaf_id' => $this->asnaf,
             'rt' => $this->rt,
             'rw' => $this->rw,
-            'ktp_url' => $file_name_ktp,
-            'kk_url' => $file_name_kk,
-            'foto_url' => $file_name,
+            'ktp_url' => $file_name_ktp ?? null,
+            'kk_url' => $file_name_kk ?? null,
+            'foto_url' => $file_name ?? null,
         ]);
+
+        // dd($mustahik);
 
         $daftar_mustahik = DaftarMustahik::create([
             'daftar_mustahik_id' => Str::uuid(),
@@ -454,7 +483,7 @@ class DetailPermohonan extends Component
     public function modal_mustahik_ubah($mustahik_id)
     {
         $mustahik = Mustahik::where('mustahik_id', $mustahik_id)->first();
-        
+        $this->mustahik_id = $mustahik_id;
         $this->nama_edit = $mustahik->nama;
         $this->nik_edit = $mustahik->nik;
         $this->kk_edit = $mustahik->kk;
@@ -467,14 +496,14 @@ class DetailPermohonan extends Component
         $this->asnaf_edit = $mustahik->asnaf_id;
         $this->rt_edit = $mustahik->rt;
         $this->rw_edit = $mustahik->rw;
-        $this->ktp_url_edit = $mustahik->ktp_url;
-        $this->kk_url_edit = $mustahik->kk_url;
-        $this->foto_url_edit = $mustahik->foto_url;
+        // $this->ktp_url_edit = $mustahik->ktp_url;
+        // $this->kk_url_edit = $mustahik->kk_url;
+        // $this->foto_url_edit = $mustahik->foto_url;
     }
 
-    public function mustahik_ubah($mustahik_id)
+    public function ubah_mustahik()
     {
-        $mustahik = Mustahik::where('mustahik_id', $mustahik_id)->first();
+        $mustahik = Mustahik::where('mustahik_id', $this->mustahik_id)->first();
 
         if ($this->foto_url_edit != NULL) {
             if ($mustahik->foto_url != null) {

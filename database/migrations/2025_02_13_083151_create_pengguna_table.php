@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('nik');
             $table->string('kk')->nullable();
             $table->string('nama');
-            $table->integer('jenis_kelamin');
+            $table->string('jenis_kelamin');
             $table->string('tempat_lahir');
             $table->date('tgl_lahir');
             $table->string('email')->unique();

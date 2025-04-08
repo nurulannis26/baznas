@@ -17,7 +17,8 @@ return new class extends Migration
             $table->uuid('daftar_mustahik_id')->primary();
             $table->foreignUuid('permohonan_id')->index()->nullable();
             $table->foreign('permohonan_id')->references('permohonan_id')->on('permohonan');
-            $table->enum('mustahik_id', ["Permohonan","Survey","Pencairan","LPJ"])->nullable();
+            $table->foreignUuid('mustahik_id')->index()->nullable();
+            $table->foreign('mustahik_id')->references('mustahik_id')->on('mustahik');
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
         });

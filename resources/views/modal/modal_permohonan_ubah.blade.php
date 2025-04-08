@@ -180,16 +180,22 @@
                                 <select class="form-control" id="select2Permohonan" wire:model="sub_program_id_edit"
                                     data-placeholder="Pilih Program Terlebih Dahulu">
                                     @php
-                                           $daftar_kegiatan_edit = App\Models\SubProgram::where('program_id', $this->program_id_edit)
-                                               ->whereRaw('LENGTH(no_urut) = 3')
-                                               ->orderBy('no_urut', 'ASC')
-                                               ->get();
+                                        $daftar_kegiatan_edit = App\Models\SubProgram::where(
+                                            'program_id',
+                                            $this->program_id_edit,
+                                        )
+                                            ->whereRaw('LENGTH(no_urut) = 3')
+                                            ->orderBy('no_urut', 'ASC')
+                                            ->get();
 
-                                           $daftar_kegiatan2_edit = App\Models\SubProgram::where('program_id', $this->program_id_edit)
-                                               ->whereRaw('LENGTH(no_urut) = 4')
-                                               ->orderBy('no_urut', 'ASC')
-                                               ->get();
-                                       @endphp
+                                        $daftar_kegiatan2_edit = App\Models\SubProgram::where(
+                                            'program_id',
+                                            $this->program_id_edit,
+                                        )
+                                            ->whereRaw('LENGTH(no_urut) = 4')
+                                            ->orderBy('no_urut', 'ASC')
+                                            ->get();
+                                    @endphp
                                     @if ($program_id_edit == '')
                                         <option value="" disabled>Pilih Pilar Terlebih Dahulu</option>
                                     @else
@@ -257,23 +263,24 @@
                     </div>
 
 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                class="fas fa-ban"></i>
+                            Batal</button>
 
+                        @if ($permohonan_nominal_edit == '' or $permohonan_bentuk_bantuan_edit == '' or $permohonan_jenis_edit == '')
+                            <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
+                                    class="fas fa-save"></i>
+                                Simpan</button>
+                        @else
+                            <button type="submit" name="submit" class="btn btn-success"
+                                wire:loading.attr="disabled"><i class="fas fa-save"></i>
+                                Simpan</button>
+                        @endif
+                    </div>
 
                 </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-ban"></i>
-                        Batal</button>
 
-                    @if ($permohonan_nominal_edit == '' or $permohonan_bentuk_bantuan_edit == '' or $permohonan_jenis_edit == '')
-                        <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
-                                class="fas fa-save"></i>
-                            Simpan</button>
-                    @else
-                        <button type="submit" name="submit" class="btn btn-success"
-                            wire:loading.attr="disabled"><i class="fas fa-save"></i>
-                            Simpan</button>
-                    @endif
-                </div>
             </div>
         </div>
         {{-- end tabbed --}}
