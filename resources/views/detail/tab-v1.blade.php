@@ -18,10 +18,16 @@
         @endif
 
         @if ($dp->permohonan_status_atasan == 'Diterima')
-            @if ($dp->survey_status == 'Selesai')
-                <sup class="text-light badge badge-success">Survey Disetujui</sup>
+
+            @if ($dp->survey_pilihan == 'Perlu')
+                <sup class="text-light badge badge-succes">Perlu Survey</sup>
+                @if ($dp->survey_status == 'Selesai')
+                    <sup class="text-light badge badge-success">Survey Disetujui</sup>
+                @else
+                    <sup class="text-light badge badge-warning">Survey Blm Selesai</sup>
+                @endif
             @else
-                <sup class="text-light badge badge-warning">Survey Blm Selesai</sup>
+                <sup class="text-light badge badge-secondary">Tidak Perlu Survey</sup>
             @endif
         @endif
 
@@ -32,6 +38,14 @@
                 <sup class="text-light badge badge-danger">Pencairan Ditolak</sup>
             @else
                 <sup class="text-light badge badge-warning">Blm Dicairkan</sup>
+            @endif
+        @endif
+
+        @if ($dp->pencairan_status == 'Berhasil Dicairkan')
+            @if ($dp->pyl_status == 'Selesai')
+                <sup class="text-light badge badge-success">Penyaluran Disetujui</sup>
+            @else
+                <sup class="text-light badge badge-warning">Penyaluran Blm Selesai</sup>
             @endif
         @endif
 
@@ -159,6 +173,7 @@
 
     <div class="col-sm-6 col-md-6 col-lg-6  tab-tab-detail-pengajuan-umum-pc">
 
+        @if(Auth::user()->pengurus_id != null and Auth::user()->pengurus->jabatan->divisi->divisi_id = '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
         <div class="d-flex align-items-center justify-content-end mb-2 mt-3 text-right" style="flex-grow: 1;">
             <button wire:click="modal_permohonan_hapus('{{ $dp->permohonan_id }}')" style="cursor: pointer"
                 class="btn btn-outline-secondary btn-sm mr-1" data-toggle="modal" data-target="#modal_permohonan_hapus"
@@ -185,6 +200,7 @@
                 </button>
             </div>
         </div>
+        @endif
 
 
         {{-- end judul --}}

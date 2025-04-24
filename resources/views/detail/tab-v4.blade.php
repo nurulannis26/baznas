@@ -18,10 +18,16 @@
         @endif
 
         @if ($dp->permohonan_status_atasan == 'Diterima')
-            @if ($dp->survey_status == 'Selesai')
-                <sup class="text-light badge badge-success">Survey Disetujui</sup>
+
+            @if ($dp->survey_pilihan == 'Perlu')
+                <sup class="text-light badge badge-succes">Perlu Survey</sup>
+                @if ($dp->survey_status == 'Selesai')
+                    <sup class="text-light badge badge-success">Survey Disetujui</sup>
+                @else
+                    <sup class="text-light badge badge-warning">Survey Blm Selesai</sup>
+                @endif
             @else
-                <sup class="text-light badge badge-warning">Survey Blm Selesai</sup>
+                <sup class="text-light badge badge-secondary">Tidak Perlu Survey</sup>
             @endif
         @endif
 
@@ -32,6 +38,14 @@
                 <sup class="text-light badge badge-danger">Pencairan Ditolak</sup>
             @else
                 <sup class="text-light badge badge-warning">Blm Dicairkan</sup>
+            @endif
+        @endif
+
+        @if ($dp->pencairan_status == 'Berhasil Dicairkan')
+            @if ($dp->pyl_status == 'Selesai')
+                <sup class="text-light badge badge-success">Penyaluran Disetujui</sup>
+            @else
+                <sup class="text-light badge badge-warning">Penyaluran Blm Selesai</sup>
             @endif
         @endif
 
@@ -246,7 +260,7 @@
             <div class="ml-1">
                 <b> A. HASIL PENCAIRAN </b>
             </div>
-            @if (Auth::user()->pengurus_id != null)
+            @if (Auth::user()->pengurus_id != null and Auth::user()->pengurus->jabatan->divisi->divisi_id = 'e6e554db-da6a-42d7-8bd7-3ccdb250fb2e')
                 {{-- <div class="ml-2" style="padding-left: 250px;"> --}}
                 <div class="btn-group">
 

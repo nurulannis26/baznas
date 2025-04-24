@@ -58,8 +58,8 @@
             color: #ffffff !important;
         }
     </style>
-    <title>E-TASYARUF</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('images/logo_siftnu.png') }}">
+    <title>E-DISDAY</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/baznas.png') }}">
     @include('template.css')
 
     @yield('css')

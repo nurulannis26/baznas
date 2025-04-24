@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\Helper;
 use Livewire\Component;
 use App\Models\Permohonan as ModelsPermohonan;
 use App\Models\Program;
@@ -10,6 +11,7 @@ use App\Models\Surat;
 use App\Models\Upz;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 
@@ -229,6 +231,33 @@ private function getRomawi($month)
         $this->emit('select2');
     }
 
+    public function nama_pengurus($id)
+    {
+        $a = DB::table('pengguna')->where('pengguna.pengurus_id', $id)->first();
+        return $a ? $a->nama : null;
+    }
+
+    public function jabatan_pengurus($id)
+    {
+        $a = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->where('pengguna.pengurus_id', $id)->first();
+        return $a ? $a->jabatan : null;
+    }
+
+    public function nama_sub($id)
+    {
+        $a = SubProgram::where('sub_program_id', $id)->first();
+
+        return  $a->nama_program ?? '';
+    }
+
+    public function nama_program($id)
+    {
+        $a = Program::where('program_id', $id)->first();
+
+        return  $a->pilar ?? '';
+    }
+
     public function tambah_permohonan()
     {
         // dd('baba');
@@ -293,15 +322,80 @@ private function getRomawi($month)
 
         if ($this->permohonan_jenis == "Individu") {
             $pemohon =$this->permohonan_nama_pemohon;
-            $nohp =$this->permohonan_nohp_pemohon;
         } elseif ($this->permohonan_jenis == "UPZ") {
             $pemohon =$this->pj_nama;
-            $nohp =$this->nohp;
         } 
+
+        $front = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
+        ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
+        ->where('divisi.divisi_id', '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
+        ->where('pengguna.status', '1')
+        ->fisrt();
+
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        // $url =  "https://e-tasyaruf.nucarecilacap.id/detail-permohonan/" . $this->permohonan_id;
+
+        $this->notif(
+            Helper::getNohpPengurus($front->pengurus_id),
+            // '089639481199',
+
+            "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
+
+                "Yth. " . "*" . $this->nama_pengurus($front->pengurus_id) .  "*" . "\n" .
+                $this->jabatan_pengurus($front->pengurus_id) . "\n" . "\n" .
+
+                "*Permohonan berhasil diinputkan*" . "\n" . "*Lengkapi lampiran & daftar mustahik lalu konfirmasi selesai input.*" . "\n" . "\n" .
+
+                "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
+                "*" .  "Nomor"  . "*" .  "\n" .
+                $this->permohonan_nomor  . "\n" .
+                "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
+                \Carbon\Carbon::parse($this->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                "*" .  "Nama Pemohon"  . "*" .  "\n" .
+                $this->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
+                'Rp' . number_format($this->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                "========================" . "\n" ."\n" .
+                "*" .  "Asnaf"  . "*" .  "\n" .
+                $asnaf .  "\n" .
+                "*" .  "Pilar"  . "*" .  "\n" .
+                $this->nama_program($this->program_id) .  "\n" .
+                $this->nama_sub($this->sub_program_id) .  "\n" .
+                "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
+                $this->permohonan_catatan_input .  "\n" . "\n" .
+
+                "Terima Kasih." 
+                // url($url)
+        );
 
         $this->dispatchBrowserEvent('closeModal');
 
         return redirect('/detail-permohonan/' . $permohonan->permohonan_id);
+    }
+
+    public function notif($nomor, $pesan)
+    {
+        $url = "http://103.23.198.175:3125/sendMessageTextWithveriyExistsNumber";
+
+        $data = [
+            'id' => $nomor . '@s.whatsapp.net',
+            'text' => $pesan,
+            'token' => 'eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY4ODg5NzMyNSwiaWF0IjoxNjg4ODk3MzI1fQ', // ganti dengan token kamu yang valid
+        ];
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ])->post($url, $data);
+
+        if ($response->successful()) {
+            // Kirim berhasil
+            session()->flash('success', 'Notifikasi WA berhasil dikirim');
+        } else {
+            // Kirim gagal
+            session()->flash('error', 'Gagal kirim notifikasi WA');
+        }
     }
     
 }

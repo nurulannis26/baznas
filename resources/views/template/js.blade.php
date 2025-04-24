@@ -1,4 +1,3 @@
-
 <!-- jQuery -->
 <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
 <!-- Bootstrap -->
@@ -27,6 +26,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 
+
 <script>
     $(function() {
         bsCustomFileInput.init();
@@ -38,7 +38,6 @@
         toastr.success('Berhasil Diubah')
     </script>
 @endif
-
 
 
 

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>E-DISDAY</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/baznas.png') }}">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -94,7 +94,7 @@
                     <h2 class="h4 font-weight-bold text-success">Selamat datang di E-DISDAY</h2>
                     <p class="h6 text-success">Pendistribusian & Pemberdayaan</p>
                     <hr class="border-warning w-50 mb-3">
-                    <form action="{{ route('login.action') }}" method="POST">
+                    <form action="{{ route('login.action') }}" method="POST" autocomplete="on">
                         @csrf
                         <div class="mt-2 font-bold text-left">
                             Masuk ke akun anda
@@ -108,18 +108,18 @@
                             <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan Password" required>
                         </div>
                 
-                        <div class="form-group d-flex justify-content-between align-items-center">
+                        {{-- <div class="form-group d-flex justify-content-between align-items-center">
                             <div>
                                 <input type="checkbox" id="remember" name="remember">
                                 <label for="remember">Ingat Saya</label>
                             </div>
                             <a href="#" class="text-success">Lupa Password?</a>
-                        </div>
+                        </div> --}}
                 
                         <button type="submit" class="btn btn-success btn-block mt-4">Masuk</button>
                     </form>
                 
-                    <p class="help-text mt-3">Butuh bantuan? <a href="#" class="text-success">Hubungi bantuan teknis</a></p>
+                    <p class="help-text mt-3">Butuh bantuan? <a href="https://wa.me/6285842716803" class="text-success">Hubungi bantuan teknis</a></p>
                 </div>
             </div>
         </div>

@@ -18,10 +18,16 @@
         @endif
 
         @if ($dp->permohonan_status_atasan == 'Diterima')
-            @if ($dp->survey_status == 'Selesai')
-                <sup class="text-light badge badge-success">Survey Disetujui</sup>
+
+            @if ($dp->survey_pilihan == 'Perlu')
+                <sup class="text-light badge badge-succes">Perlu Survey</sup>
+                @if ($dp->survey_status == 'Selesai')
+                    <sup class="text-light badge badge-success">Survey Disetujui</sup>
+                @else
+                    <sup class="text-light badge badge-warning">Survey Blm Selesai</sup>
+                @endif
             @else
-                <sup class="text-light badge badge-warning">Survey Blm Selesai</sup>
+                <sup class="text-light badge badge-secondary">Tidak Perlu Survey</sup>
             @endif
         @endif
 
@@ -32,6 +38,14 @@
                 <sup class="text-light badge badge-danger">Pencairan Ditolak</sup>
             @else
                 <sup class="text-light badge badge-warning">Blm Dicairkan</sup>
+            @endif
+        @endif
+
+        @if ($dp->pencairan_status == 'Berhasil Dicairkan')
+            @if ($dp->pyl_status == 'Selesai')
+                <sup class="text-light badge badge-success">Penyaluran Disetujui</sup>
+            @else
+                <sup class="text-light badge badge-warning">Penyaluran Blm Selesai</sup>
             @endif
         @endif
 
@@ -118,7 +132,8 @@
                     <div class="card card-body " style="background-color:#e0e0e0;">
                         <b>INFORMASI!</b>
                         <span>
-                            Dengan klik tombol Simpan, penyaluran dinyatakan selesai. Lampirkan dokumentasi penyaluran/scan LPJ.
+                            Dengan klik tombol Simpan, penyaluran dinyatakan selesai. Lampirkan dokumentasi
+                            penyaluran/scan LPJ.
                         </span>
                     </div>
                 </div>
@@ -134,9 +149,9 @@
                                 class="fas fa-check-circle"></i>
                             Simpan</button>
                     @else --}}
-                        <button type="submit" name="submit" class="btn btn-success btn-block"
-                            wire:loading.attr="disabled"><i class="fas fa-check-circle"></i>
-                            Simpan</button>
+                    <button type="submit" name="submit" class="btn btn-success btn-block"
+                        wire:loading.attr="disabled"><i class="fas fa-check-circle"></i>
+                        Simpan</button>
                     {{-- @endif --}}
                 </div>
                 {{-- acc --}}
@@ -155,9 +170,11 @@
 
         <div class="d-flex justify-content-between align-items-center mt-3">
             <div class="ml-1">
-                <b> A. LPJ & BA  </b>
+                <b> A. LPJ & BA </b>
             </div>
-            @if (Auth::user()->pengurus_id != null)
+            @if (Auth::user()->pengurus_id != null and
+                    (Auth::user()->pengurus->jabatan->divisi->divisi_id = '78e31483-4c70-4736-8768-621ec862b30d'
+                    and $dp->pencairan_status != 'Ditolak'))
                 {{-- <div class="ml-2" style="padding-left: 250px;"> --}}
                 <div class="btn-group">
 
@@ -245,11 +262,12 @@
                         <td class="text-bold " style="width: 30%">
                             Scan Form LPJ</td>
                         <td class="mr-2">
-                            @if($dp->pyl_form_url == null)
+                            @if ($dp->pyl_form_url == null)
                                 <span>-</span>
                             @else
-                                <a href="{{ asset('uploads/penyaluran/' . $dp->pyl_form_url) }}" target="_blank">Lihat
-                                </a> 
+                                <a href="{{ asset('uploads/penyaluran/' . $dp->pyl_form_url) }}"
+                                    target="_blank">Lihat
+                                </a>
                             @endif
                         </td>
                     </tr>
@@ -267,9 +285,9 @@
             <b>B. LAMPIRAN LPJ</b>
         </div>
         <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
-                wire:click="modal_lampiran_pyl_tambah" data-target="#modal_lampiran_pyl_tambah"
-                type="button"><i class="fas fa-plus-circle"></i>
-                Tambah</button>
+            wire:click="modal_lampiran_pyl_tambah" data-target="#modal_lampiran_pyl_tambah" type="button"><i
+                class="fas fa-plus-circle"></i>
+            Tambah</button>
     </div>
 
     {{-- alert --}}
@@ -334,13 +352,11 @@
                                 <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item"
                                     wire:click="modal_lampiran_pyl_hapus('{{ $a->lampiran_id }}','{{ $a->url }}')"
-                                    data-toggle="modal" data-target="#modal_lampiran_pyl_hapus"
-                                    type="button"><i class="fas fa-trash"></i>
+                                    data-toggle="modal" data-target="#modal_lampiran_pyl_hapus" type="button"><i
+                                        class="fas fa-trash"></i>
                                     Hapus</a>
-                                <a href="#"
-                                {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}}
-                                    onMouseOver="this.style.color='green'" onMouseOut="this.style.color='black'"
-                                    class="dropdown-item" type="button">
+                                <a href="#" {{-- <a href="/unduh-lampiran/{{ $a->lampiran_id }}" --}} onMouseOver="this.style.color='green'"
+                                    onMouseOut="this.style.color='black'" class="dropdown-item" type="button">
                                     <i class="fa fa-download"></i> Cetak
                                 </a>
 

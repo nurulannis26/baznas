@@ -26,7 +26,7 @@
                             </div>
                             <select wire:model="filters_fo" wire:loading.attr="disabled" class="form-control"
                                 onchange="submitPermohonan();" name="fo_lv">
-                                <option value="">Semua</option>
+                                <option value="Semua">Semua</option>
                                 <option value="Belum Selesai Input">Belum Selesai Input</option>
                                 <option value="Selesai Input">Selesai Input</option>
 
@@ -40,7 +40,7 @@
                             </div>
                             <select wire:model="filters_atasan" wire:loading.attr="disabled" class="form-control"
                                 onchange="submitPermohonan();" name="atasan_lv">
-                                <option value="">Semua</option>
+                                <option value="Semua">Semua</option>
                                 <option value="Belum Dicek">Belum Dicek</option>
                                 <option value="Diterima">Diterima</option>
                             </select>
@@ -53,7 +53,7 @@
                             </div>
                             <select wire:model="filters_survey" wire:loading.attr="disabled" class="form-control"
                                 onchange="submitPermohonan();" name="survey_lv">
-                                <option value="">Semua</option>
+                                <option value="Semua">Semua</option>
                                 <option value="Tidak Perlu">Tidak Perlu</option>
                                 <option value="Perlu">Perlu</option>
                             </select>
@@ -67,7 +67,7 @@
                             </div>
                             <select wire:model="filters_pencairan" wire:loading.attr="disabled" class="form-control"
                                 onchange="submitPermohonan();" name="pencairan_lv">
-                                <option value="">Semua</option>
+                                <option value="Semua">Semua</option>
                                 <option value="Belum Dicairkan">Belum Dicairkan</option>
                                 <option value="Berhasil Dicairkan">Berhasil Dicairkan</option>
                             </select>
@@ -83,7 +83,7 @@
                             </div>
                             <select wire:model="filters_lpj" wire:loading.attr="disabled" class="form-control"
                                 onchange="submitPermohonan();" name="lpj_lv">
-                                <option value="">Semua</option>
+                                <option value="Semua">Semua</option>
                                 <option value="Belum LPJ">Belum LPJ</option>
                                 <option value="Sudah LPJ">Sudah LPJ</option>
                             </select>
@@ -103,14 +103,24 @@
                                 <i class="fas fa-file"></i>&nbsp; Ekspor
                             </button>
                             <div class="dropdown-menu">
-                                <a form="none" class="dropdown-item" onMouseOver="this.style.color='red'"
-                                    onMouseOut="this.style.color='black'" type="button" href="" target="_blank">
+                                <a class="dropdown-item" onMouseOver="this.style.color='red'"
+                                    onMouseOut="this.style.color='black'" type="button"
+                                    href="{{ route('print_permohonan_pdf', [
+                                        'filter_daterange' => $filter_daterange,
+                                        'filters_fo' => $filters_fo,
+                                        'filters_atasan' => $filters_atasan,
+                                        'filters_pencairan' => $filters_pencairan,
+                                        'filters_survey' => $filters_survey,
+                                        'filters_lpj' => $filters_lpj,
+                                    ]) }}"
+                                    target="_blank">
                                     <i class="fas fa-file-pdf"></i>&nbsp; Pdf
                                 </a>
-                                <a form="none" class="dropdown-item" onMouseOver="this.style.color='green'"
+
+                                {{-- <a form="none" class="dropdown-item" onMouseOver="this.style.color='green'"
                                     onMouseOut="this.style.color='black'" type="button" href="#">
                                     <i class="fas fa-file-excel"></i>&nbsp; Excel
-                                </a>
+                                </a> --}}
 
                             </div>
                         </div>
@@ -175,6 +185,7 @@
                 </thead>
                 <tbody>
                     @foreach ($data as $a)
+                        {{-- {{dd($data)}} --}}
                         @php
 
                             if ($a->permohonan_status_input == 'Selesai Input') {
@@ -188,6 +199,9 @@
                             if ($a->permohonan_status_atasan == 'Diterima') {
                                 $bg_atasan = 'badge-success';
                                 $ket_atasan = 'Disetujui Atasan';
+                            } elseif ($a->permohonan_status_atasan == 'Ditolak') {
+                                $bg_atasan = 'badge-danger';
+                                $ket_atasan = 'Ditolak Atasan';
                             } else {
                                 $bg_atasan = 'badge-warning';
                                 $ket_atasan = 'Blm Direspon Atasan';
@@ -195,26 +209,33 @@
 
                             if ($a->survey_status == 'Selesai') {
                                 $bg_survey = 'badge-success';
-                                $ket_survey = 'Sudah Survey';
+                                $ket_survey = 'Survey Selesai';
+                                $survey = 'Selesai';
                             } else {
                                 $bg_survey = 'badge-warning';
                                 $ket_survey = 'Blm Survey';
+                                $survey = 'Blm Selesai';
+                            }
+
+                            if ($a->pyl_status == 'Selesai') {
+                                $bg_pyl = 'badge-success';
+                                $ket_pyl = 'LPJ Selesai';
+                                $pyl = 'Sudah disalurkan';
+                            } else {
+                                $bg_pyl = 'badge-warning';
+                                $ket_pyl = 'LPJ Blm Selesai';
+                                $pyl = 'Blm disalurkan';
                             }
 
                             if ($a->pencairan_status == 'Berhasil Dicairkan') {
                                 $bg_pencairan = 'badge-success';
                                 $ket_pencairan = 'Sudah Dicairkan';
+                            } elseif ($a->pencairan_status == 'Ditolak') {
+                                $bg_pencairan = 'badge-danger';
+                                $ket_pencairan = 'Ditolak Dicairkan';
                             } else {
                                 $bg_pencairan = 'badge-warning';
                                 $ket_pencairan = 'Blm Dicairkan';
-                            }
-
-                            if ($a->pencairan_status == 'Berhasil Dicairkan') {
-                                $bg_lpj = 'badge-success';
-                                $ket_lpj = 'Sudah Dicairkan';
-                            } else {
-                                $bg_lpj = 'badge-warning';
-                                $ket_lpj = 'Blm Dicairkan';
                             }
 
                             if ($a->permohonan_jenis == 'Individu') {
@@ -237,33 +258,35 @@
                                     {{ $a->permohonan_nomor }}
                                 </span>
                                 <br>
-                                <div class="d-flex justify-content-between" style="font-size: 13px">
-                                    <div>Nominal Diajukan</div>
-                                    <div class="text-bold">
+                                <span class="d-flex justify-content-between" style="font-size: 13px">
+                                    <span>Nominal Diajukan</span>
+                                    <span class="text-bold">
                                         Rp{{ number_format($a->permohonan_nominal), 0, '.', '.' }}
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-between" style="font-size: 13px">
-                                    <div>Tgl Permohonan</div>
-                                    <div class="text-bold">
+                                    </span>
+                                </span>
+                                <span class="d-flex justify-content-between" style="font-size: 13px">
+                                    <span>Tgl Permohonan</span>
+                                    <span class="text-bold">
                                         {{ Carbon\Carbon::parse($a->permohonan_tgl)->isoFormat('D MMM YYYY') }}
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-between" style="font-size: 13px">
-                                    <div>Tgl Selesai Diinput</div>
-                                    <div class="text-bold">
+                                    </span>
+                                </span>
+                                <span class="d-flex justify-content-between" style="font-size: 13px">
+                                    <span>Tgl Selesai Diinput</span>
+                                    <span class="text-bold">
                                         {{ Carbon\Carbon::parse($a->permohonan_timestamp_input)->isoFormat('D MMM YYYY') }}
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center" style="font-size: 13px;">
-                                    <div class="d-flex align-items-center">
+                                    </span>
+                                </span>
+                                <span class="d-flex justify-content-between align-items-center"
+                                    style="font-size: 13px;">
+                                    <span class="d-flex align-items-center">
                                         <p class="mb-0 mr-2">Pemohon</p>
-                                        <span class="badge px-3 py-1 text-white" style="background-color: #0F5132; border-radius: 20px;">{{ $a->permohonan_jenis }}</span>
-                                    </div>
-                                    <div class="font-weight-bold " style="font-size: 13px;">
+                                        <span class="badge px-3 py-1 text-white"
+                                            style="background-color: #0F5132; border-radius: 20px;">{{ $a->permohonan_jenis }}</span>
+                                    </span>
+                                    <span class="font-weight-bold " style="font-size: 13px;">
                                         {{ $nama }}
-                                    </div>
-                                </div>                                
+                                    </span>
+                                </span>
                             </td>
 
                             <td style="width: 20%">
@@ -286,11 +309,10 @@
 
                             <td>
 
-                                <sup class="badge {{ $bg_survey }} text-white">{{ $ket_survey }}
-                                    Direktur</sup>
+                                <sup class="badge {{ $bg_survey }} text-white">{{ $ket_survey }}</sup>
                                 <br>
                                 <span class="text-bold" style="font-size: 13px">
-                                    {{ $a->survey_status ?? '-' }}
+                                    {{ $survey }}
                                 </span> <br>
                                 <span style="font-size: 13px">
                                     {{ Carbon\Carbon::parse($a->survey_tgl)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
@@ -305,8 +327,7 @@
 
                             </td>
                             <td>
-                                <sup class="badge {{ $bg_pencairan }} text-white">{{ $ket_pencairan }}
-                                    Keuangan</sup>
+                                <sup class="badge {{ $bg_pencairan }} text-white">{{ $ket_pencairan }}</sup>
                                 <br>
                                 <span class="text-bold" style="font-size: 13px">
                                     Sumber:DANA ZAKAT
@@ -314,16 +335,16 @@
                                 <span style="font-size: 13px">
                                     {{ Carbon\Carbon::parse($a->pencairan_timestamp)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
                                 </span> <br>
-                                <div class="row text-right">
-                                    <div class="col text-bold  text-left" style="font-size: 10pt;">
+                                <span class="row text-right">
+                                    <span class="col text-bold  text-left" style="font-size: 10pt;">
                                         Nominal Dicairkan
-                                    </div>
-                                    <div class="col text-bold text-right" style="font-size: 10pt;">
+                                    </span>
+                                    <span class="col text-bold text-right" style="font-size: 10pt;">
                                         <b class="" style="font-size: 10pt;">
                                             Rp{{ number_format($a->pencairan_nominal), 0, '.', '.' }}
                                         </b>
-                                    </div>
-                                </div>
+                                    </span>
+                                </span>
                                 <span class="text-bold" style="font-size: 13px">
                                     Catatan Tambahan:
                                 </span> <br>
@@ -332,25 +353,25 @@
                                 </span>
                             </td>
                             <td>
-                                <sup class="badge {{ $bg_lpj }} text-white">{{ $ket_lpj }}
-                                    Keuangan</sup>
+                                <sup class="badge {{ $bg_pyl }} text-white">{{ $ket_pyl }}
+                                </sup>
                                 <br>
                                 <span class="text-bold" style="font-size: 13px">
-                                    Sudah disalurkan
+                                    {{ $pyl }}
                                 </span> <br>
                                 <span style="font-size: 13px">
                                     {{ Carbon\Carbon::parse($a->survey_tgl)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
                                 </span> <br>
-                                <div class="row text-right">
-                                    <div class="col text-bold  text-left" style="font-size: 10pt;">
+                                <span class="row text-right">
+                                    <span class="col text-bold  text-left" style="font-size: 10pt;">
                                         Bentuk Penyaluran
-                                    </div>
-                                    <div class="col text-bold text-right" style="font-size: 10pt;">
+                                    </span>
+                                    <span class="col text-bold text-right" style="font-size: 10pt;">
                                         <b class="" style="font-size: 10pt;">
                                             Uang Tunai
                                         </b>
-                                    </div>
-                                </div>
+                                    </span>
+                                </span>
                                 <span class="text-bold" style="font-size: 13px">
                                     Catatan Tambahan:
                                 </span> <br>
@@ -365,6 +386,109 @@
             </table>
 
         </div>
+
+        <div class="row">
+            <div class="col-md-8">
+
+                <div class="card " style="height: 50vh;" wire:ignore>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <strong>
+                                Jumlah Permohonan Berdasarkan Program
+                            </strong>
+                        </div>
+                        <div class="row">
+                            <canvas id="myChart5"
+                                style="min-height: 300px; height: 300px; max-height: 100%; max-width: 100%; "></canvas>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card " style="height: 50vh;">
+
+                    <div class="card-body">
+                        <strong>
+                            Statistik Permohonan
+                        </strong>
+                        <br><br>
+
+                        <div class="table-responsive">
+                            <table class="table">
+
+
+                                <tr>
+                                    <th style="width:50%">Jumlah Permohonan:</th>
+                                    <td>5 </td>
+                                </tr>
+                                <tr>
+                                    <th>Total Nominal Permohonan:</th>
+                                    <td> 10000</td>
+                                </tr>
+                                <tr>
+                                    <th> Total Penerima :</th>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <th>Total Nominal Disetujui :</th>
+                                    <td>Rp. 100000</td>
+                                </tr>
+
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            Chart.defaults.font.size = 12;
+            const ctx3 = document.getElementById('myChart5');
+
+            new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Ekonomi', 'Pendidikan', 'Kesehatan', ['Dakwah', 'Kemanusiaan'],
+                        'Lingkungan', 'Operasional'
+                    ],
+                    datasets: [{
+                        label: 'Jumlah Kegiatan',
+                        backgroundColor: 'rgba(0, 89, 59, 0.7)',
+                        borderColor: 'rgba(0, 89, 59, 0.7)',
+                        pointRadius: false,
+                        pointColor: '#00593b',
+                        pointStrokeColor: 'rgba(0, 89, 59, 0.7)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(0, 89, 59, 0.7)',
+                        data: [2, 4, 6, 7, 4, 2]
+                    }, ]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: false
+                    }
+
+
+                }
+            });
+        </script>
+
         @include('modal.modal_tambah_permohonan')
 
         {{-- end tabel --}}
@@ -462,7 +586,7 @@
 
                 });
 
-                function submitFormUpzis() {
+                function submitPermohonan() {
                     $('#reportrange').val(window.start.format('Y-MM-DD') + ' - ' + window.end.format('Y-MM-DD'));
                     $('#filterFormPermohonan').submit();
                 }

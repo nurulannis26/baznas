@@ -39,6 +39,10 @@ use Illuminate\Support\Facades\Route;
         Route::get('/detail-permohonan/{permohonan_id}', [PermohonanController::class, 'detail_permohonan'])->name('permohonan.detail');
         Route::post('/filter_permohonan_post', [PermohonanController::class, 'filter_permohonan_post']);
         Route::get('/filter_permohonan/{c_filter_daterange}/{c_filters_fo}/{c_filters_atasan}/{c_filters_survey}/{c_filters_pencairan}/{c_filters_lpj}', [PermohonanController::class, 'filter_permohonan']);
+        // Route::get('/print_permohonan/{filter_daterange}/{filters_fo}/{filters_atasan}/{filters_pencairan}/{filters_survey}/{filters_lpj}', [PermohonanController::class, 'print_permohonan_pdf'])->name('print_permohonan_pdf');
+        Route::get('/print_permohonan', [PermohonanController::class, 'print_permohonan_pdf'])
+        ->name('print_permohonan_pdf');
+
     });
 // });
 

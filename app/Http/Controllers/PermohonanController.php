@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-
+use PDF as Dompdf;
 class PermohonanController extends Controller
 {
+    public $filters_fo;
+    public $filters_atasan;
+    public $filters_survey;
+    public $filters_pencairan;
+    public $filters_lpj;
+
     public function index()
     {
         $filter_permohonan = '';
@@ -73,4 +81,98 @@ class PermohonanController extends Controller
             compact('title', 'permohonan_id')
         );
     }
+
+    public function print_permohonan_pdf(Request $request)
+{
+   
+    // Ambil semua query string
+    $filter_daterange     = $request->query('filter_daterange');
+    $filters_fo           = $request->query('filters_fo');
+    $filters_atasan       = $request->query('filters_atasan');
+    $filters_pencairan    = $request->query('filters_pencairan');
+    $filters_survey       = $request->query('filters_survey');
+    $filters_lpj          = $request->query('filters_lpj');
+    // dd( $filter_daterange, $filters_fo, $filters_atasan, $filters_pencairan, $filters_survey, $filters_lpj);    
+    // Format date range
+    $start_date = null;
+    $end_date = null;
+
+    if (strpos($filter_daterange, '+-+') !== false) {
+        $date_parts = explode("+-+", $filter_daterange);
+        $start_date = $date_parts[0];
+        $end_date   = $date_parts[1];
+    } else {
+        $date_parts = explode(" - ", $filter_daterange);
+        $start_date = $date_parts[0];
+        $end_date   = $date_parts[1];
+    }
+
+    $filter_daterange = $start_date . ' - ' . $end_date;
+
+    // Handle kondisi filter
+    $this->filters_fo        = $filters_fo        == 'Semua' ? null : $filters_fo;
+    $this->filters_atasan    = $filters_atasan    == 'Semua' ? null : $filters_atasan;
+    $this->filters_pencairan = $filters_pencairan == 'Semua' ? null : $filters_pencairan;
+    $this->filters_survey    = $filters_survey    == 'Semua' ? null : $filters_survey;
+    $this->filters_lpj       = $filters_lpj       == 'Semua' ? null : $filters_lpj;
+
+    // Query data
+    $data = DB::table('permohonan')
+        ->leftJoin('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
+        ->select('permohonan.*', 'upz.*')
+        ->when($filter_daterange != '', function ($query) use ($start_date, $end_date) {
+            return $query->when($start_date && $end_date, function ($query) use ($start_date, $end_date) {
+                if ($start_date == $end_date) {
+                    return $query->whereDate('permohonan_tgl', '=', $start_date);
+                } else {
+                    return $query->whereDate('permohonan_tgl', '>=', $start_date)
+                        ->whereDate('permohonan_tgl', '<=', $end_date);
+                }
+            });
+        })
+        ->when($this->filters_fo, function ($query) {
+            return $query->where('permohonan_status_input', $this->filters_fo);
+        })
+        ->when($this->filters_atasan, function ($query) {
+            if ($this->filters_atasan == 'Belum Dicek') {
+                return $query->where('permohonan_status_input', 'Selesai Input');
+            } else {
+                return $query->where('permohonan_status_atasan', $this->filters_atasan);
+            }
+        })
+        ->when($this->filters_survey, function ($query) {
+            return $query->where('survey_pilihan', $this->filters_survey);
+        })
+        ->when($this->filters_pencairan, function ($query) {
+            if ($this->filters_pencairan == 'Belum Dicairkan') {
+                return $query->where('permohonan_status_atasan', 'Diterima');
+            } else {
+                return $query->where('pencairan_status', $this->filters_pencairan);
+            }
+        })
+        ->when($this->filters_lpj, function ($query) {
+            return $query->where('tujuan', $this->filters_lpj);
+        })
+        ->orderBy('permohonan.created_at', 'desc')
+        ->get();
+        Carbon::setLocale('id');
+
+        $start_date = Carbon::parse(explode(' - ', $filter_daterange)[0])->translatedFormat('d F Y');
+        $end_date   = Carbon::parse(explode(' - ', $filter_daterange)[1])->translatedFormat('d F Y');
+    
+        // Generate PDF
+    $pdf = Dompdf::loadView('permohonan.print_permohonan_pdf', [
+        'data'               => $data,
+        'filter_daterange'   => $filter_daterange,
+        'filters_fo'         => $filters_fo,
+        'filters_atasan'     => $filters_atasan,
+        'filters_pencairan'  => $filters_pencairan,
+        'filters_survey'     => $filters_survey,
+        'filters_lpj'        => $filters_lpj,
+        'start_date'         => $start_date,
+        'end_date'           => $end_date,
+    ])->setPaper('a4', 'landscape');
+
+    return $pdf->stream('PERMOHONAN_' . $filter_daterange . '.pdf');
+}
 }

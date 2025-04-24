@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\Helper;
 use App\Models\DaftarMustahik;
 use App\Models\Lampiran;
 use App\Models\Mustahik;
+use App\Models\Pengguna;
 use App\Models\Pengurus;
 use App\Models\Permohonan;
 use App\Models\Surat;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Http;
 
 
 
@@ -161,6 +164,8 @@ class DetailPermohonan extends Component
         ->select('pengguna.pengurus_id', 'pengguna.nama')
         ->get();
 
+        $penggunas = Pengguna::with('pengurus.jabatan.divisi')->get();
+
         return view('livewire.detail-permohonan', compact(
             'dp', 
             'lampiran_pengajuan', 
@@ -169,6 +174,7 @@ class DetailPermohonan extends Component
             'lampiran_pyl',
             'daftar_mustahik',
             'petugas_survey',
+            'penggunas'
         ));
     }
 
@@ -380,7 +386,7 @@ class DetailPermohonan extends Component
         ]);
 
         if ($this->permohonan_jenis_edit === 'UPZ') {
-            $upz = Surat::where('upz_id', $upz_id)->update([
+            $upz = Upz::where('upz_id', $upz_id)->update([
                 'upz' => $this->upz_edit,
                 'nohp' => $this->nohp_edit,
                 'alamat' => $this->alamat_edit,
@@ -413,12 +419,89 @@ class DetailPermohonan extends Component
     
     }
 
+    public function nama_pengurus($id)
+    {
+        $a = DB::table('pengguna')->where('pengguna.pengurus_id', $id)->first();
+        return $a ? $a->nama : null;
+    }
+
+    public function jabatan_pengurus($id)
+    {
+        $a = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->where('pengguna.pengurus_id', $id)->first();
+        return $a ? $a->jabatan : null;
+    }
+
+    public function nama_sub($id)
+    {
+        $a = SubProgram::where('sub_program_id', $id)->first();
+
+        return  $a->nama_program ?? '';
+    }
+
+    public function nama_program($id)
+    {
+        $a = Program::where('program_id', $id)->first();
+
+        return  $a->pilar ?? '';
+    }
+
     public function selesai_input($permohonan_id)
     {
         $data_detail = Permohonan::where('permohonan_id', $permohonan_id)->first();
         Permohonan::where('permohonan_id', $permohonan_id)->update([
             'permohonan_status_input' => 'Selesai Input',
         ]);
+
+        if ($this->permohonan_jenis == "Individu") {
+            $pemohon =$this->permohonan_nama_pemohon;
+        } elseif ($this->permohonan_jenis == "UPZ") {
+            $pemohon =$this->pj_nama;
+        } 
+
+        $atasan = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
+        ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
+        ->where('divisi.divisi_id', '0e883f67-9130-43cf-ac95-54395388538b')
+        ->where('pengguna.status', '1')
+        ->fisrt();
+
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        // $url =  "https://e-tasyaruf.nucarecilacap.id/detail-permohonan/" . $this->permohonan_id;
+
+        $this->notif(
+            Helper::getNohpPengurus($atasan->pengurus_id),
+            // '089639481199',
+
+            "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
+
+                "Yth. " . "*" . $this->nama_pengurus($atasan->pengurus_id) .  "*" . "\n" .
+                $this->jabatan_pengurus($atasan->pengurus_id) . "\n" . "\n" .
+
+                "*Permohonan telah selesai diinput.*" . "\n" . "\n" .
+
+                "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
+                "*" .  "Nomor"  . "*" .  "\n" .
+                $this->permohonan_nomor  . "\n" .
+                "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
+                \Carbon\Carbon::parse($this->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                "*" .  "Nama Pemohon"  . "*" .  "\n" .
+                $this->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
+                'Rp' . number_format($this->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                "========================" . "\n" ."\n" .
+                "*" .  "Asnaf"  . "*" .  "\n" .
+                $asnaf .  "\n" .
+                "*" .  "Pilar"  . "*" .  "\n" .
+                $this->nama_program($this->program_id) .  "\n" .
+                $this->nama_sub($this->sub_program_id) .  "\n" .
+                "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
+                $this->permohonan_catatan_input .  "\n" . "\n" .
+
+                "Terima Kasih." 
+                // url($url)
+        );
+        
 
         $this->emit('waktu_alert');
         session()->flash('alert_permohonan', 'Pengajuan telah selesai input!');
@@ -446,20 +529,20 @@ class DetailPermohonan extends Component
         if ($this->foto_url) {
             $ext = $this->foto_url->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->foto_url->storeAs('foto_diri', $file_name, 'public');
+            $this->foto_url->storeAs('foto_diri', $file_name);
         }
 
         if ($this->ktp_url) {
         //     dd('baba');
             $ext = $this->ktp_url->extension();
             $file_name_ktp = Str::uuid()->toString() . '.' . $ext;
-            $this->ktp_url->storeAs('ktp', $file_name_ktp, 'public');
+            $this->ktp_url->storeAs('ktp', $file_name_ktp);
         }
 
         if ($this->kk_url) {
             $ext = $this->kk_url->extension();
             $file_name_kk = Str::uuid()->toString() . '.' . $ext;
-            $this->kk_url->storeAs('kk', $file_name_kk, 'public');
+            $this->kk_url->storeAs('kk', $file_name_kk);
         }
 
         $mustahik = Mustahik::create([
@@ -954,6 +1037,8 @@ class DetailPermohonan extends Component
 
     public function acc_atasan()
     {
+        $data = Permohonan::where('permohonan_id', $this->permohonan_id);
+
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'permohonan_timestamp_atasan' => $this->permohonan_timestamp_atasan,
             'survey_pilihan' => $this->survey_pilihan,
@@ -964,6 +1049,99 @@ class DetailPermohonan extends Component
             'survey_status' => 'Belum Selesai',
         ]);
 
+        if ($this->permohonan_jenis == "Individu") {
+            $pemohon =$this->permohonan_nama_pemohon;
+        } elseif ($this->permohonan_jenis == "UPZ") {
+            $pemohon =$this->pj_nama;
+        } 
+
+        $survey = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
+        ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
+        ->where('divisi.divisi_id', '78e31483-4c70-4736-8768-621ec862b30d')
+        ->where('pengguna.status', '1')
+        ->fisrt();
+
+        $keuangan = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
+        ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
+        ->where('divisi.divisi_id', 'e6e554db-da6a-42d7-8bd7-3ccdb250fb2e')
+        ->where('pengguna.status', '1')
+        ->fisrt();
+
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        // $url =  "https://e-tasyaruf.nucarecilacap.id/detail-permohonan/" . $this->permohonan_id;
+
+        if ($this->survey_pilihan == 'Perlu') {
+            $this->notif(
+                Helper::getNohpPengurus($survey->pengurus_id),
+                // '089639481199',
+    
+                "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
+    
+                    "Yth. " . "*" . $this->nama_pengurus($survey->pengurus_id) .  "*" . "\n" .
+                    $this->jabatan_pengurus($survey->pengurus_id) . "\n" . "\n" .
+    
+                     "*Permohonan disetujui Atasan.*" . "\n" . "*Segera input lampiran dokumentasi & hasil survey*" . "\n" . "\n" .
+                    "*Konfirmasi jika telah selesai survey.*" . "\n" . "\n" .
+    
+                    "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
+                    "*" .  "Nomor"  . "*" .  "\n" .
+                    $data->permohonan_nomor  . "\n" .
+                    "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
+                    \Carbon\Carbon::parse($data->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                    "*" .  "Nama Pemohon"  . "*" .  "\n" .
+                    $data->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                    "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
+                    'Rp' . number_format($data->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                    "========================" . "\n" ."\n" .
+                    "*" .  "Asnaf"  . "*" .  "\n" .
+                    $asnaf .  "\n" .
+                    "*" .  "Pilar"  . "*" .  "\n" .
+                    $this->nama_program($data->program_id) .  "\n" .
+                    $this->nama_sub($data->sub_program_id) .  "\n" .
+                    "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
+                    $data->permohonan_catatan_input .  "\n" . "\n" .
+    
+                    "Terima Kasih." 
+                    // url($url)
+            );
+        } else {
+            $this->notif(
+                Helper::getNohpPengurus($keuangan->pengurus_id),
+                // '089639481199',
+    
+                "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
+    
+                    "Yth. " . "*" . $this->nama_pengurus($keuangan->pengurus_id) .  "*" . "\n" .
+                    $this->jabatan_pengurus($keuangan->pengurus_id) . "\n" . "\n" .
+    
+                     "*Permohonan disetujui Atasan (Tanpa Survey).*" . "\n" . "\n" .
+    
+                    "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
+                    "*" .  "Nomor"  . "*" .  "\n" .
+                    $data->permohonan_nomor  . "\n" .
+                    "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
+                    \Carbon\Carbon::parse($data->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                    "*" .  "Nama Pemohon"  . "*" .  "\n" .
+                    $data->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                    "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
+                    'Rp' . number_format($data->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                    "========================" . "\n" ."\n" .
+                    "*" .  "Asnaf"  . "*" .  "\n" .
+                    $asnaf .  "\n" .
+                    "*" .  "Pilar"  . "*" .  "\n" .
+                    $this->nama_program($data->program_id) .  "\n" .
+                    $this->nama_sub($data->sub_program_id) .  "\n" .
+                    "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
+                    $data->permohonan_catatan_input .  "\n" . "\n" .
+    
+                    "Terima Kasih." 
+                    // url($url)
+            );
+        }
+        
+
         session()->flash('alert_atasan', 'Permohonan berhasil di ACC oleh Atasan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
@@ -972,6 +1150,8 @@ class DetailPermohonan extends Component
 
     public function tolak_atasan()
     {
+        $data = Permohonan::where('permohonan_id', $this->permohonan_id);
+
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'denial_date_atasan' => $this->denial_date_atasan,
             'survey_pilihan' => null,
@@ -981,6 +1161,55 @@ class DetailPermohonan extends Component
             'permohonan_petugas_atasan' => Auth::user()->pengurus_id,
         ]);
 
+        if ($this->permohonan_jenis == "Individu") {
+            $pemohon =$this->permohonan_nama_pemohon;
+        } elseif ($this->permohonan_jenis == "UPZ") {
+            $pemohon =$this->pj_nama;
+        } 
+
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+
+        $front = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
+        ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
+        ->where('divisi.divisi_id', '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
+        ->where('pengguna.status', '1')
+        ->fisrt();
+
+        $this->notif(
+            Helper::getNohpPengurus($front->pengurus_id),
+            // '089639481199',
+
+            "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
+
+                "Yth. " . "*" . $this->nama_pengurus($front->pengurus_id) .  "*" . "\n" .
+                $this->jabatan_pengurus($front->pengurus_id) . "\n" . "\n" .
+
+                 "*" .  "Mohon segera ditinjau kembali"  . "*" .  "\n" .
+                "Permohonan telah " . "*" . "di-tolak" . "*" . " oleh Atasan, dengan detail sebagai berikut :" . "\n" . "\n" .
+
+                "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
+                    "*" .  "Nomor"  . "*" .  "\n" .
+                    $data->permohonan_nomor  . "\n" .
+                    "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
+                    \Carbon\Carbon::parse($data->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                    "*" .  "Nama Pemohon"  . "*" .  "\n" .
+                    $data->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                    "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
+                    'Rp' . number_format($data->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                    "========================" . "\n" ."\n" .
+                    "*" .  "Asnaf"  . "*" .  "\n" .
+                    $asnaf .  "\n" .
+                    "*" .  "Pilar"  . "*" .  "\n" .
+                    $this->nama_program($data->program_id) .  "\n" .
+                    $this->nama_sub($data->sub_program_id) .  "\n" .
+                    "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
+                    $data->permohonan_catatan_input .  "\n" . "\n" .
+
+                "Terima Kasih." 
+                // url($url)
+        );
+
         session()->flash('alert_atasan', 'Permohonan berhasil di Tolak oleh Atasan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
@@ -989,6 +1218,8 @@ class DetailPermohonan extends Component
 
     public function survey()
     {
+        $data = Permohonan::where('permohonan_id', $this->permohonan_id);
+
         if ($this->survey_form_url) {
             $ext = $this->survey_form_url->extension();
             $file_name = Str::uuid()->toString() . '.' . $ext;
@@ -1004,6 +1235,54 @@ class DetailPermohonan extends Component
             'survey_petugas_survey' => Auth::user()->pengurus_id,
             'survey_petugas_pyl' => $this->survey_petugas_survey,
         ]);
+
+        if ($this->permohonan_jenis == "Individu") {
+            $pemohon =$this->permohonan_nama_pemohon;
+        } elseif ($this->permohonan_jenis == "UPZ") {
+            $pemohon =$this->pj_nama;
+        } 
+
+        $keuangan = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
+        ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
+        ->where('divisi.divisi_id', 'e6e554db-da6a-42d7-8bd7-3ccdb250fb2e')
+        ->where('pengguna.status', '1')
+        ->fisrt();
+
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+
+        $this->notif(
+            Helper::getNohpPengurus($keuangan->pengurus_id),
+            // '089639481199',
+
+            "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
+
+                "Yth. " . "*" . $this->nama_pengurus($keuangan->pengurus_id) .  "*" . "\n" .
+                $this->jabatan_pengurus($keuangan->pengurus_id) . "\n" . "\n" .
+
+                 "*Permohonan telah selesai survey.*" . "\n" . "\n" .
+
+                "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
+                "*" .  "Nomor"  . "*" .  "\n" .
+                $data->permohonan_nomor  . "\n" .
+                "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
+                \Carbon\Carbon::parse($data->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                "*" .  "Nama Pemohon"  . "*" .  "\n" .
+                $data->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
+                'Rp' . number_format($data->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                "========================" . "\n" ."\n" .
+                "*" .  "Asnaf"  . "*" .  "\n" .
+                $asnaf .  "\n" .
+                "*" .  "Pilar"  . "*" .  "\n" .
+                $this->nama_program($data->program_id) .  "\n" .
+                $this->nama_sub($data->sub_program_id) .  "\n" .
+                "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
+                $data->permohonan_catatan_input .  "\n" . "\n" .
+
+                "Terima Kasih." 
+                // url($url)
+        );
 
         session()->flash('alert_survey', 'Survey berhasil di ACC');
         $this->emit('waktu_alert');
@@ -1036,6 +1315,8 @@ class DetailPermohonan extends Component
 
     public function acc_pencairan()
     {
+        $data = Permohonan::where('permohonan_id', $this->permohonan_id);
+
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'pencairan_timestamp' => $this->pencairan_timestamp,
             'pencairan_nominal' => str_replace('.', '', $this->pencairan_nominal), 
@@ -1045,6 +1326,54 @@ class DetailPermohonan extends Component
             'pencairan_petugas_keuangan' => Auth::user()->pengurus_id,
         ]);
 
+        if ($this->permohonan_jenis == "Individu") {
+            $pemohon =$this->permohonan_nama_pemohon;
+        } elseif ($this->permohonan_jenis == "UPZ") {
+            $pemohon =$this->pj_nama;
+        } 
+
+        $front = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
+        ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
+        ->where('divisi.divisi_id', '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
+        ->where('pengguna.status', '1')
+        ->fisrt();
+
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+
+        $this->notif(
+            Helper::getNohpPengurus($front->pengurus_id),
+            // '089639481199',
+
+            "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
+
+                "Yth. " . "*" . $this->nama_pengurus($front->pengurus_id) .  "*" . "\n" .
+                $this->jabatan_pengurus($front->pengurus_id) . "\n" . "\n" .
+
+                 "*Permohonan telah berhasil dicairkan.*" . "\n" . "\n" .
+
+                "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
+                "*" .  "Nomor"  . "*" .  "\n" .
+                $data->permohonan_nomor  . "\n" .
+                "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
+                \Carbon\Carbon::parse($data->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                "*" .  "Nama Pemohon"  . "*" .  "\n" .
+                $data->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
+                'Rp' . number_format($data->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                "========================" . "\n" ."\n" .
+                "*" .  "Asnaf"  . "*" .  "\n" .
+                $asnaf .  "\n" .
+                "*" .  "Pilar"  . "*" .  "\n" .
+                $this->nama_program($data->program_id) .  "\n" .
+                $this->nama_sub($data->sub_program_id) .  "\n" .
+                "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
+                $data->permohonan_catatan_input .  "\n" . "\n" .
+
+                "Terima Kasih." 
+                // url($url)
+        );
+
         session()->flash('alert_pencairan', 'Pencairan berhasil di ACC Keuangan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
@@ -1053,6 +1382,8 @@ class DetailPermohonan extends Component
 
     public function tolak_pencairan()
     {
+        $data = Permohonan::where('permohonan_id', $this->permohonan_id);
+        
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'denial_date_pencairan' => $this->denial_date_pencairan,
             'pencairan_nominal' => null, 
@@ -1062,10 +1393,89 @@ class DetailPermohonan extends Component
             'pencairan_petugas_keuangan' => Auth::user()->pengurus_id,
         ]);
 
+        if ($this->permohonan_jenis == "Individu") {
+            $pemohon =$this->permohonan_nama_pemohon;
+        } elseif ($this->permohonan_jenis == "UPZ") {
+            $pemohon =$this->pj_nama;
+        } 
+
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+
+        $front = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
+        ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
+        ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
+        ->where('divisi.divisi_id', '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
+        ->where('pengguna.status', '1')
+        ->fisrt();
+
+        $this->notif(
+            Helper::getNohpPengurus($front->pengurus_id),
+            // '089639481199',
+
+            "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
+
+                "Yth. " . "*" . $this->nama_pengurus($front->pengurus_id) .  "*" . "\n" .
+                $this->jabatan_pengurus($front->pengurus_id) . "\n" . "\n" .
+
+                "*" .  "Mohon segera ditinjau kembali"  . "*" .  "\n" .
+                "Permohonan telah " . "*" . "di-tolak" . "*" . " oleh Bagian Keuangan, dengan detail sebagai berikut :" . "\n" . "\n" .
+
+                "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
+                "*" .  "Nomor"  . "*" .  "\n" .
+                $data->permohonan_nomor  . "\n" .
+                "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
+                \Carbon\Carbon::parse($data->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                "*" .  "Nama Pemohon"  . "*" .  "\n" .
+                $data->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
+                'Rp' . number_format($data->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                "========================" . "\n" ."\n" .
+                "*" .  "Asnaf"  . "*" .  "\n" .
+                $asnaf .  "\n" .
+                "*" .  "Pilar"  . "*" .  "\n" .
+                $this->nama_program($data->program_id) .  "\n" .
+                $this->nama_sub($data->sub_program_id) .  "\n" .
+                "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
+                $data->permohonan_catatan_input .  "\n" . "\n" .
+
+                "Terima Kasih." 
+                // url($url)
+        );
+
         session()->flash('alert_pencairan', 'Pencairan berhasil di Tolak Keuangan');
         $this->emit('waktu_alert');
         $this->dispatchBrowserEvent('closeModal');
         $this->none_block_tolak_pencairan = 'none';
     }
+
+    
+
+    public function notif($nomor, $pesan)
+    {
+        $url = "http://103.23.198.175:3125/sendMessageTextWithveriyExistsNumber";
+
+        $data = [
+            'id' => $nomor . '@s.whatsapp.net',
+            'text' => $pesan,
+            'token' => 'eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY4ODg5NzMyNSwiaWF0IjoxNjg4ODk3MzI1fQ', // ganti dengan token kamu yang valid
+        ];
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ])->post($url, $data);
+
+        if ($response->successful()) {
+            // Kirim berhasil
+            session()->flash('success', 'Notifikasi WA berhasil dikirim');
+        } else {
+            // Kirim gagal
+            session()->flash('error', 'Gagal kirim notifikasi WA');
+        }
+    }
+
+
+    
+
 
 }
