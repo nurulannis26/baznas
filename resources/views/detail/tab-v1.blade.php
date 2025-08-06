@@ -104,9 +104,9 @@
                             $alamat = $dp->permohonan_alamat_pemohon;
                         } else {
                             $bg_jenis = 'badge-warning';
-                            $nama = \App\Models\Permohonan::getNamaUPZ($dp->permohonan_upz_id);
-                            $nohp = \App\Models\Permohonan::getNoHP($dp->permohonan_upz_id);
-                            $alamat = \App\Models\Permohonan::getAlamat($dp->permohonan_upz_id);
+                            $nama = \App\Models\Permohonan::getNamaUPZ($dp->upz_id);
+                            $nohp = \App\Models\Permohonan::getNoHP($dp->upz_id);
+                            $alamat = \App\Models\Permohonan::getAlamat($dp->upz_id);
                         }
                     @endphp
 
@@ -249,15 +249,23 @@
 
 <div class="col-sm-12 mt-3 col-md-12 col-lg-12 tab-tab-lampiran-pengajuan-umum-pc">
     {{-- judul --}}
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <b>B. DAFTAR MUSTAHIK</b>
-        </div>
-        <button class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
-            wire:click="modal_mustahik_tambah" data-target="#modal_mustahik_tambah" type="button"><i
-                class="fas fa-plus-circle"></i>
-            Tambah</button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <b>B. DAFTAR MUSTAHIK</b>
     </div>
+    <div>
+        <a class="btn btn-outline-success btn-sm tombol-import"
+            href="{{ route('import_mustahik', ['permohonan_id' => $dp->permohonan_id]) }}"
+            target="_blank" type="button">
+            <i class="fas fa-file-import"></i> Import
+        </a>
+        <a class="btn btn-outline-success btn-sm tombol-tambah" data-toggle="modal"
+            wire:click="modal_mustahik_tambah" type="button" data-target="#modal_mustahik_tambah" type="button">
+            <i class="fas fa-plus-circle"></i> Tambah
+        </a>
+    </div>
+</div>
+
 
     {{-- alert --}}
     @if (session()->has('alert_mustahik'))
@@ -272,52 +280,44 @@
 
     {{-- tabel --}}
     {{-- tabel dokumentasi --}}
-    <table class="table table-bordered mt-2 mb-2" style="width:100%">
+    <table class="table table-bordered table-hover" id="tabelMustahik" style="width:100%">
         <thead>
-            <tr class="text-center">
-                <th style="width: 5%;">No</th>
-                <th style="width: 15%;">Nama</th>
-                <th style="width: 15%;">Nomor Identitas</th>
-                <th style="width: 15%;">Tempat, Tgl Lahir</th>
-                <th style="width: 15%;">Alamat</th>
-                <th style="width: 15%;">Kontak</th>
-                <th style="width: 10%;">Asnaf</th>
-                <th style="width: 10%;">Aksi</th>
+            <tr class="text-center ">
+                <th style="width: 3%;vertical-align:middle;text-align:center"> No</th>
+                <th style="width: 9%;vertical-align:middle;text-align:center">Tanggal <br> Realisasi</th>
+                <th style="width: 24%;vertical-align:middle;text-align:center">Nama <br> Mustahik</th>
+                <th style="width: 21%;vertical-align:middle;text-align:center">Alamat</th>
+                <th style="width: 14%;vertical-align:middle;text-align:center">Tanggal <br> Lahir</th>
+                <th style="width: 9%;vertical-align:middle;text-align:center">Jenis <br> Bantuan</th>
+                <th style="width: 13%;vertical-align:middle;text-align:center">Nominal <br>Bantuan</th>
+                <th style="width: 9%;vertical-align:middle;text-align:center">Keterangan</th>
+                <th style="width: 8%;vertical-align:middle;text-align:center">Aksi</th>
             </tr>
         </thead>
         <tbody>
 
-            @forelse($daftar_mustahik as $a)
-                <tr>
-                    <td>
-                        {{ $loop->iteration }}
+            @foreach ($mustahik as $a)
+                <tr style=" cursor: pointer;">
+                    <td style="text-align:center;padding-top:3mm;">{{ $loop->iteration }}</td>
+                    <td>{{ Carbon\Carbon::parse($a->tgl_realisasi)->format('d/m/Y') }}</td>
+                    <td>{{ $a->nama_mustahik }}<br>
+                        NKK &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ $a->nkk }} <br>
+                        NIK &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ $a->nik }} <br>
+                        NO HP &nbsp;: {{ $a->nohp }}
                     </td>
-                    <td>
-                        {{ $a->nama }}
+                    <td>{{ $a->alamat }}</td>
+                    <td>{{ Carbon\Carbon::parse($a->tgl_lahir)->format('d/m/Y') }}<br>
+                        Jumlah KK &nbsp;&nbsp;&nbsp;: {{ $a->jumlah_kk }} <br>
+                        Jumlah Jiwa : {{ $a->jumlah_jiwa }}
                     </td>
-                    <td>
-                        <span>NIK&nbsp;&nbsp;: {{ $a->nik }}</span><br>
-                        <span>KK&nbsp;&nbsp;&nbsp;: {{ $a->kk }}</span>
-                    </td>
-                    <td>
-                        <span>{{ $a->tempat_lahir }}</span><br>
-                        <span> {{ Carbon\Carbon::parse($a->tgl_lahir)->isoFormat('D MMMM YYYY') }}</span>
-                    </td>
-                    <td>
-                        {{ $a->alamat }}
-                    </td>
-                    <td>
-                        <span>No HP&nbsp;&nbsp;: {{ $a->nohp }}</span><br>
-                        <span>Email&nbsp;&nbsp;: {{ $a->email }}</span>
-                    </td>
-                    <td>
-                        {{ \App\Models\Permohonan::getAsnaf($a->asnaf_id) }}
-                    </td>
+                    <td>{{ $a->jenis_bantuan }}</td>
+                    <td>Rp{{ number_format((float) $a->nominal_bantuan, 0, '.', '.') }}</td>
+                    <td>{{ $a->keterangan }}</td>
                     <td>
                         <!-- tombol aksi -->
                         <div class="btn-group">
                             <button type="button" class="btn btn-success btn-sm" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">Aksi</button>
+                                aria-haspopup="true" aria-expanded="false">Kelola</button>
                             <button type="button"
                                 class="btn btn-success dropdown-toggle dropdown-toggle-split btn-sm"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -327,30 +327,23 @@
                             <div class="dropdown-menu">
                                 <a onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'"
                                     class="dropdown-item tombol-ubah tombol-tambah"
-                                    wire:click="modal_mustahik_ubah('{{ $a->mustahik_id }}')" type="button"
-                                    data-toggle="modal" data-target="#modal_mustahik_ubah"><i
-                                        class="fas fa-edit"></i>
+                                    wire:click="modal_mustahik_ubah('{{ $a->mustahik_id }}')"
+                                    type="button" data-toggle="modal"
+                                    data-target="#modal_mustahik_ubah"><i class="fas fa-edit"></i>
                                     Ubah</a>
                                 <a onMouseOver="this.style.color='red'" onMouseOut="this.style.color='black'"
-                                    class="dropdown-item" wire:click="modal_mustahik_hapus('{{ $a->mustahik_id }}')"
-                                    data-toggle="modal" data-target="#modal_mustahik_hapus" type="button"><i
-                                        class="fas fa-trash"></i>
+                                    class="dropdown-item"
+                                    wire:click="modal_mustahik_hapus('{{ $a->mustahik_id }}')"
+                                    data-toggle="modal" data-target="#modal_mustahik_hapus"
+                                    type="button"><i class="fas fa-trash"></i>
                                     Hapus</a>
 
                             </div>
                         </div>
                         {{-- end tombol aksi --}}
                     </td>
-
-
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="8" class="text-center"> Belum ada data</td>
-                </tr>
-            @endforelse
-
-
+            @endforeach
         </tbody>
     </table>
     {{-- end tabel --}}
@@ -463,4 +456,22 @@
     @include('modal.modal_lampiran_pengajuan_tambah')
     @include('modal.modal_lampiran_pengajuan_ubah')
     @include('modal.modal_lampiran_pengajuan_hapus')
+    
+    
+@push('script-permohonan')
+    <script>
+        $(document).ready(function() {
+            $('#tabelMustahik').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json"
+                },
+                "paging": true, // Aktifkan pagination
+                "searching": true, // Aktifkan search box
+                "info": true, // Aktifkan informasi tampilan data
+                "lengthMenu": [5, 10, 25, 50, 100], // Pilihan jumlah baris per halaman
+                "pageLength": 5 // Jumlah baris awal yang ditampilkan
+            });
+        });
+    </script>
+@endpush
 </div>

@@ -19,12 +19,13 @@
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label>NAMA &nbsp;</label><input wire:model="nama_pengurus_edit" type="text"
+                                <label>NAMA &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
+                                <input wire:model="nama_pengurus_edit" type="text"
                                     class="form-control" placeholder="Masukan Nama">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputNama">JENIS KELAMIN &nbsp;</label>
+                                <label for="inputNama">JENIS KELAMIN &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                 <select wire:model="jenis_kelamin_pengurus_edit" class="select2dulus form-control ">
                                     <option value="">Pilih Jenis Kelamin</option>
@@ -36,59 +37,59 @@
                             <hr>
 
                             <div class="form-group col-md-6">
-                                <label for="inputNama">NOMOR HP &nbsp;</label>
+                                <label for="inputNama">NOMOR HP &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="nohp_pengurus_edit" type="text" class="form-control"
                                     placeholder="Masukan Nomor HP">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputNama">EMAIL &nbsp;</label>
+                                <label for="inputNama">EMAIL &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="email_pengurus_edit" type="text" class="form-control"
                                     placeholder="Masukan Email">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>NIK &nbsp;</label>
+                                <label>NIK &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
                                 <input wire:model="nik_pengurus_edit" type="text" class="form-control"
                                     placeholder="Masukkan NIK">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>KK &nbsp;</label>
+                                <label>KK &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
                                 <input wire:model="kk_pengurus_edit" type="text" class="form-control"
                                     placeholder="Masukkan KK">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>TEMPAT LAHIR &nbsp;</label>
+                                <label>TEMPAT LAHIR &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
                                 <input wire:model="tempat_lahir_pengurus_edit" type="text" class="form-control"
                                     placeholder="Masukkan Tempat Lahir">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>TGL LAHIR &nbsp;</label>
+                                <label>TGL LAHIR &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
                                 <input wire:model="tgl_lahir_pengurus_edit" type="date" class="form-control"
                                     placeholder="Masukkan Tgl Lahir">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>ALAMAT &nbsp;</label>
+                                <label>ALAMAT &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="alamat_pengurus_edit" type="text" class="form-control"
                                     placeholder="Masukkan Alamat">
                             </div>
                             <hr>
                             <div class="form-group col-md-3">
-                                <label>RT &nbsp;</label>
+                                <label>RT &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="rt_pengurus_edit" type="text" class="form-control"
                                     placeholder="Masukkan Alamat">
                             </div>
                             <hr>
                             <div class="form-group col-md-3">
-                                <label>RW &nbsp;</label>
+                                <label>RW &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="rw_pengurus_edit" type="text" class="form-control"
                                     placeholder="Masukkan Alamat">
                             </div>
@@ -116,7 +117,7 @@
                             <hr>
 
                             <div class="form-group col-md-6">
-                                <label for="inputNama">DIVISI &nbsp;</label>
+                                <label for="inputNama">DIVISI &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 @php
                                     $divisi = DB::table('divisi')->get();
                                 @endphp
@@ -129,7 +130,7 @@
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputNama">JABATAN &nbsp;</label>
+                                <label for="inputNama">JABATAN &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 @php
                                     $jabatan = DB::table('jabatan')->get();
                                 @endphp
@@ -143,21 +144,21 @@
                             </div>
                             <hr>
                             <div class="form-group col-md-3">
-                                <label>TGL MULAI &nbsp;</label>
+                                <label>TGL MULAI &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
                                 <input wire:model="tgl_mulai_edit" type="date" class="form-control"
                                     placeholder="Masukkan Tgl Mulai">
                             </div>
                             <hr>
                             <div class="form-group col-md-3">
-                                <label>TGL SELESAI &nbsp;</label>
+                                <label>TGL SELESAI &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
                                 <input wire:model="tgl_selesai_edit" type="date" class="form-control"
                                     placeholder="Masukkan Tgl Selesai">
                             </div>
                             <hr>
                             <div class="form-group col-md-3">
-                                <label>SK NOMOR &nbsp;</label>
+                                <label>SK NOMOR &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="sk_nomor_edit" type="text" class="form-control"
                                     placeholder="Masukkan Nomor SK">
                             </div>
@@ -176,6 +177,15 @@
 
 
                         </div>
+                        
+                        {{-- info --}}
+                            <div class="card card-body" style="background-color:#cbf2d6;">
+                                <b>INFORMASI!</b>
+                                <span>
+                                    Jika ada tanda ( <span style="color:rgba(230, 82, 82)">*</span> ) menunjukkan kolom harus diisi.
+                                </span>
+                            </div>
+                            {{-- end info --}}
                     </div>
 
 

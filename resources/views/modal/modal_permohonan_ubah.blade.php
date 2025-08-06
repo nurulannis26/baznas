@@ -19,7 +19,7 @@
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputNama">JENIS PERMOHONAN &nbsp;</label>
+                                <label for="inputNama">JENIS PERMOHONAN &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                 <select wire:model="permohonan_jenis_edit" class="select2dulus form-control ">
                                     <option value="">Pilih Jenis Permohonan</option>
@@ -31,13 +31,13 @@
                             <hr>
 
                             <div class="form-group col-md-6">
-                                <label for="inputNama">NOMOR PERMOHONAN &nbsp;</label>
+                                <label for="inputNama">NOMOR PERMOHONAN &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="permohonan_nomor_edit" type="text" class="form-control" readonly>
                             </div>
                             @if ($this->permohonan_jenis_edit == 'Individu')
                                 {{-- pemohon --}}
                                 <div class="form-group col-md-6">
-                                    <label>NAMA PEMOHON &nbsp;</label>
+                                    <label>NAMA PEMOHON &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                     {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                     <input wire:model="permohonan_nama_pemohon_edit" type="text" class="form-control"
                                         placeholder="Masukan Nama Pemohon">
@@ -47,7 +47,7 @@
 
                                 {{-- nohp --}}
                                 <div class="form-group col-md-6 ">
-                                    <label>NO HP PEMOHON &nbsp;</label>
+                                    <label>NO HP PEMOHON &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
 
                                     {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                     <input wire:model="permohonan_nohp_pemohon_edit" id="permohonan_nohp_pemohon"
@@ -57,21 +57,21 @@
                                 <hr>
                                 {{-- end nohp --}}
                                 <div class="form-group col-md-12">
-                                    <label>ALAMAT PEMOHON &nbsp;</label>
+                                    <label>ALAMAT PEMOHON &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                     {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                     <input wire:model="permohonan_alamat_pemohon_edit" type="text"
                                         class="form-control" placeholder="Masukan Alamat Pemohon">
                                 </div>
                             @elseif($this->permohonan_jenis_edit == 'UPZ')
                                 <div class="form-group col-md-6">
-                                    <label>NAMA UPZ &nbsp;</label>
+                                    <label>NAMA UPZ &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                     {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                     <input wire:model="upz_edit" type="text" class="form-control"
                                         placeholder="Masukan Nama UPZ">
                                 </div>
                                 <hr>
                                 <div class="form-group col-md-6 ">
-                                    <label>NO HP UPZ &nbsp;</label>
+                                    <label>NO HP UPZ &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
 
                                     {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                     <input wire:model="nohp_edit" id="nohp" type="text" class="form-control"
@@ -80,21 +80,21 @@
                                 </div>
                                 <hr>
                                 <div class="form-group col-md-12">
-                                    <label>ALAMAT UPZ &nbsp;</label>
+                                    <label>ALAMAT UPZ &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                     {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                     <input wire:model="alamat_edit" type="text" class="form-control"
                                         placeholder="Masukan Alamat UPZ">
                                 </div>
                                 <hr>
                                 <div class="form-group col-md-6">
-                                    <label>NAMA PJ &nbsp;</label>
+                                    <label>NAMA PJ &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                     {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                     <input wire:model="pj_nama_edit" type="text" class="form-control"
                                         placeholder="Masukan Nama PJ Permohonan">
                                 </div>
                                 <hr>
                                 <div class="form-group col-md-6">
-                                    <label>JABATAN &nbsp;</label>
+                                    <label>JABATAN &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                     {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                     <input wire:model="pj_jabatan_edit" type="text" class="form-control"
                                         placeholder="Masukan Jabatan PJ">
@@ -104,34 +104,32 @@
                             <hr style="width: 100%; border: none; border-top: 1px solid #797b7d; margin: 10px 0;">
 
                             <div class="form-group col-md-6">
-                                <label>JUDUL SURAT &nbsp;</label>
+                                <label>JUDUL SURAT &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
                                 <input wire:model="surat_judul_edit" type="text" class="form-control"
                                     placeholder="Masukkan Judul Surat">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>NOMOR SURAT &nbsp;</label>
+                                <label>NOMOR SURAT &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
                                 <input wire:model="surat_nomor_edit" type="text" class="form-control"
                                     placeholder="Masukkan Nomor Surat">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>TGL SURAT &nbsp;</label>
+                                <label>TGL SURAT &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="surat_tgl_edit" type="date" class="form-control">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
                                 <label for="inputHP">FILE SCAN SURAT</label>
-                                <sup class="badge badge-danger text-white mb-2"
-                                    style="background-color:rgba(230,82,82)">WAJIB
-                                    (PDF/JPG/JPEG/PNG)</sup>
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <div class="custom-file custom-file-surat">
                                     <input type="file" wire:model="surat_url_edit"
                                         accept="application/pdf, image/png, image/jpg, image/jpeg"
                                         class="custom-file-input" id="file" name="file">
-                                    <label class="custom-file-label" for="customFile">Pilih file</label>
+                                    <label class="custom-file-label" for="customFile">Pilih file (PDF/JPG/JPEG/PNG)</label>
                                 </div>
                             </div>
 
@@ -140,7 +138,7 @@
                             <div class="form-group col-md-6 modal-tambah-asnaf-pilar">
                                 <label for="inputNama">ASNAF &nbsp;</label>
                                 <sup class="badge badge-danger text-white mb-2"
-                                    style="background-color:rgb(0, 187, 31)">Optional</sup>
+                                    style="background-color:rgb(0, 187, 31)">Opsional</sup>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                 <select wire:model="asnaf_id_edit" class=" form-control ">
                                     <option value="">Pilih Asnaf</option>
@@ -156,7 +154,7 @@
                             <div class="form-group col-md-6">
                                 <label for="inputNama">PROGRAM &nbsp;</label>
                                 <sup class="badge badge-danger text-white mb-2"
-                                    style="background-color:rgb(0, 187, 31)">Optional</sup>
+                                    style="background-color:rgb(0, 187, 31)">Opsional</sup>
                                 <select wire:model="program_id_edit" id="id_program_pilars"
                                     class="select2dulur form-control pilar">
                                     <option value="">Pilih Program</option>
@@ -212,7 +210,7 @@
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputNama">NOMINAL PERMOHONAN &nbsp;</label>
+                                <label for="inputNama">NOMINAL PERMOHONAN &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -225,7 +223,7 @@
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputNama">BENTUK BANTUAN &nbsp;</label>
+                                <label for="inputNama">BENTUK BANTUAN &nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                 <select wire:model="permohonan_bentuk_bantuan_edit"
                                     class="select2dulus form-control ">
@@ -237,7 +235,7 @@
                             </div>
                             <hr>
                             <div class="form-group col-md-12">
-                                <label for="inputAlamat">CATATAN TAMBAHAN&nbsp;</label>
+                                <label for="inputAlamat">CATATAN TAMBAHAN&nbsp;</label><span style="color:rgba(230, 82, 82)">*</span>
                                 {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
                                 <textarea type="text" class="form-control" wire:model="permohonan_catatan_input_edit"
                                     placeholder="Masukan Keterangan / Perihal" rows="4"> </textarea>
@@ -247,15 +245,18 @@
 
 
 
-                            {{-- info --}}
+                             {{-- info --}}
                             <div class="card card-body" style="background-color:#cbf2d6;">
                                 <b>INFORMASI!</b>
                                 <span>
-                                    Setelah simpan data, lengkapi data penerima manfaat, dan data lampiran pendukung
+                                    1. Setelah simpan data, lengkapi data penerima manfaat, dan data lampiran pendukung
                                     lainnya.
+                                    <br>
+                                    2. Jika ada tanda ( <span style="color:rgba(230, 82, 82)">*</span> ) menunjukkan kolom harus diisi.
                                 </span>
                             </div>
                             {{-- end info --}}
+
 
 
 

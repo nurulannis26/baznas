@@ -20,12 +20,14 @@
                             
                             <div class="form-group col-md-6">
                                 <label>JUDUL &nbsp;</label>
+                                <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup>
                                 <input wire:model="keterangan_survey_edit" type="text" class="form-control"
                                     placeholder="Masukan judul">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
                                 <label for="inputHP">FILE LAMPIRAN</label>
+                                <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(82, 166, 230)">ABAIKAN JIKA TIDAK ADA PERUBAHAN</sup>
                                 <div class="custom-file custom-file-surat">
                                     <input type="file" wire:model="url_survey_edit"
                                         accept="application/pdf, image/png, image/jpg, image/jpeg"

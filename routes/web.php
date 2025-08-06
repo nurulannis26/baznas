@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ImportMustahikController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MustahikController;
 use App\Http\Controllers\PengurusController;
 use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\ProgramController;
@@ -24,6 +26,14 @@ use Illuminate\Support\Facades\Route;
             // dd('as');
             return view('auth.welcome');
         })->name('login');
+        Route::get('/lupa-password', function () {
+            // dd('as');
+            return view('auth.lupa_password');
+        })->name('lupaPassword');
+        Route::get('/reset-password/{id_pengguna}', function () {
+            // dd('as');
+            return view('auth.reset_password');
+        });
         Route::get('/', function () {
             return view('auth.welcome');
         });
@@ -34,6 +44,7 @@ use Illuminate\Support\Facades\Route;
     Route::middleware('auth')->group(function () {
         Route::get('/home', [LoginController::class, 'home'])->name('home');
         Route::get('/permohonan', [PermohonanController::class, 'index'])->name('permohonan');
+        Route::get('/mustahik', [MustahikController::class, 'index'])->name('mustahik');
         Route::get('/program', [ProgramController::class, 'index'])->name('program');
         Route::get('/pengurus', [PengurusController::class, 'index'])->name('pengurus');
         Route::get('/detail-permohonan/{permohonan_id}', [PermohonanController::class, 'detail_permohonan'])->name('permohonan.detail');
@@ -42,9 +53,16 @@ use Illuminate\Support\Facades\Route;
         // Route::get('/print_permohonan/{filter_daterange}/{filters_fo}/{filters_atasan}/{filters_pencairan}/{filters_survey}/{filters_lpj}', [PermohonanController::class, 'print_permohonan_pdf'])->name('print_permohonan_pdf');
         Route::get('/print_permohonan', [PermohonanController::class, 'print_permohonan_pdf'])
         ->name('print_permohonan_pdf');
+        Route::get('/import_mustahik/{permohonan_id}', [ImportMustahikController::class, 'import_mustahik'])->name('import_mustahik');
+        Route::post('/import_excel_mustahik',  [ImportMustahikController::class, 'import_excel_mustahik'])->name('import_excel_mustahik');
+        Route::post('/import_save', [ImportMustahikController::class, 'save'])->name('import_save');
+        Route::post('/import_cancel', [ImportMustahikController::class, 'cancel'])->name('import_cancel');
 
     });
 // });
+
+
+
 
 
 

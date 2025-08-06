@@ -20,7 +20,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label>NAMA &nbsp;</label>
-                                <input wire:model="nama" type="text" class="form-control" placeholder="Masukan Nama">
+                                <input wire:model="nama_mustahik" type="text" class="form-control" placeholder="Masukan Nama">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
@@ -35,13 +35,13 @@
                             <hr>
                             <div class="form-group col-md-6">
                                 <label>NO KK &nbsp;</label>
-                                <input wire:model="kk" type="text" class="form-control" placeholder="Masukan KK">
+                                <input wire:model="nkk" type="text" class="form-control" placeholder="Masukan No KK">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>TEMPAT LAHIR &nbsp;</label>
-                                <input wire:model="tempat_lahir" type="text" class="form-control"
-                                    placeholder="Masukan tempat lahir">
+                                <label>NO HP &nbsp;</label>
+                                <input wire:model="nohp_mustahik" type="text" class="form-control"
+                                    placeholder="Masukan nomor hp">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
@@ -56,77 +56,33 @@
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>NO HP &nbsp;</label>
-                                <input wire:model="nohp_mustahik" type="text" class="form-control"
-                                    placeholder="Masukan nomor hp">
+                                <label>JUMLAH KK &nbsp;</label>
+                                <input wire:model="jumlah_kk" type="text" class="form-control" placeholder="Masukan jumlah KK">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label>EMAIL &nbsp;</label>
-                                <input wire:model="email" type="text" class="form-control"
-                                    placeholder="Masukan email">
+                                <label>JUMLAH JIWA &nbsp;</label>
+                                <input wire:model="jumlah_jiwa" type="text" class="form-control" placeholder="Masukan jumlah jiwa">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputNama">JENIS KELAMIN &nbsp;</label>
-                                <select wire:model="jenis_kelamin" class=" form-control ">
-                                    <option value="">Pilih Jenis Kelamin</option>
-                                    <option value="Laki-laki">Laki-laki</option>
-                                    <option value="Perempuan">Perempuan</option>
-                                </select>
-                            </div>
-                            <hr>
-                            <div class="form-group col-md-6 modal-tambah-asnaf-pilar">
-                                <label for="inputNama">ASNAF &nbsp;</label>
-                                <select wire:model="asnaf" class=" form-control ">
-                                    <option value="">Pilih Asnaf</option>
-                                    @php
-                                        $asnaf_get = DB::table('asnaf')->get();
-                                    @endphp
-                                    @foreach ($asnaf_get as $as)
-                                        <option value="{{ $as->asnaf_id }}">{{ $as->asnaf }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <hr>
-                            <div class="form-group col-md-3">
-                                <label>RT &nbsp;</label>
-                                <input wire:model="rt" type="text" class="form-control" placeholder="Masukan rt">
-                            </div>
-                            <hr>
-                            <div class="form-group col-md-3">
-                                <label>RW &nbsp;</label>
-                                <input wire:model="rw" type="text" class="form-control" placeholder="Masukan rw">
+                                <label>JENIS BANTUAN &nbsp;</label>
+                                <input wire:model="jenis_bantuan" type="text" class="form-control" placeholder="Masukan jenis bantuan">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputHP">FILE FOTO DIRI</label>
-                                <div class="custom-file custom-file-foto">
-                                    <input type="file" wire:model="foto_url"
-                                        accept="application/pdf, image/png, image/jpg, image/jpeg"
-                                        class="custom-file-input" id="file" name="file">
-                                    <label class="custom-file-label" for="customFile">Pilih file</label>
-                                </div>
+                                <label>NOMINAL BANTUAN &nbsp;</label>
+                                <input wire:model="nominal_bantuan" type="text" class="form-control" placeholder="Masukan nominal bantuan">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputHP">FILE KTP</label>
-                                <div class="custom-file custom-file-ktp">
-                                    <input type="file" wire:model="ktp_url"
-                                        accept="application/pdf, image/png, image/jpg, image/jpeg"
-                                        class="custom-file-input" id="file" name="file">
-                                    <label class="custom-file-label" for="customFile">Pilih file</label>
-                                </div>
+                                <label>TGL REALISASI &nbsp;</label>
+                                <input wire:model="tgl_realisasi" type="date" class="form-control">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
-                                <label for="inputHP">FILE KK</label>
-                                <div class="custom-file custom-file-kk">
-                                    <input type="file" wire:model="kk_url"
-                                        accept="application/pdf, image/png, image/jpg, image/jpeg"
-                                        class="custom-file-input" id="file" name="file">
-                                    <label class="custom-file-label" for="customFile">Pilih file</label>
-                                </div>
+                                <label>KETERANGAN &nbsp;</label>
+                                <input wire:model="keterangan" type="date" class="form-control" placeholder="Masukan keterangan">
                             </div>
                         </div>
                     </div>
@@ -136,7 +92,7 @@
                                 class="fas fa-ban"></i>
                             Batal</button>
 
-                        @if ($nama == '' or $alamat == '' or $nohp == '')
+                        @if ($nama_mustahik == '' or $alamat == '' or $nohp == '')
                             <button class="btn btn-success" disabled wire:loading.attr="disabled"><i
                                     class="fas fa-save"></i>
                                 Simpan</button>

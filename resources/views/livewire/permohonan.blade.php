@@ -243,7 +243,7 @@
                                 $nama = $a->permohonan_nama_pemohon;
                             } else {
                                 $bg_jenis = 'badge-primary';
-                                $nama = $this->nama_upz($a->upz_id);
+                                $nama = $a->permohonan_namapj_entitas;
                             }
 
                         @endphp
@@ -376,7 +376,7 @@
                                     Catatan Tambahan:
                                 </span> <br>
                                 <span style="font-size: 13px">
-                                    {{ $a->pencairan_catatan ?? '-' }}
+                                    {{ $a->pyl_catatan ?? '-' }}
                                 </span>
                             </td>
 
@@ -422,19 +422,15 @@
 
                                 <tr>
                                     <th style="width:50%">Jumlah Permohonan:</th>
-                                    <td>5 </td>
+                                    <td>{{$permohonan_total}}</td>
                                 </tr>
                                 <tr>
                                     <th>Total Nominal Permohonan:</th>
-                                    <td> 10000</td>
+                                    <td> Rp. {{ number_format($total_nominal_permohonan, 0, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <th> Total Penerima :</th>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <th>Total Nominal Disetujui :</th>
-                                    <td>Rp. 100000</td>
+                                    <th>Total Nominal Pencairan :</th>
+                                    <td>Rp. {{ number_format($total_nominal_pencairan, 0, ',', '.') }}</td>
                                 </tr>
 
 
@@ -454,8 +450,7 @@
                 type: 'bar',
                 data: {
                     labels: [
-                        'Ekonomi', 'Pendidikan', 'Kesehatan', ['Dakwah', 'Kemanusiaan'],
-                        'Lingkungan', 'Operasional'
+                        ['Cilacap', 'Peduli'], ['Cilacap', 'Makmur'], ['Cilacap', 'Cerdas'], ['Cilacap', 'Sehat'], ['Cilacap', 'Taqwa'], ['Peduli', 'Bencana'], ['Layanan Aktif', 'Baznas'],
                     ],
                     datasets: [{
                         label: 'Jumlah Kegiatan',
@@ -466,7 +461,7 @@
                         pointStrokeColor: 'rgba(0, 89, 59, 0.7)',
                         pointHighlightFill: '#fff',
                         pointHighlightStroke: 'rgba(0, 89, 59, 0.7)',
-                        data: [2, 4, 6, 7, 4, 2]
+                        data: [{{ $cilacap_peduli }}, {{ $cilacap_makmur }}, {{ $cilacap_cerdas }}, {{ $cilacap_sehat }}, {{ $cilacap_taqwa }}, {{ $peduli_bencana }}, {{ $layanan_baznas }}]
                     }, ]
                 },
                 options: {

@@ -9,6 +9,8 @@ use App\Models\Mustahik;
 use App\Models\Pengguna;
 use App\Models\Pengurus;
 use App\Models\Permohonan;
+use App\Models\SubProgram;
+use App\Models\Program;
 use App\Models\Surat;
 use App\Models\Upz;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +61,10 @@ class DetailPermohonan extends Component
     public $permohonan_nama_pemohon_edit;
     public $permohonan_alamat_pemohon_edit;
     public $permohonan_nohp_pemohon_edit;
+    public $permohonan_nama_entitas_edit;
+    public $permohonan_nohp_entitas_edit;
+    public $permohonan_alamat_entitas_edit;
+    public $permohonan_namapj_entitas_edit;
     public $asnaf_id_edit;
     public $program_id_edit;
     public $sub_program_id_edit;
@@ -123,6 +129,19 @@ class DetailPermohonan extends Component
     public $url_pyl;
     public $keterangan_lampiran_pyl_edit;
     public $url_pyl_edit;
+    public $nama_mustahik_edit;
+    public $nkk_edit;
+    public $jumlah_kk_edit;
+    public $jumlah_jiwa_edit;
+    public $jenis_bantuan_edit;
+    public $tgl_realisasi_edit;
+    public $nominal_bantuan_edit;
+    public $nkk;
+    public $jumlah_kk;
+    public $jumlah_jiwa;
+    public $jenis_bantuan;
+    public $nominal_bantuan;
+    public $tgl_realisai;
 
     public function mount()
     {
@@ -136,9 +155,8 @@ class DetailPermohonan extends Component
 
     public function render()
     {
-        $dp = Permohonan::leftJoin('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
-        ->leftJoin('surat', 'surat.surat_id', '=', 'permohonan.surat_id')
-        ->where('permohonan_id', $this->permohonan_id)->select('permohonan.*', 'upz.*', 'surat.*')->first();
+        $dp = Permohonan::leftJoin('surat', 'surat.surat_id', '=', 'permohonan.surat_id')
+        ->where('permohonan_id', $this->permohonan_id)->select('permohonan.*', 'surat.*')->first();
 
         $lampiran_pengajuan = Lampiran::where('permohonan_id', $this->permohonan_id)
         ->where('jenis', 'Permohonan')->get();
@@ -152,9 +170,8 @@ class DetailPermohonan extends Component
         $lampiran_pyl = Lampiran::where('permohonan_id', $this->permohonan_id)
         ->where('jenis', 'LPJ')->get();
 
-        $daftar_mustahik = DaftarMustahik::join('mustahik', 'mustahik.mustahik_id', '=', 'daftar_mustahik.mustahik_id')
-        ->where('daftar_mustahik.permohonan_id', $this->permohonan_id)
-        ->select('mustahik.*', 'daftar_mustahik.*')
+        $mustahik = Mustahik::where('permohonan_id', $this->permohonan_id)
+        ->orderBy('created_at', 'desc')
         ->get();
 
         $petugas_survey = Pengurus::join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
@@ -172,7 +189,7 @@ class DetailPermohonan extends Component
             'lampiran_survey', 
             'lampiran_pencairan',
             'lampiran_pyl',
-            'daftar_mustahik',
+            'mustahik',
             'petugas_survey',
             'penggunas'
         ));
@@ -191,6 +208,10 @@ class DetailPermohonan extends Component
         $this->permohonan_nama_pemohon_edit = NULL;
         $this->permohonan_alamat_pemohon_edit = NULL;
         $this->permohonan_nohp_pemohon_edit = NULL;
+        $this->permohonan_nama_entitas_edit = NULL;
+        $this->permohonan_nohp_entitas_edit = NULL;
+        $this->permohonan_alamat_entitas_edit = NULL;
+        $this->permohonan_namapj_entitas_edit = NULL;
         $this->asnaf_id_edit = NULL;
         $this->program_id_edit = NULL;
         $this->sub_program_id_edit = NULL;
@@ -199,7 +220,6 @@ class DetailPermohonan extends Component
         $this->permohonan_catatan_input_edit = NULL;
         $this->permohonan_status_input_edit = NULL;
         $this->surat_nomor_edit = NULL;
-        $this->upz_edit = NULL;
         $this->surat_tgl_edit = NULL;
         $this->nohp_edit = NULL;
         $this->surat_judul_edit = NULL;
@@ -284,12 +304,10 @@ class DetailPermohonan extends Component
 
     public function modal_permohonan_ubah($permohonan_id)
     {
-        $data = Permohonan::leftJoin('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
-        ->leftJoin('surat', 'surat.surat_id', '=', 'permohonan.surat_id')
+        $data = Permohonan::leftJoin('surat', 'surat.surat_id', '=', 'permohonan.surat_id')
         ->where('permohonan.permohonan_id', $permohonan_id)->first();
 
 
-        $this->upz_edit = $data->upz;
         $this->nohp_edit = $data->nohp;
         $this->alamat_edit = $data->alamat;
         $this->pj_nama_edit = $data->pj_nama;
@@ -306,6 +324,10 @@ class DetailPermohonan extends Component
         $this->permohonan_nama_pemohon_edit = $data->permohonan_nama_pemohon;
         $this->permohonan_nohp_pemohon_edit = $data->permohonan_nohp_pemohon;
         $this->permohonan_alamat_pemohon_edit = $data->permohonan_alamat_pemohon;
+        $this->permohonan_nama_entitas_edit = $data->permohonan_nama_entitas;
+        $this->permohonan_nohp_entitas_edit = $data->permohonan_nohp_entitas;
+        $this->permohonan_alamat_entitas_edit = $data->permohonan_alamat_entitas;
+        $this->permohonan_namapj_entitas_edit = $data->permohonan_namapj_entitas;
         $this->asnaf_id_edit = $data->asnaf_id;
         $this->program_id_edit = $data->program_id;
         $this->sub_program_id_edit = $data->sub_program_id;
@@ -354,11 +376,9 @@ class DetailPermohonan extends Component
 
     public function ubah_permohonan()
     {
-        $data = Permohonan::leftJoin('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
-        ->leftJoin('surat', 'surat.surat_id', '=', 'permohonan.surat_id')
+        $data = Permohonan::leftJoin('surat', 'surat.surat_id', '=', 'permohonan.surat_id')
         ->where('permohonan.permohonan_id', $this->permohonan_id)->first();
         $surat_id = $data->value('surat_id');
-        $upz_id = $data->value('upz_id');
 
 
         if ($this->surat_url_edit != NULL) {
@@ -384,19 +404,6 @@ class DetailPermohonan extends Component
             'surat_keterangan' => null,
             'surat_url' => $surat_url_name,
         ]);
-
-        if ($this->permohonan_jenis_edit === 'UPZ') {
-            $upz = Upz::where('upz_id', $upz_id)->update([
-                'upz' => $this->upz_edit,
-                'nohp' => $this->nohp_edit,
-                'alamat' => $this->alamat_edit,
-                'pj_nama' => $this->pj_nama_edit,
-                'pj_jabatan' => $this->pj_jabatan_edit,
-                'pj_nohp' => $this->pj_nohp_edit,
-                'keterangan' => $this->keterangan_edit,
-            ]);
-
-        }
 
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'permohonan_jenis' => $this->permohonan_jenis_edit,
@@ -436,14 +443,14 @@ class DetailPermohonan extends Component
     {
         $a = SubProgram::where('sub_program_id', $id)->first();
 
-        return  $a->nama_program ?? '';
+        return  $a->sub_program ?? '';
     }
 
     public function nama_program($id)
     {
         $a = Program::where('program_id', $id)->first();
 
-        return  $a->pilar ?? '';
+        return  $a->program ?? '';
     }
 
     public function selesai_input($permohonan_id)
@@ -453,10 +460,10 @@ class DetailPermohonan extends Component
             'permohonan_status_input' => 'Selesai Input',
         ]);
 
-        if ($this->permohonan_jenis == "Individu") {
-            $pemohon =$this->permohonan_nama_pemohon;
-        } elseif ($this->permohonan_jenis == "UPZ") {
-            $pemohon =$this->pj_nama;
+        if ($data_detail->permohonan_jenis == "Individu") {
+            $pemohon =$data_detail->permohonan_nama_pemohon;
+        } elseif ($data_detail->permohonan_jenis == "Entitas") {
+            $pemohon = $data_detail->permohonan_namapj_entitas;
         } 
 
         $atasan = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
@@ -464,14 +471,16 @@ class DetailPermohonan extends Component
         ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
         ->where('divisi.divisi_id', '0e883f67-9130-43cf-ac95-54395388538b')
         ->where('pengguna.status', '1')
-        ->fisrt();
+        ->first();
+        
+        // dd($atasan);
 
-        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $data_detail->asnaf_id)->value('asnaf');
         // $url =  "https://e-tasyaruf.nucarecilacap.id/detail-permohonan/" . $this->permohonan_id;
 
         $this->notif(
-            Helper::getNohpPengurus($atasan->pengurus_id),
-            // '089639481199',
+            // Helper::getNohpPengurus($atasan->pengurus_id),
+            '089639481199',
 
             "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
 
@@ -482,21 +491,21 @@ class DetailPermohonan extends Component
 
                 "# Permohonan Baznas Cilacap" .  "\n"  . "\n" .
                 "*" .  "Nomor"  . "*" .  "\n" .
-                $this->permohonan_nomor  . "\n" .
+                $data_detail->permohonan_nomor  . "\n" .
                 "*" .  "Tanggal Permohonan"  . "*" .  "\n" .
-                \Carbon\Carbon::parse($this->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
+                \Carbon\Carbon::parse($data_detail->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
                 "*" .  "Nama Pemohon"  . "*" .  "\n" .
-                $this->permohonan_jenis . " - " . $pemohon  .  "\n" .
+                $data_detail->permohonan_jenis . " - " . $pemohon  .  "\n" .
                 "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
-                'Rp' . number_format($this->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
+                'Rp' . number_format($data_detail->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
                 "========================" . "\n" ."\n" .
                 "*" .  "Asnaf"  . "*" .  "\n" .
                 $asnaf .  "\n" .
                 "*" .  "Pilar"  . "*" .  "\n" .
-                $this->nama_program($this->program_id) .  "\n" .
-                $this->nama_sub($this->sub_program_id) .  "\n" .
+                $this->nama_program($data_detail->program_id) .  "\n" .
+                $this->nama_sub($data_detail->sub_program_id) .  "\n" .
                 "*" .  "Keterangan Permohonan"  . "*" .  "\n" .
-                $this->permohonan_catatan_input .  "\n" . "\n" .
+                $data_detail->permohonan_catatan_input .  "\n" . "\n" .
 
                 "Terima Kasih." 
                 // url($url)
@@ -526,50 +535,39 @@ class DetailPermohonan extends Component
     public function tambah_mustahik()
     {
         // dd($this->ktp_url);
-        if ($this->foto_url) {
-            $ext = $this->foto_url->extension();
-            $file_name = Str::uuid()->toString() . '.' . $ext;
-            $this->foto_url->storeAs('foto_diri', $file_name);
-        }
+        // if ($this->foto_url) {
+        //     $ext = $this->foto_url->extension();
+        //     $file_name = Str::uuid()->toString() . '.' . $ext;
+        //     $this->foto_url->storeAs('foto_diri', $file_name);
+        // }
 
-        if ($this->ktp_url) {
-        //     dd('baba');
-            $ext = $this->ktp_url->extension();
-            $file_name_ktp = Str::uuid()->toString() . '.' . $ext;
-            $this->ktp_url->storeAs('ktp', $file_name_ktp);
-        }
+        // if ($this->ktp_url) {
+        // //     dd('baba');
+        //     $ext = $this->ktp_url->extension();
+        //     $file_name_ktp = Str::uuid()->toString() . '.' . $ext;
+        //     $this->ktp_url->storeAs('ktp', $file_name_ktp);
+        // }
 
-        if ($this->kk_url) {
-            $ext = $this->kk_url->extension();
-            $file_name_kk = Str::uuid()->toString() . '.' . $ext;
-            $this->kk_url->storeAs('kk', $file_name_kk);
-        }
+        // if ($this->kk_url) {
+        //     $ext = $this->kk_url->extension();
+        //     $file_name_kk = Str::uuid()->toString() . '.' . $ext;
+        //     $this->kk_url->storeAs('kk', $file_name_kk);
+        // }
 
         $mustahik = Mustahik::create([
             'mustahik_id' => Str::uuid(),
-            'nama' => $this->nama,
+            'nama_mustahik' => $this->nama_mustahik,
             'nik' => $this->nik,
-            'kk' => $this->kk,
-            'tempat_lahir' => $this->tempat_lahir,
+            'nkk' => $this->nkk,
             'tgl_lahir' => $this->tgl_lahir,
             'alamat' => $this->alamat_mustahik,
             'nohp' => $this->nohp_mustahik,
-            'email' => $this->email,
-            'jenis_kelamin' => $this->jenis_kelamin,
-            'asnaf_id' => $this->asnaf,
-            'rt' => $this->rt,
-            'rw' => $this->rw,
-            'ktp_url' => $file_name_ktp ?? null,
-            'kk_url' => $file_name_kk ?? null,
-            'foto_url' => $file_name ?? null,
-        ]);
-
-        // dd($mustahik);
-
-        $daftar_mustahik = DaftarMustahik::create([
-            'daftar_mustahik_id' => Str::uuid(),
-            'permohonan_id' => $this->permohonan_id,
-            'mustahik_id' => $mustahik->mustahik_id,
+            'jumlah_kk' => $this->jumlah_kk,
+            'jumlah_jiwa' => $this->jumlah_jiwa,
+            'jenis_bantuan' => $this->jenis_bantuan,
+            'nominal_bantuan' => $this->nominal_bantuan,
+            'tgl_realisai' => $this->tgl_realisai,
+            'keterangan' => $this->keterangan,
         ]);
 
         session()->flash('alert_mustahik', 'Mustahik berhasil ditambahkan!');
@@ -581,18 +579,18 @@ class DetailPermohonan extends Component
     {
         $mustahik = Mustahik::where('mustahik_id', $mustahik_id)->first();
         $this->mustahik_id = $mustahik_id;
-        $this->nama_edit = $mustahik->nama;
+        $this->nama_mustahik_edit = $mustahik->nama_mustahik;
         $this->nik_edit = $mustahik->nik;
-        $this->kk_edit = $mustahik->kk;
-        $this->tempat_lahir_edit = $mustahik->tempat_lahir;
+        $this->nkk_edit = $mustahik->nkk;
+        $this->nohp_mustahik_edit = $mustahik->nohp;
         $this->tgl_lahir_edit = $mustahik->tgl_lahir;
         $this->alamat_mustahik_edit = $mustahik->alamat;
-        $this->nohp_mustahik_edit = $mustahik->nohp;
-        $this->email_edit = $mustahik->email;
-        $this->jenis_kelamin_edit = $mustahik->jenis_kelamin;
-        $this->asnaf_edit = $mustahik->asnaf_id;
-        $this->rt_edit = $mustahik->rt;
-        $this->rw_edit = $mustahik->rw;
+        $this->jumlah_kk_edit = $mustahik->jumlah_kk;
+        $this->jumlah_jiwa_edit = $mustahik->jumlah_jiwa;
+        $this->jenis_bantuan_edit = $mustahik->jenis_bantuan;
+        $this->nominal_bantuan_edit = $mustahik->nominal_bantuan;
+        $this->tgl_realisasi_edit = $mustahik->tgl_realisasi;
+        $this->keterangan_edit = $mustahik->keterangan;
         // $this->ktp_url_edit = $mustahik->ktp_url;
         // $this->kk_url_edit = $mustahik->kk_url;
         // $this->foto_url_edit = $mustahik->foto_url;
@@ -602,67 +600,67 @@ class DetailPermohonan extends Component
     {
         $mustahik = Mustahik::where('mustahik_id', $this->mustahik_id)->first();
 
-        if ($this->foto_url_edit != NULL) {
-            if ($mustahik->foto_url != null) {
-                $path = public_path() . "/uploads/foto_diri" . $mustahik->foto_url;
-                if (file_exists($path)) {
-                    unlink($path);
-                }
-            }
+        // if ($this->foto_url_edit != NULL) {
+        //     if ($mustahik->foto_url != null) {
+        //         $path = public_path() . "/uploads/foto_diri" . $mustahik->foto_url;
+        //         if (file_exists($path)) {
+        //             unlink($path);
+        //         }
+        //     }
 
-            $ext = $this->foto_url_edit->extension();
-            $foto_url_name = Str::uuid()->toString() . '.' . $ext;
-            $this->foto_url_edit->storeAs('uploads/foto_diri', $foto_url_name);
-        } else {
-            $foto_url_name = $mustahik->foto_url;
-        }
+        //     $ext = $this->foto_url_edit->extension();
+        //     $foto_url_name = Str::uuid()->toString() . '.' . $ext;
+        //     $this->foto_url_edit->storeAs('uploads/foto_diri', $foto_url_name);
+        // } else {
+        //     $foto_url_name = $mustahik->foto_url;
+        // }
 
-        if ($this->ktp_url_edit != NULL) {
-            if ($mustahik->ktp_url != null) {
-                $path = public_path() . "/uploads/ktp" . $mustahik->ktp_url;
-                if (file_exists($path)) {
-                    unlink($path);
-                }
-            }
+        // if ($this->ktp_url_edit != NULL) {
+        //     if ($mustahik->ktp_url != null) {
+        //         $path = public_path() . "/uploads/ktp" . $mustahik->ktp_url;
+        //         if (file_exists($path)) {
+        //             unlink($path);
+        //         }
+        //     }
 
-            $ext = $this->ktp_url_edit->extension();
-            $ktp_url_name = Str::uuid()->toString() . '.' . $ext;
-            $this->ktp_url_edit->storeAs('uploads/ktp', $ktp_url_name);
-        } else {
-            $ktp_url_name = $mustahik->ktp_url;
-        }
+        //     $ext = $this->ktp_url_edit->extension();
+        //     $ktp_url_name = Str::uuid()->toString() . '.' . $ext;
+        //     $this->ktp_url_edit->storeAs('uploads/ktp', $ktp_url_name);
+        // } else {
+        //     $ktp_url_name = $mustahik->ktp_url;
+        // }
 
-        if ($this->kk_url_edit != NULL) {
-            if ($mustahik->kk_url != null) {
-                $path = public_path() . "/uploads/kk" . $mustahik->kk_url;
-                if (file_exists($path)) {
-                    unlink($path);
-                }
-            }
+        // if ($this->kk_url_edit != NULL) {
+        //     if ($mustahik->kk_url != null) {
+        //         $path = public_path() . "/uploads/kk" . $mustahik->kk_url;
+        //         if (file_exists($path)) {
+        //             unlink($path);
+        //         }
+        //     }
 
-            $ext = $this->kk_url_edit->extension();
-            $kk_url_name = Str::uuid()->toString() . '.' . $ext;
-            $this->kk_url_edit->storeAs('uploads/kk', $kk_url_name);
-        } else {
-            $kk_url_name = $mustahik->kk_url;
-        }
+        //     $ext = $this->kk_url_edit->extension();
+        //     $kk_url_name = Str::uuid()->toString() . '.' . $ext;
+        //     $this->kk_url_edit->storeAs('uploads/kk', $kk_url_name);
+        // } else {
+        //     $kk_url_name = $mustahik->kk_url;
+        // }
 
         Mustahik::where('mustahik_id', $mustahik->mustahik_id)->update([
-            'nama' => $this->nama_edit,
+            'nama_mustahik' => $this->nama_mustahik_edit,
             'nik' => $this->nik_edit,
-            'kk' => $this->kk_edit,
-            'tempat_lahir' => $this->tempat_lahir_edit,
+            'nkk' => $this->nkk_edit,
             'tgl_lahir' => $this->tgl_lahir_edit,
             'alamat' => $this->alamat_mustahik_edit,
             'nohp' => $this->nohp_mustahik_edit,
-            'email' => $this->email_edit,
-            'jenis_kelamin' => $this->jenis_kelamin_edit,
-            'asnaf_id' => $this->asnaf_edit,
-            'rt' => $this->rt_edit,
-            'rw' => $this->rw_edit,
-            'ktp_url' => $ktp_url_name,
-            'kk_url' => $kk_url_name,
-            'foto_url' => $foto_url_name,
+            'jumlah_kk' => $this->jumlah_kk_edit,
+            'jumlah_jiwa' => $this->jumlah_jiwa_edit,
+            'jenis_bantuan' => $this->jenis_bantuan_edit,
+            'nominal_bantuan' => $this->nominal_bantuan_edit,
+            'tgl_realisasi' => $this->tgl_realisasi_edit,
+            'keterangan' => $this->keterangan_edit,
+            // 'ktp_url' => $ktp_url_name,
+            // 'kk_url' => $kk_url_name,
+            // 'foto_url' => $foto_url_name,
         ]);
 
         session()->flash('alert_mustahik', 'Mustahik berhasil diubah!');
@@ -678,28 +676,28 @@ class DetailPermohonan extends Component
     public function mustahik_hapus()
     {
         $mustahik = Mustahik::where('mustahik_id', $this->mustahik_id)->first();
-        if ($mustahik->foto_url != null) {
-            $path = public_path() . "/uploads/foto_diri" . $mustahik->foto_url;
-            if (file_exists($path)) {
-                unlink($path);
-            }
-        }
+        // if ($mustahik->foto_url != null) {
+        //     $path = public_path() . "/uploads/foto_diri" . $mustahik->foto_url;
+        //     if (file_exists($path)) {
+        //         unlink($path);
+        //     }
+        // }
 
-        if ($mustahik->ktp_url != null) {
-            $path = public_path() . "/uploads/ktp" . $mustahik->ktp_url;
-            if (file_exists($path)) {
-                unlink($path);
-            }
-        }
+        // if ($mustahik->ktp_url != null) {
+        //     $path = public_path() . "/uploads/ktp" . $mustahik->ktp_url;
+        //     if (file_exists($path)) {
+        //         unlink($path);
+        //     }
+        // }
 
-        if ($mustahik->kk_url != null) {
-            $path = public_path() . "/uploads/kk" . $mustahik->kk_url;
-            if (file_exists($path)) {
-                unlink($path);
-            }
-        }
+        // if ($mustahik->kk_url != null) {
+        //     $path = public_path() . "/uploads/kk" . $mustahik->kk_url;
+        //     if (file_exists($path)) {
+        //         unlink($path);
+        //     }
+        // }
 
-        DaftarMustahik::where('mustahik_id', $this->mustahik_id)->delete();
+        // DaftarMustahik::where('mustahik_id', $this->mustahik_id)->delete();
         Mustahik::where('mustahik_id', $this->mustahik_id)->delete();
         session()->flash('alert_mustahik', 'Mustahik berhasil dihapus!');
         $this->emit('waktu_alert');
@@ -1037,7 +1035,7 @@ class DetailPermohonan extends Component
 
     public function acc_atasan()
     {
-        $data = Permohonan::where('permohonan_id', $this->permohonan_id);
+        $data = Permohonan::where('permohonan_id', $this->permohonan_id)->first();
 
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'permohonan_timestamp_atasan' => $this->permohonan_timestamp_atasan,
@@ -1049,10 +1047,10 @@ class DetailPermohonan extends Component
             'survey_status' => 'Belum Selesai',
         ]);
 
-        if ($this->permohonan_jenis == "Individu") {
-            $pemohon =$this->permohonan_nama_pemohon;
-        } elseif ($this->permohonan_jenis == "UPZ") {
-            $pemohon =$this->pj_nama;
+        if ($data->permohonan_jenis == "Individu") {
+            $pemohon =$data->permohonan_nama_pemohon;
+        } elseif ($data->permohonan_jenis == "Entitas") {
+            $pemohon = $data->permohonan_namapj_entitas;
         } 
 
         $survey = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
@@ -1060,22 +1058,22 @@ class DetailPermohonan extends Component
         ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
         ->where('divisi.divisi_id', '78e31483-4c70-4736-8768-621ec862b30d')
         ->where('pengguna.status', '1')
-        ->fisrt();
+        ->first();
 
         $keuangan = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
         ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
         ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
         ->where('divisi.divisi_id', 'e6e554db-da6a-42d7-8bd7-3ccdb250fb2e')
         ->where('pengguna.status', '1')
-        ->fisrt();
+        ->first();
 
-        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $data->asnaf_id)->value('asnaf');
         // $url =  "https://e-tasyaruf.nucarecilacap.id/detail-permohonan/" . $this->permohonan_id;
 
         if ($this->survey_pilihan == 'Perlu') {
             $this->notif(
-                Helper::getNohpPengurus($survey->pengurus_id),
-                // '089639481199',
+                // Helper::getNohpPengurus($survey->pengurus_id),
+                '089639481199',
     
                 "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
     
@@ -1108,8 +1106,8 @@ class DetailPermohonan extends Component
             );
         } else {
             $this->notif(
-                Helper::getNohpPengurus($keuangan->pengurus_id),
-                // '089639481199',
+                // Helper::getNohpPengurus($keuangan->pengurus_id),
+                '089639481199',
     
                 "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
     
@@ -1150,7 +1148,7 @@ class DetailPermohonan extends Component
 
     public function tolak_atasan()
     {
-        $data = Permohonan::where('permohonan_id', $this->permohonan_id);
+        $data = Permohonan::where('permohonan_id', $this->permohonan_id)->first();
 
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'denial_date_atasan' => $this->denial_date_atasan,
@@ -1161,24 +1159,24 @@ class DetailPermohonan extends Component
             'permohonan_petugas_atasan' => Auth::user()->pengurus_id,
         ]);
 
-        if ($this->permohonan_jenis == "Individu") {
-            $pemohon =$this->permohonan_nama_pemohon;
-        } elseif ($this->permohonan_jenis == "UPZ") {
-            $pemohon =$this->pj_nama;
+        if ($data->permohonan_jenis == "Individu") {
+            $pemohon =$data->permohonan_nama_pemohon;
+        } elseif ($data->permohonan_jenis == "Entitas") {
+            $pemohon = $data->permohonan_namapj_entitas;
         } 
 
-        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $data->asnaf_id)->value('asnaf');
 
         $front = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
         ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
         ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
         ->where('divisi.divisi_id', '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
         ->where('pengguna.status', '1')
-        ->fisrt();
+        ->first();
 
         $this->notif(
-            Helper::getNohpPengurus($front->pengurus_id),
-            // '089639481199',
+            // Helper::getNohpPengurus($front->pengurus_id),
+            '6289639481199',
 
             "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
 
@@ -1238,8 +1236,8 @@ class DetailPermohonan extends Component
 
         if ($this->permohonan_jenis == "Individu") {
             $pemohon =$this->permohonan_nama_pemohon;
-        } elseif ($this->permohonan_jenis == "UPZ") {
-            $pemohon =$this->pj_nama;
+        } elseif ($this->permohonan_jenis == "Entitas") {
+            $pemohon =$this->permohonan_namapj_entitas;
         } 
 
         $keuangan = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
@@ -1247,13 +1245,13 @@ class DetailPermohonan extends Component
         ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
         ->where('divisi.divisi_id', 'e6e554db-da6a-42d7-8bd7-3ccdb250fb2e')
         ->where('pengguna.status', '1')
-        ->fisrt();
+        ->first();
 
-        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $data->asnaf_id)->value('asnaf');
 
         $this->notif(
-            Helper::getNohpPengurus($keuangan->pengurus_id),
-            // '089639481199',
+            // Helper::getNohpPengurus($keuangan->pengurus_id),
+            '089639481199',
 
             "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
 
@@ -1315,7 +1313,7 @@ class DetailPermohonan extends Component
 
     public function acc_pencairan()
     {
-        $data = Permohonan::where('permohonan_id', $this->permohonan_id);
+        $data = Permohonan::where('permohonan_id', $this->permohonan_id)->first();
 
         $permohonan = Permohonan::where('permohonan_id', $this->permohonan_id)->update([
             'pencairan_timestamp' => $this->pencairan_timestamp,
@@ -1326,10 +1324,10 @@ class DetailPermohonan extends Component
             'pencairan_petugas_keuangan' => Auth::user()->pengurus_id,
         ]);
 
-        if ($this->permohonan_jenis == "Individu") {
-            $pemohon =$this->permohonan_nama_pemohon;
-        } elseif ($this->permohonan_jenis == "UPZ") {
-            $pemohon =$this->pj_nama;
+       if ($data->permohonan_jenis == "Individu") {
+            $pemohon =$data->permohonan_nama_pemohon;
+        } elseif ($data->permohonan_jenis == "Entitas") {
+            $pemohon = $data->permohonan_namapj_entitas;
         } 
 
         $front = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
@@ -1337,13 +1335,13 @@ class DetailPermohonan extends Component
         ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
         ->where('divisi.divisi_id', '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
         ->where('pengguna.status', '1')
-        ->fisrt();
+        ->first();
 
-        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $data->asnaf_id)->value('asnaf');
 
         $this->notif(
-            Helper::getNohpPengurus($front->pengurus_id),
-            // '089639481199',
+            // Helper::getNohpPengurus($front->pengurus_id),
+            '089639481199',
 
             "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
 
@@ -1395,22 +1393,22 @@ class DetailPermohonan extends Component
 
         if ($this->permohonan_jenis == "Individu") {
             $pemohon =$this->permohonan_nama_pemohon;
-        } elseif ($this->permohonan_jenis == "UPZ") {
-            $pemohon =$this->pj_nama;
+        } elseif ($this->permohonan_jenis == "Entitas") {
+            $pemohon =$this->permohonan_namapj_entitas;
         } 
 
-        $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
+        $asnaf = DB::table('asnaf')->where('asnaf_id', $data->asnaf_id)->value('asnaf');
 
         $front = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
         ->join('jabatan', 'jabatan.jabatan_id', '=', 'pengurus.jabatan_id')
         ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
         ->where('divisi.divisi_id', '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
         ->where('pengguna.status', '1')
-        ->fisrt();
+        ->first();
 
         $this->notif(
-            Helper::getNohpPengurus($front->pengurus_id),
-            // '089639481199',
+            // Helper::getNohpPengurus($front->pengurus_id),
+            '089639481199',
 
             "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
 

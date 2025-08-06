@@ -40,7 +40,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-width: 110%;
+            min-width: 100%;
         }
 
         .footer-custom {
@@ -74,72 +74,173 @@
         .border-bottom {
             border-bottom: 1px solid #FFC107 !important;
         }
+
+        @media (max-width: 767.98px) {
+            .navbar-brand {
+                display: flex;
+                flex-direction: row !important;
+                align-items: center;
+            }
+            
+            .navbar-brand img {
+                width: 60px;
+                height: auto;
+            }
+            
+            .navbar-brand div {
+                margin-left: 10px;
+            }
+            
+            .navbar .nav-link {
+        padding: 0 5px;
+        font-size: 14px;
+        color: #00593b !important;
+        }
+    
+        .navbar .nav-link:first-child {
+            margin-left: 0;
+        }
+    
+        .navbar .nav-link:last-child {
+            margin-left: 10px;
+        }
+        
+        
+
+
+            .container.mt-5.pt-5 {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .row.d-flex.justify-content-end.align-items-center {
+                flex-direction: column;
+                align-items: flex-start !important;
+                text-align: left;
+            }
+
+            .row.mt-4.align-items-stretch {
+                flex-direction: column;
+            }
+
+            .col-md-6.d-flex {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .col-md-6.d-flex .card-custom {
+                min-width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .social-icons a img {
+                width: 30px;
+                margin-right: 10px;
+            }
+
+            .rounded-circle.bg-light {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .text-right {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            h2.font-weight-bold,
+            p.lead {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="{{ asset('images/baznas.png') }}" width="80" alt="Logo BAZNAS">
-                <div class="ml-3">
-                    <strong class="text-success">E-DISDAY</strong>
-                    <p class="mb-0 text-muted" style="font-size: 15px;">Pendistribusian & Pemberdayaan</p>
-                </div>
-            </a>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" :href="route('home')" :active="request() - > routeIs('home')">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://wa.me/6285842716803" target="_blank">Bantuan Teknis</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-light bg-white border-bottom fixed-top d-lg-none">
+    <div class="container d-flex flex-column align-items-start">
+        <!-- Row 1: Logo & Judul -->
+        <div class="d-flex align-items-center w-100 mb-2">
+            <img src="{{ asset('images/baznas.png') }}" width="50" alt="Logo BAZNAS">
+            <div class="ml-2">
+                <strong class="text-success mb-0 d-block">E-DISDAY</strong>
+                <small class="text-muted">Pendistribusian & Pemberdayaan</small>
+            </div>
         </div>
-    </nav>
-    <br>
-    <br>
 
+        <!-- Row 2: Menu di pojok kiri -->
+        <div class="w-100 d-flex justify-content-start ml-2">
+            <a class="nav-link px-2 {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
+            <a class="nav-link px-2" href="https://wa.me/6285842716803" target="_blank">Bantuan Teknis</a>
+        </div>
+    </div>
+</nav>
+
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top d-none d-lg-flex">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="#">
+                        <img src="{{ asset('images/baznas.png') }}" width="80" alt="Logo BAZNAS">
+                        <div class="ml-3">
+                            <strong class="text-success">E-DISDAY</strong>
+                            <p class="mb-0 text-muted" style="font-size: 15px;">Pendistribusian & Pemberdayaan</p>
+                        </div>
+                    </a>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item  mt-3">
+                            <a class="nav-link active font-black" :href="route('home')" :active="request() - > routeIs('home')">Home</a>
+                        </li>
+                        <li class="nav-item  mt-3">
+                            <a class="nav-link font-black" href="https://wa.me/6285842716803" target="_blank">Bantuan Teknis</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+    </nav>
+
+
+    <br>
+    <br>
     <div class="container mt-5 pt-5 ">
-        <div class="row d-flex justify-content-end align-items-center">
-            <!-- Foto Profil -->
-            <div class="rounded-circle bg-light text-center d-flex align-items-center justify-content-center"
-                style="width: 50px; height: 50px; font-weight: bold; color: #2E7D32;">
+           <div class="d-flex justify-content-start justify-content-lg-end align-items-center mb-3">
+                <!-- Foto Profil -->
                 @if (Auth::user()->foto_url)
-                    <img src="{{ Auth::user()->foto_url }}" width="70"
-                        class="w-10 h-10 rounded-full object-cover">
+                    <img src="{{ asset('uploads/foto_pengguna/' . Auth::user()->foto_url) }}"
+                        class="rounded-circle mr-2"
+                        style="width: 50px; height: 50px; object-fit: cover;">
                 @else
-                    <div
-                        class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 font-semibold">
+                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2"
+                        style="width: 50px; height: 50px; font-weight: bold; color: #2E7D32;">
                         {{ strtoupper(substr(Auth::user()->nama, 0, 2)) }}
                     </div>
                 @endif
+            
+                <!-- Info Nama dan Jabatan -->
+                <div class="text-left">
+                    <strong>{{ Auth::user()->nama }}</strong><br>
+                    <span>{{ Auth::user()->pengurus->jabatan->jabatan }}</span><br>
+                    <span>{{ Auth::user()->pengurus->jabatan->divisi->divisi }}</span>
+                </div>
             </div>
 
-            <!-- Informasi Nama & Jabatan -->
-            <div class="ml-3 text-right">
-                <p class="font-weight-bold mb-0 text-left">{{ Auth::user()->nama }}</p>
-                <p class="mb-0 text-left">{{ Auth::user()->pengurus->jabatan->jabatan }}</p>
-                <p class="mb-0 text-left">{{ Auth::user()->pengurus->jabatan->divisi->divisi }}</p>
-            </div>
-        </div>
-
-
-        <br>
-        <br>
+        <br class="d-none d-lg-block">
+        <br class="d-none d-lg-block">
 
         <div class="row mt-4 align-items-stretch">
             <div class="col-md-6">
                 <h5 class="text-success">{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}</h5>
                 <h2 class="font-weight-bold text-success">Efektif, Akuntabel, dan Transparan</h2>
                 <p class="lead text-success">e-DisDay untuk Manajemen yang Lebih Baik</p>
-                <div class="d-flex align-items-center mt-4">
+                <div class="d-flex align-items-center mt-4 mb-3">
                     <div class="d-flex social-icons">
                         <a href="https://www.instagram.com/baznascilacap?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                        target="_blank">
+                            target="_blank">
                             <img src="{{ asset('icons/ig.png') }}" alt="Instagram">
                         </a>
-                        <a href="https://www.tiktok.com/@baznaskab.cilacap_?is_from_webapp=1&sender_device=pc" target="_blank">
+                        <a href="https://www.tiktok.com/@baznaskab.cilacap_?is_from_webapp=1&sender_device=pc"
+                            target="_blank">
                             <img src="{{ asset('icons/tw.png') }}" alt="TikTok">
                         </a>
                         <a href="https://www.facebook.com/BaznasKabCilacap/" target="_blank">
@@ -150,35 +251,39 @@
                         </a>
                     </div>
                     <p class="h5 mb-0 ml-3 text-success">BAZNAS CILACAP</p>
-                </div>
-            </div>
-            <div class="col-md-6 d-flex">
-                <div class="col-md-6 d-flex">
-                    <a href="{{ route('permohonan') }}" class="text-white">
-                        <div class="card card-custom">
-                            <h4>E-DISDAY</h4>
-                            <span style="font-size: 17px">Pendistribusian & Pemberdayaan</span>
-                            <a href="#" class="text-white arrow-big" style="font-size: 30px">&#8594;</a>
-                        </div>
-                    </a>
                     
                 </div>
-                <div class="col-md-6 d-flex">
-                    <a href="#" class="text-white">
-                        <div class="card card-custom">
-                            <h4>E-AMBULANCE</h4>
-                            <span style="font-size: 17px">Rekam Jejak Layanan Ambulance</span>
-                            <a href="#" class="text-white arrow-big" style="font-size: 30px">&#8594;</a>
-                        </div>
-                    </a>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6 col-12 mb-3">
+                        <a href="{{ route('permohonan') }}" class="text-white">
+                            <div class="card card-custom">
+                                <h4>E-DISDAY</h4>
+                                <span style="font-size: 17px">Pendistribusian & Pemberdayaan</span>
+                                <span class="text-white arrow-big" style="font-size: 30px">&#8594;</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-12 mb-3">
+                        <a href="https://ambulance.sibaznas.com" class="text-white">
+                            <div class="card card-custom">
+                                <h4>E-AMBULANCE</h4>
+                                <span style="font-size: 17px">Rekam Jejak Layanan Ambulance</span>
+                                <span class="text-white arrow-big" style="font-size: 30px">&#8594;</span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 
     <footer class="footer-custom">
         <p>Hak Cipta 2025 - BAZNAS CILACAP</p>
     </footer>
+    
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

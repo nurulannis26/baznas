@@ -59,12 +59,13 @@ class Permohonan extends Model
 
     public static function getNamaUPZ($id)
     {
+        // dd($id);
         $upz = DB::table('permohonan')
             ->join('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
             ->where('upz.upz_id', $id)
             ->first();
 
-        return $upz ? $upz->nama : 'Tidak ditemukan';
+        return $upz ? $upz->upz : 'Tidak ditemukan';
     }
 
     public static function getNoHP($id)
@@ -91,20 +92,20 @@ class Permohonan extends Model
     {
         $a = DB::table('permohonan')->join('program', 'program.program_id', '=', 'permohonan.program_id')
         ->where('program.program_id', $id)->first();
-        return $a->program;
+        return $a->program ?? '-';
     }
 
     public static function getSubProgram($id)
     {
         $a = DB::table('program')->join('sub_program', 'program.program_id', '=', 'sub_program.program_id')
         ->where('sub_program.program_id', $id)->first();
-        return $a->sub_program;
+        return $a->sub_program ?? '-';
     }
 
     public static function getAsnaf($id)
     {
         $a = DB::table('permohonan')->join('asnaf', 'asnaf.asnaf_id', '=', 'permohonan.asnaf_id')
         ->where('asnaf.asnaf_id', $id)->first();
-        return $a->asnaf;
+        return $a->asnaf ?? '-';
     }
 }

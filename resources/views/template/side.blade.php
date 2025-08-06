@@ -11,11 +11,11 @@
         <div class="text-center">
             <h5 class="btn-hilang mt-4">BAZNAS CILACAP</p>
             </h5>
-            <span class="btn-hilang">Nurul Annisa</span><br>
+            <span class="btn-hilang">{{Auth::user()->nama}}</span><br>
             <span class="m-0 badge badge-success badge-sm badge-hilang" style="border-radius: 10px">
 
                 <marquee behavior="" scrolldelay="300" direction="" class="pt-1">
-                    Kepala Cabang
+                    {{ Auth::user()->pengurus->jabatan->jabatan }}
                 </marquee>
             </span><br>
             <a class="btn btn-white btn-sm btn-hilang" data-toggle="modal" data-target="#modal_pengurus_detail{{ Auth::user()->pengguna_id }}"><i class="fas fa-cog"></i>

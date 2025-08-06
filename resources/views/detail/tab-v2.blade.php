@@ -366,7 +366,7 @@
                                 {{ $namaPengguna }}
                                     <br>
                                     <span
-                                        style="font-size:11pt;">{{ $jabatan }}/span>
+                                        style="font-size:11pt;">{{ $jabatan }}</span>
                                 @endif
                             </td>
                         @endif

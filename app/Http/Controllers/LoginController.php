@@ -17,6 +17,8 @@ class LoginController extends Controller
 
     public function home()
     {
+        // dd('asda');
+
         return view('auth.home');
     }
 
@@ -26,16 +28,36 @@ class LoginController extends Controller
         'nohp' => 'required|numeric',
         'password' => 'required'
     ]);
-
+    
     $user = Pengguna::where('nohp', $request->nohp)->first();
-
+    
     if (!$user || !Hash::check($request->password, $user->password)) {
         return redirect(route('login'))->with('pesan', 'Username atau password salah');
     }
-
+    
     Auth::login($user, false);
     $request->session()->regenerate(); // Regenerate session untuk mencegah session fixation
+    // $request->session()->put([
+    //         'pengguna_id' => $user->pengguna_id,
+    //         'user_id' => $user->pengguna_id,
+    //     ]);
+//     session(
+//         [
+//             'pengguna_id' => $user->pengguna_id,
+//             'user_id' => $user->pengguna_id,
+//         ]
+// );
+    
 
+
+//     dd([
+//     'auth_check' => Auth::check(),
+//     'user' => Auth::user(),
+//     'session_id' => session()->getId(),
+//     'session' => session()->all(),
+// ]);
+
+    // dd($request->session());
     return redirect('/home');
 }
 

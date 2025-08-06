@@ -20,11 +20,11 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="inputNama">JENIS PERMOHONAN &nbsp;</label>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <select wire:model="permohonan_jenis" class="select2dulus form-control ">
                                     <option value="">Pilih Jenis Permohonan</option>
                                     <option value="Individu">INDIVIDU</option>
-                                    <option value="UPZ">UPZ</option>
+                                    <option value="Entitas">ENTITAS</option>
 
                                 </select>
                             </div>
@@ -32,13 +32,16 @@
 
                             <div class="form-group col-md-6">
                                 <label for="inputNama">NOMOR PERMOHONAN &nbsp;</label>
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="permohonan_nomor" type="text" class="form-control" readonly>
                             </div>
                             @if ($this->permohonan_jenis == 'Individu')
                                 {{-- pemohon --}}
                                 <div class="form-group col-md-6">
-                                    <label>NAMA PEMOHON &nbsp;</label><input wire:model="permohonan_nama_pemohon"
+                                    <label>NAMA PEMOHON &nbsp;</label>
+                                    <span style="color:rgba(230, 82, 82)">*</span><input wire:model="permohonan_nama_pemohon"
                                         type="text" class="form-control" placeholder="Masukan Nama Pemohon">
+                                        
                                 </div>
                                 <hr>
                                 {{-- end pemohon --}}
@@ -47,7 +50,7 @@
                                 <div class="form-group col-md-6 ">
                                     <label>NO HP PEMOHON &nbsp;</label>
 
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
+                                    <span style="color:rgba(230, 82, 82)">*</span>
                                     <input wire:model="permohonan_nohp_pemohon" id="permohonan_nohp_pemohon"
                                         type="text" class="form-control" placeholder="Masukan No HP Pemohon"
                                         oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
@@ -56,80 +59,85 @@
                                 {{-- end nohp --}}
                                 <div class="form-group col-md-12">
                                     <label>ALAMAT PEMOHON &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
+                                    <span style="color:rgba(230, 82, 82)">*</span>
                                     <input wire:model="permohonan_alamat_pemohon" type="text" class="form-control"
                                         placeholder="Masukan Alamat Pemohon">
                                 </div>
-                            @elseif($this->permohonan_jenis == 'UPZ')
+                            @elseif ($this->permohonan_jenis == 'Entitas')
+                                {{-- pemohon --}}
                                 <div class="form-group col-md-6">
-                                    <label>NAMA UPZ &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="upz" type="text" class="form-control"
-                                        placeholder="Masukan Nama UPZ">
+                                    <label>NAMA ENTITAS&nbsp;</label>
+                                    <span style="color:rgba(230, 82, 82)">*</span><input wire:model="permohonan_nama_entitas"
+                                        type="text" class="form-control" placeholder="Masukan Nama Entitas">
+                                        
                                 </div>
                                 <hr>
-                                <div class="form-group col-md-6 ">
-                                    <label>NO HP UPZ &nbsp;</label>
+                                {{-- end pemohon --}}
 
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="nohp" id="nohp" type="text" class="form-control"
-                                        placeholder="Masukan No HP UPZ"
+                                {{-- nohp --}}
+                                <div class="form-group col-md-6 ">
+                                    <label>NO HP  &nbsp;</label>
+
+                                    <span style="color:rgba(230, 82, 82)">*</span>
+                                    <input wire:model="permohonan_nohp_entitas" id="permohonan_nohp_entitas"
+                                        type="text" class="form-control" placeholder="Masukan No HP Entitas"
                                         oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                                 </div>
-                                <hr>
-                                <div class="form-group col-md-12">
-                                    <label>ALAMAT UPZ &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="alamat" type="text" class="form-control"
-                                        placeholder="Masukan Alamat UPZ">
-                                </div>
+
                                 <hr>
                                 <div class="form-group col-md-6">
-                                    <label>NAMA PJ &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="pj_nama" type="text" class="form-control"
-                                        placeholder="Masukan Nama PJ Permohonan">
+                                    <label>NAMA PJ&nbsp;</label>
+                                    <span style="color:rgba(230, 82, 82)">*</span><input wire:model="permohonan_namapj_entitas"
+                                        type="text" class="form-control" placeholder="Masukan Nama PJ Entitas">
+                                        
                                 </div>
                                 <hr>
+                                {{-- end nohp --}}
                                 <div class="form-group col-md-6">
-                                    <label>JABATAN &nbsp;</label>
-                                    {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
-                                    <input wire:model="pj_jabatan" type="text" class="form-control"
-                                        placeholder="Masukan Jabatan PJ">
+                                    <label>ALAMAT  &nbsp;</label>
+                                    <span style="color:rgba(230, 82, 82)">*</span>
+                                    <input wire:model="permohonan_alamat_entitas" type="text" class="form-control"
+                                        placeholder="Masukan Alamat Entitas">
                                 </div>
+                                
                                 <hr>
                             @endif
                             <hr style="width: 100%; border: none; border-top: 1px solid #797b7d; margin: 10px 0;">
 
                             <div class="form-group col-md-6">
                                 <label>JUDUL SURAT &nbsp;</label>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="surat_judul" type="text" class="form-control"
                                     placeholder="Masukkan Judul Surat">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
                                 <label>NOMOR SURAT &nbsp;</label>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Optional</sup> --}}
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="surat_nomor" type="text" class="form-control"
                                     placeholder="Masukkan Nomor Surat">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
                                 <label>TGL SURAT &nbsp;</label>
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <input wire:model="surat_tgl" type="date" class="form-control">
                             </div>
                             <hr>
                             <div class="form-group col-md-6">
+                                <label>TGL DITERIMA &nbsp;</label>
+                                <span style="color:rgba(230, 82, 82)">*</span>
+                                <input wire:model="surat_diterima" type="date" class="form-control">
+                            </div>
+                            <hr>
+                            <div class="form-group col-md-12">
                                 <label for="inputHP">FILE SCAN SURAT</label>
-                                <sup class="badge badge-danger text-white mb-2"
-                                    style="background-color:rgba(230,82,82)">WAJIB
-                                    (PDF/JPG/JPEG/PNG)</sup>
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <div class="custom-file custom-file-surat">
                                     <input type="file" wire:model="surat_url"
                                         accept="application/pdf, image/png, image/jpg, image/jpeg"
                                         class="custom-file-input" id="file" name="file">
-                                    <label class="custom-file-label" for="customFile">Pilih file</label>
+                                    <label class="custom-file-label" for="customFile">Pilih file (PDF/JPG/JPEG/PNG)</label>
                                 </div>
                             </div>
 
@@ -137,12 +145,11 @@
                             <hr>
                             <div class="form-group col-md-6 modal-tambah-asnaf-pilar">
                                 <label for="inputNama">ASNAF &nbsp;</label>
-                                <sup class="badge badge-danger text-white mb-2"
-                                    style="background-color:rgb(0, 187, 31)">Optional</sup>
+                                <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Opsional</sup>
                                 <select wire:model="asnaf_id" class=" form-control ">
                                     <option value="">Pilih Asnaf</option>
                                     @php
-                                        $asnaf_get = DB::table('asnaf')->get();
+                                        $asnaf_get = DB::table('asnaf')->orderBy('created_at', 'asc')->get();
                                     @endphp
                                     @foreach ($asnaf_get as $as)
                                         <option value="{{ $as->asnaf_id }}">{{ $as->asnaf }}</option>
@@ -152,8 +159,7 @@
                             <hr>
                             <div class="form-group col-md-6">
                                 <label for="inputNama">PROGRAM &nbsp;</label>
-                                <sup class="badge badge-danger text-white mb-2"
-                                    style="background-color:rgb(0, 187, 31)">Optional</sup>
+                                <sup class="badge badge-danger text-white mb-2" style="background-color:rgb(0, 187, 31)">Opsional</sup>
                                 <select wire:model="program_id" id="id_program_pilars"
                                     class="select2dulur form-control pilar">
                                     <option value="">Pilih Program</option>
@@ -191,7 +197,7 @@
                             <hr>
                             <div class="form-group col-md-6">
                                 <label for="inputNama">NOMINAL PERMOHONAN &nbsp;</label>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bor-abu">Rp</span>
@@ -204,7 +210,7 @@
                             <hr>
                             <div class="form-group col-md-6">
                                 <label for="inputNama">BENTUK BANTUAN &nbsp;</label>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <select wire:model="permohonan_bentuk_bantuan" class="select2dulus form-control ">
                                     <option value="">Pilih Bentuk Bantuan</option>
                                     <option value="Uang Tunai">Uang Tunai</option>
@@ -215,7 +221,7 @@
                             <hr>
                             <div class="form-group col-md-12">
                                 <label for="inputAlamat">CATATAN TAMBAHAN&nbsp;</label>
-                                {{-- <sup class="badge badge-danger text-white mb-2" style="background-color:rgba(230,82,82)">WAJIB</sup> --}}
+                                <span style="color:rgba(230, 82, 82)">*</span>
                                 <textarea type="text" class="form-control" wire:model="permohonan_catatan_input"
                                     placeholder="Masukan Keterangan / Perihal" rows="4"> </textarea>
 
@@ -228,8 +234,10 @@
                             <div class="card card-body" style="background-color:#cbf2d6;">
                                 <b>INFORMASI!</b>
                                 <span>
-                                    Setelah simpan data, lengkapi data penerima manfaat, dan data lampiran pendukung
+                                    1. Setelah simpan data, lengkapi data penerima manfaat, dan data lampiran pendukung
                                     lainnya.
+                                    <br>
+                                    2. Jika ada tanda ( <span style="color:rgba(230, 82, 82)">*</span> ) menunjukkan kolom harus diisi.
                                 </span>
                             </div>
                             {{-- end info --}}
@@ -284,6 +292,10 @@
                             $('#nominal_permohonan').val(formatRupiah($('#nominal_permohonan').val(),
                                 'Rp. '));
                         });
+                         $('#select2Permohonan').on('change', function() {
+                          var selectedValue = $(this).val();
+                          @this.set('selectedProgram', selectedValue);
+                      });
                     }
 
                     loadContactDeviceSelect2();

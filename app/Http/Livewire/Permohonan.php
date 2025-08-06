@@ -59,11 +59,20 @@ class Permohonan extends Component
     public $permohonan_bentuk_bantuan;
     public $permohonan_catatan_input;
     public $selectedProgram;
+    public $permohonan_tgl;
+    
+    public $permohonan_nama_entitas;
+    public $permohonan_nohp_entitas;
+    public $permohonan_alamat_entitas;
+    public $permohonan_namapj_entitas;
+    public $surat_diterima;
+    
     // public $fileName;
 
-    public function updateSelectedProgram($value)
+    public function updatedSelectedProgram($value)
     {
-        $this->sub_program_id = $value; // Simpan nilai yang dipilih
+        // dd($value);
+        $this->sub_program_id = $value;
     }
 
     public function mount()
@@ -113,8 +122,7 @@ class Permohonan extends Component
 
         $filter_daterange = $start_date . ' - ' . $end_date;
 
-        $data = DB::table('permohonan')->leftJoin('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
-        ->select('permohonan.*', 'upz.*')
+        $data = DB::table('permohonan')->select('permohonan.*')
             ->when($filter_daterange != '', function ($query) use ($start_date, $end_date) {
                 // filter bulan dan tahun for pengajuan_detail
                 return $query->when($start_date && $end_date, function ($query) use ($start_date, $end_date) {
@@ -155,6 +163,16 @@ class Permohonan extends Component
 
             // dd($data);
 
+            $permohonan_total = $data ->count();
+            $total_nominal_permohonan = $data->sum('permohonan_nominal');
+            $total_nominal_pencairan = $data->sum('pencairan_nominal');
+            $cilacap_peduli = $data->where('program_id', '9e2ea277-9550-4ff7-bd6a-5fb36ef30633')->count();
+            $cilacap_cerdas = $data->where('program_id', '2a700a8d-dd49-46d3-9e25-2953266cf9a5')->count();
+            $cilacap_makmur = $data->where('program_id', '30746c18-3f7a-4736-ae47-ea91154a5a00')->count();
+            $cilacap_sehat = $data->where('program_id', 'ce2ac72c-02bc-4d8c-b143-9d526b1edd2b')->count();
+            $cilacap_taqwa = $data->where('program_id', 'd578e2e4-23d4-4cc6-9657-2415ba633420')->count();
+            $layanan_baznas = $data->where('program_id', 'e47c6712-98b5-42b9-9b47-22f7b843745f')->count();
+            $peduli_bencana = $data->where('program_id', 'e47c6722-98b5-42b9-9b37-22f7b8437450')->count();
             $this->daftar_program = Program::orderBy('created_at', 'DESC')->get();
             $this->daftar_kegiatan = SubProgram::where('program_id', $this->program_id)
             ->whereRaw('LENGTH(no_urut) = 3')
@@ -169,15 +187,25 @@ class Permohonan extends Component
             'end_date',
             'filter_daterange',
             'data',
+            'permohonan_total',
+            'total_nominal_permohonan',
+            'total_nominal_pencairan',
+            'cilacap_peduli',
+            'cilacap_cerdas',
+            'cilacap_makmur',
+            'cilacap_sehat',
+            'cilacap_taqwa',
+            'layanan_baznas',
+            'peduli_bencana',
             ));
     }
     
-    public function nama_upz($id)
-    {
-        $a = DB::table('permohonan')->join('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
-        ->where('upz.upz_id', $id)->first();
-        return $a->nama ?? '-';
-    }
+    // public function nama_upz($id)
+    // {
+    //     $a = DB::table('permohonan')->join('upz', 'upz.upz_id', '=', 'permohonan.upz_id')
+    //     ->where('upz.upz_id', $id)->first();
+    //     return $a->nama ?? '-';
+    // }
 
     public function modal_tambah_permohonan()
     {
@@ -190,8 +218,8 @@ class Permohonan extends Component
     
     if ($this->permohonan_jenis == 'Individu') {
         $this->generateNomorPermohonan('INDIVIDU', $romawi);
-    } elseif ($this->permohonan_jenis == 'UPZ') {
-        $this->generateNomorPermohonan('UPZ', $romawi);
+    } elseif ($this->permohonan_jenis == 'Entitas') {
+        $this->generateNomorPermohonan('ENTITAS', $romawi);
     }
 }
 
@@ -248,14 +276,14 @@ private function getRomawi($month)
     {
         $a = SubProgram::where('sub_program_id', $id)->first();
 
-        return  $a->nama_program ?? '';
+        return  $a->sub_program ?? '';
     }
 
     public function nama_program($id)
     {
         $a = Program::where('program_id', $id)->first();
 
-        return  $a->pilar ?? '';
+        return  $a->program ?? '';
     }
 
     public function tambah_permohonan()
@@ -273,25 +301,12 @@ private function getRomawi($month)
             'surat_judul' => $this->surat_judul,
             'surat_nomor' => $this->surat_nomor,
             'surat_tgl' => $this->surat_tgl,
+            'surat_diterima' => $this->surat_diterima,
             'surat_keterangan' => null,
             'surat_url' => $file_name,
         ]);
     
-        $upz_id = null;
-        if ($this->permohonan_jenis === 'UPZ') {
-            $upz = Upz::create([
-                'upz_id' => Str::uuid(),
-                'upz' => $this->upz,
-                'nohp' => $this->nohp,
-                'alamat' => $this->alamat,
-                'pj_nama' => $this->pj_nama,
-                'pj_jabatan' => $this->pj_jabatan,
-                'pj_nohp' => $this->pj_nohp,
-                'keterangan' => $this->keterangan,
-            ]);
-
-            $upz_id = $upz->upz_id;
-        }
+        
 
         // dd($this->selectedProgram);
 
@@ -303,7 +318,12 @@ private function getRomawi($month)
             'permohonan_nama_pemohon' => $this->permohonan_nama_pemohon,
             'permohonan_nohp_pemohon' => $this->permohonan_nohp_pemohon,
             'permohonan_alamat_pemohon' => $this->permohonan_alamat_pemohon,
-            'upz_id' => $upz_id, 
+            
+            'permohonan_nama_entitas' => $this->permohonan_nama_entitas,
+            'permohonan_nohp_entitas' => $this->permohonan_nohp_entitas,
+            'permohonan_alamat_entitas' => $this->permohonan_alamat_entitas,
+            'permohonan_namapj_entitas' => $this->permohonan_namapj_entitas,
+            
             'surat_id' => $surat->surat_id, 
             'asnaf_id' => $this->asnaf_id,
             'program_id' => $this->program_id,
@@ -317,13 +337,15 @@ private function getRomawi($month)
             'permohonan_tgl' => date('Y-m-d'),
             'permohonan_timestamp_input' => date('Y-m-d H:i:s'),
         ]);
+        
+        // dd($permohonan);
 
         
 
         if ($this->permohonan_jenis == "Individu") {
             $pemohon =$this->permohonan_nama_pemohon;
-        } elseif ($this->permohonan_jenis == "UPZ") {
-            $pemohon =$this->pj_nama;
+        } elseif ($this->permohonan_jenis == "Entitas") {
+            $pemohon =$this->permohonan_namapj_entitas;
         } 
 
         $front = DB::table('pengguna')->join('pengurus', 'pengurus.pengurus_id', '=', 'pengguna.pengurus_id')
@@ -331,7 +353,9 @@ private function getRomawi($month)
         ->join('divisi', 'divisi.divisi_id', '=', 'jabatan.divisi_id')
         ->where('divisi.divisi_id', '83c88d02-3d27-45d4-95a5-9a9c56ae61f0')
         ->where('pengguna.status', '1')
-        ->fisrt();
+        ->first();
+        
+        // dd($front);
 
         $asnaf = DB::table('asnaf')->where('asnaf_id', $this->asnaf_id)->value('asnaf');
         // $url =  "https://e-tasyaruf.nucarecilacap.id/detail-permohonan/" . $this->permohonan_id;
@@ -342,7 +366,7 @@ private function getRomawi($month)
 
             "Assalamualaikum Warahmatullahi Wabarakatuh" . "\n" . "\n" .
 
-                "Yth. " . "*" . $this->nama_pengurus($front->pengurus_id) .  "*" . "\n" .
+                "Yth. " ."*". $this->nama_pengurus($front->pengurus_id) ."*". "\n" .
                 $this->jabatan_pengurus($front->pengurus_id) . "\n" . "\n" .
 
                 "*Permohonan berhasil diinputkan*" . "\n" . "*Lengkapi lampiran & daftar mustahik lalu konfirmasi selesai input.*" . "\n" . "\n" .
@@ -354,8 +378,6 @@ private function getRomawi($month)
                 \Carbon\Carbon::parse($this->permohonan_tgl)->isoFormat('D MMMM Y')  .  "\n" .
                 "*" .  "Nama Pemohon"  . "*" .  "\n" .
                 $this->permohonan_jenis . " - " . $pemohon  .  "\n" .
-                "*" .  "Nominal Diajukkan"  . "*" .  "\n" .
-                'Rp' . number_format($this->permohonan_nominal, 0, '.', '.')  . "\n" . "\n" .
                 "========================" . "\n" ."\n" .
                 "*" .  "Asnaf"  . "*" .  "\n" .
                 $asnaf .  "\n" .
